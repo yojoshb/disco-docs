@@ -45,6 +45,9 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
   icon:
     #logo: material/laptop
     annotation: material/plus-circle
