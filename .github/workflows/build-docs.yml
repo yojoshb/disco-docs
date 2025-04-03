@@ -3,8 +3,6 @@ name: build-docs
 on:
   workflow_dispatch:
   push:
-    tags:
-    - '*'
     branches: [ "main" ]
     paths-ignore:
     - ".github/**"
@@ -44,13 +42,3 @@ jobs:
         with:
           name: docs
           path: site/ # or path/to/artifact
-
-      
-      - name: Create Release
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "docs/*"
-          allowUpdates: true
-          generateReleaseNotes: true
