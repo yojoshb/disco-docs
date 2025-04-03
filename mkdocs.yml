@@ -10,7 +10,22 @@ plugins:
   - offline
   #- privacy
   - search
-  - print-site
+  - print-site:
+      add_to_navigation: true
+      print_page_title: 'OpenShift Disconnected'
+      print_page_basename: 'print_page'
+      add_print_site_banner: false
+      # Table of contents
+      add_table_of_contents: true
+      toc_title: 'Table of Contents'
+      toc_depth: 6
+      # Content-related
+      add_full_urls: true
+      enumerate_headings: true
+      enumerate_figures: true
+      add_cover_page: true
+      cover_page_template: ""
+      path_to_pdf: ""
 
 nav:
   - Home: index.md
