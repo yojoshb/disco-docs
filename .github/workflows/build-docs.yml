@@ -2,9 +2,6 @@ name: build-docs
 
 on:
   workflow_dispatch:
-  create:
-    tags:
-      - v0.1
   #push:
   #  branches: [ "main" ]
   #  paths-ignore:
@@ -46,7 +43,8 @@ jobs:
           name: docs
           path: site/ # or path/to/artifact
 
-      - uses: ncipollo/release-action@v1
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          artifacts: "docs"
-          omitBody: true
+          files: docs
