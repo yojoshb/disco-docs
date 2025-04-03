@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-print-site-plugin htmlark[http,parsers]
-      - run: mkdocs build --force
+      - run: mkdocs build
       - run: | 
           cd site 
           htmlark print_page.html -o standalone.html
