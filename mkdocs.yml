@@ -21,7 +21,6 @@ nav:
     - Offline Tasks: offline-tasks.md
     - OpenShift Update Service: osus.md
   - About:
-    - License: license.md
     - Release Notes: release-notes.md
 
 theme:
@@ -61,7 +60,7 @@ markdown_extensions:
       #auto_title: true
       anchor_linenums: true
       #linenums: true
-      #linenums_style: pymdownx-inline
+      linenums_style: pymdownx-inline
       line_spans: __span
       use_pygments: true
   - attr_list
