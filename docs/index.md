@@ -33,14 +33,3 @@ Only pertains to the install being performed on the high-side.
     - [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.16/html/installation_overview/installing-fips#installing-fips)
 
 Follow along and good luck..
-
-## Installation
-[Connected](install-connected.md)
-
-[Disconnected](install-disconnected.md)
-
-## Post Installation
-[Offline tasks](offline-tasks.md)
-
-[OpenShift Update Service (OSUS)](osus.md)
-
