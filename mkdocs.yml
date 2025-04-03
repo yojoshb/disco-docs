@@ -12,7 +12,7 @@ plugins:
   - search
   - print-site:
       add_to_navigation: true
-      print_page_title: 'OpenShift Disconnected'
+      print_page_title: ''
       print_page_basename: 'print_page'
       add_print_site_banner: false
       # Table of contents
@@ -92,5 +92,5 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.tilde
     
-extra_css:
-  - stylesheets/maxwidth.css
+#extra_css:
+#  - stylesheets/maxwidth.css
