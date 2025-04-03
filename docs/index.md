@@ -31,5 +31,3 @@ Only pertains to the install being performed on the high-side.
 
 - **OpenShift version 4.16 and later**: To enable FIPS mode for your cluster, you must run the installation program from a RHEL 9 computer that is configured to operate in FIPS mode, and you must use a FIPS-capable version of the installation program. 
     - [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.16/html/installation_overview/installing-fips#installing-fips)
-
-Follow along and good luck..
