@@ -1,0 +1,82 @@
+site_name: OpenShift Disconnected
+site_url: ""
+site_author: "jbezotte@redhat.com"
+use_directory_urls: false
+
+extra:
+  generator: false
+
+plugins:
+  - offline
+  #- privacy
+  - search
+  - print-site
+
+nav:
+  - Home: index.md
+  - Installation:
+    - Connected: install-connected.md
+    - Disconnected: install-disconnected.md
+  - Post Installation:
+    - Offline Tasks: offline-tasks.md
+    - OpenShift Update Service: osus.md
+  - About:
+    - License: license.md
+    - Release Notes: release-notes.md
+
+theme:
+  name: material
+  font: false
+  features:
+    - content.code.copy
+    - content.code.annotate
+    - content.tooltips
+  icon:
+    #logo: material/laptop
+    annotation: material/plus-circle
+  palette: 
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+markdown_extensions:
+  - pymdownx.highlight:
+      pygments_lang_class: true
+      #auto_title: true
+      anchor_linenums: true
+      #linenums: true
+      #linenums_style: pymdownx-inline
+      line_spans: __span
+      use_pygments: true
+  - attr_list
+  - tables
+  - md_in_html
+  - admonition
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+    
+extra_css:
+  - stylesheets/maxwidth.css
