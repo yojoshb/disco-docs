@@ -2,6 +2,9 @@ name: build-docs
 
 on:
   workflow_dispatch:
+  create:
+    tags:
+      - v0.1
   #push:
   #  branches: [ "main" ]
   #  paths-ignore:
