@@ -3,6 +3,8 @@ name: build-docs
 on:
   workflow_dispatch:
   push:
+    tags:
+    - '*'
     branches: [ "main" ]
     paths-ignore:
     - ".github/**"
