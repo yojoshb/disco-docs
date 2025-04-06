@@ -92,4 +92,4 @@ Generate a secret from the mirror registry and save it to your machine.
     Existing credentials are valid. Already logged in to registry.example.com:8443
     ```
 
-1. Continue to [mirroring images to registry](mirroring.md)
+1. Continue to [mirroring images to registry](../disconnected/mirroring.md)

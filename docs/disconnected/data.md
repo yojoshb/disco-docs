@@ -23,7 +23,7 @@ $ cp /mnt/transfer-disk/{imageset-config.yaml,mirror_000001.tar} /opt/4.17-mirro
 ## Create your pull/push secret for your mirror registry
 If you already have a registry in your target environment, you can generate a secret from it and place it in a json file like earlier. 
 
-If you do not have a registry in your target environment that can store the mirror images, click [here for Red Hat Mirror Registry instructions](registry.md).
+If you do not have a registry in your target environment that can store the mirror images, click [here for Red Hat Mirror Registry instructions](../optional/registry.md).
 
 1. Make a copy of your pull secret in JSON format:
     ```bash

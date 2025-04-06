@@ -7,6 +7,7 @@ Now that the images are on the disk and you have a target registry with push/pul
 - Specify the target directory where the `mirror_000001.tar` file is. The target directory path must start with `file://`. This procedure assumes you want to upload the mirror_000001.tar **from** `/opt/4.17-mirrordata/`.
   - The target directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. Keep this directory safe, and do not modify it. It will be used again for updates and additions to your cluster
 - Be aware of the caching system, this will also take up considerable space on the disk depending on how many images are being uploaded to your mirror
+  
   !!! question "Caching"
     - How does the cache work?
         - It's like a local registry, it can take up additional disk space almost as large as the .tar that gets generated

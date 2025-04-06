@@ -1,4 +1,4 @@
-# 3. Disconnected Cluster Install
+# Disconnected Cluster Install
 
 [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments)
 
