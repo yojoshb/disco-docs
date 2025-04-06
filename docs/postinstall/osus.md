@@ -1,4 +1,3 @@
-# Configure OpenShift Update Service
 [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#updating-disconnected-cluster-osus)
 
 This is kind of a pain but should only need to be set up one time. We essentially have to tell the cluster to look at our registry for graph-data and release-images like it does when connected to the Internet. Perform these steps only if you mirrored graph data and the cincinnati-operator to your mirror registry.
@@ -217,6 +216,8 @@ The following steps outline the high-level workflow on how to update a cluster i
   [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/networking/#enable-cluster-wide-proxy)
 
   Finally, configure the cluster-wide proxy to configure the CA to trust the update server we created.
+
+!!! warning "This may cause nodes to reboot so be prepared"
 
   1. Get the ingress-router CA and save it to a file
       ```bash

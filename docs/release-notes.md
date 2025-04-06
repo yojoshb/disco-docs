@@ -1,3 +1,3 @@
-## Release Notes
+# Release Notes
 
-- DATE: 2025/4/3 - Initial draft documentation (needs much additional formatting) 
+- 4/6/2025: Initial draft documentation (needs much additional formatting) 

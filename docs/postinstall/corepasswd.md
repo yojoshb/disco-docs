@@ -1,20 +1,8 @@
-# OpenShift in a Disconnected Environment: Post Installation
-This document purpose is for consolidating information to perform post installation tasks for a OpenShift cluster in a disconnected environment. Perform these steps after the 24 hour mark passes to ensure that any nodes that may be rebooted will have correct certificates.
-
-## Patch the OperatorHub default sources 
-
-This makes the cluster stop trying to reach Red Hat's CDN
-```bash
-$ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
-operatorhub.config.openshift.io/cluster patched
-```
-
-## Optional: Configure password for `core` user
 By default, Red Hat Enterprise Linux CoreOS (RHCOS) creates a user named `core` on the nodes in your cluster. You can use the `core` user to access the node through a cloud provider serial console or a bare metal baseboard controller manager (BMC). 
 
 This can be helpful, for example, if a node is down and you cannot access that node by using SSH or the `oc debug node` command. However, by default, there is no password for this user, so you cannot log in without creating one. You can create a password for the `core` user by using a machine config.
 
-#### OpenShift 4.7 to 4.12 Procedure
+## OpenShift 4.7 to 4.12 Procedure
 [KCS Article](https://access.redhat.com/solutions/7010657)
 
 1. Create a base64-encoded string in the format `username:password`, with the username as `core` and the password being hashed with SHA512 (`openssl passwd -6`) in order to avoid storing cleartext passwords. Replace `MYPASSWORD` in the command below with the password of your choice:
@@ -70,17 +58,17 @@ This can be helpful, for example, if a node is down and you cannot access that n
     !!! note
         Be aware that SSH password-based login would not be possible still as it is **disabled** by default on RHCOS `sshd` configuration, allowing only key-based authentication. Also, these steps could be taken before the issue arises, as a safeguard.
 
-#### OpenShift 4.13 and up Procedure
+## OpenShift 4.13 and up Procedure
 [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/machine_configuration/machine-configs-configure#core-user-password_machine-configs-configure)
 
 You can create a password for the `core` user by using a machine config. The Machine Config Operator (MCO) assigns the password and injects the password into the `/etc/shadow` file, allowing you to log in with the `core` user. The MCO does not examine the password hash. As such, the MCO cannot report if there is a problem with the password.
 
-!!! Note
+!!! note
     The password works only through a cloud provider serial console or a BMC. It does not work with SSH.
 
     If you have a machine config that includes an `/etc/shadow` file or a systemd unit that sets a password, it takes precedence over the password hash.
 
-You can change the password, if needed, by editing the machine config you used to create the password. Also, you can remove the password by deleting the machine config. Deleting the machine config does not remove the user account.
+!!! info "You can change the password, if needed, by editing the machine config you used to create the password. Also, you can remove the password by deleting the machine config. Deleting the machine config does not remove the user account."
 
 1. Using a tool that is supported by your operating system, create a hashed password. For example, create a hashed password using `mkpasswd` by running the following command:
 

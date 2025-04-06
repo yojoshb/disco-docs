@@ -1,24 +1,25 @@
-site_name: OpenShift Disconnected
+site_name: "OpenShifting the hard way"
 site_url: ""
 site_author: "jbezotte@redhat.com"
+copyright: ""
+site_description: >-
+  Write your documentation in Markdown and create a professional static site in
+  minutes – searchable, customizable, in 60+ languages, for all devices
 use_directory_urls: false
-
-extra:
-  generator: false
 
 plugins:
   - offline
-  #- privacy
+  - privacy
   - search
   - print-site:
       add_to_navigation: true
-      print_page_title: ''
-      print_page_basename: 'print_page'
+      print_page_title: ""
+      print_page_basename: "print_page"
       add_print_site_banner: false
       # Table of contents
       add_table_of_contents: true
-      toc_title: 'Table of Contents'
-      toc_depth: 6
+      toc_title: "Table of Contents"
+      toc_depth: 5
       # Content-related
       add_full_urls: true
       enumerate_headings: true
@@ -27,47 +28,75 @@ plugins:
       cover_page_template: ""
       path_to_pdf: ""
 
-nav:
-  - Home: index.md
-  - Installation:
-    - Connected: install-connected.md
-    - Disconnected: install-disconnected.md
-  - Post Installation:
-    - Offline Tasks: offline-tasks.md
-    - OpenShift Update Service: osus.md
+nav: 
+  - Welcome: index.md
+  - Getting started: prereqs.md
+  - 1. Connected Setup:
+    - connected/index.md
+    - 1.1 Tools: connected/tools.md
+    - 1.2 Creating imagesets: connected/imagesets.md
+    - 1.3 Mirror images to disk: connected/mirroring.md
+  - 2. Disconnected Setup:
+    - disconnected/index.md
+    - 2.1 Tools and data: disconnected/data.md
+    - 2.2 Mirror images to registry: disconnected/mirroring.md
+    - 2.3 DNS Records: disconnected/dns.md
+  - 3. Disconnected Cluster Install:
+    - install/index.md
+    - 3.1 Cluster Configs and ISO building: install/config.md
+    - 3.2 Installing the cluster: install/install.md
+  - 4. Post Installation:
+    - postinstall/index.md
+    - 4.1 Apply Cluster Resources: postinstall/resources.md
+    - 4.2 NTP Setup: postinstall/ntp.md
+    - 4.3 OpenShift Update Service: postinstall/osus.md
+    - Optional - Core User Password: postinstall/corepasswd.md 
   - About:
     - Release Notes: release-notes.md
 
 theme:
   name: material
+  custom_dir: overrides
   font: false
   features:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
-    - navigation.sections
-    - navigation.tabs
+    #- navigation.sections
+    #- navigation.tabs
+    #- navigation.tabs.sticky
     - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - toc.follow
+    - toc.integrate
+    #- header.autohide
+    - announce.dismiss
+
+  logo: assets/openshift-logo.png
   icon:
     #logo: material/laptop
     annotation: material/plus-circle
+  favicon: assets/openshift-logo.png
   palette: 
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       toggle:
         icon: material/brightness-auto
         name: Switch to light mode
-
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
-      scheme: default 
+      scheme: default
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: black
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
@@ -75,15 +104,13 @@ theme:
 markdown_extensions:
   - pymdownx.highlight:
       pygments_lang_class: true
-      #auto_title: true
       anchor_linenums: true
-      #linenums: true
-      linenums_style: pymdownx-inline
       line_spans: __span
       use_pygments: true
   - attr_list
   - tables
   - md_in_html
+  - footnotes
   - admonition
   - pymdownx.inlinehilite
   - pymdownx.snippets
@@ -95,5 +122,18 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.tilde
     
-#extra_css:
-#  - stylesheets/maxwidth.css
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:jbezotte@redhat.com
+      name: Email
+    - icon: fontawesome/brands/github
+      link: https://github.com/yojoshb/disco-docs
+      name: Link to GitHub
+    - icon: fontawesome/brands/redhat
+      link: https://docs.redhat.com/en/documentation/openshift_container_platform/
+      name: Link to Red Hat Docs
