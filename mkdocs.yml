@@ -71,7 +71,7 @@ theme:
     #- navigation.indexes
     - navigation.footer
     - toc.follow
-    - toc.integrate
+    #- toc.integrate
     #- header.autohide
     - announce.dismiss
 
