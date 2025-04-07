@@ -1,3 +1,5 @@
+## Booting the agent ISO and watching the installation process
+
 1. Run the `openshift-install` binary against the directory that contains your cluster config files. This example is for a single node OpenShift install, the node is named `sno.cluster.example.com`
    - We will watch for the bootstrap to complete and the Kube API initialization
     ```bash

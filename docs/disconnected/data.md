@@ -1,4 +1,5 @@
 ## Prepare the tools
+
 If you brought the tools over in `.tar` extract them to your `$PATH` like the low-side process, or copy them there if you brought the binaries to your high-side mirror host
 ```bash
 $ sudo cp /mnt/transfer-disk/{oc,oc-mirror,butane} /usr/local/bin/

@@ -33,8 +33,5 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material
-      
-      - run: |
-          export ENABLED_PRINT_SITE=false
-          mkdocs build
+      - run: mkdocs build
       

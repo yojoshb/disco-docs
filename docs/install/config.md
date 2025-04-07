@@ -1,10 +1,12 @@
+## Creating cluster configs and building the agent ISO
+
 Here is where the cluster is defined. We'll use two files, `install-config.yaml` and `agent-config.yaml` along with the `openshift-install` binary we extracted earlier to create the install `agent.iso`. Examples are given below. Create a directory somewhere to house the config files. This directory will also hold the credentials for API access to the cluster when it is built.
 
 The examples below build a compact cluster (HA: 3 control-plane/master/worker) with static IP's. The cluster is called `cluster.example.com`. Each node is called m(1-3).cluster.example.com. 
 
 - **install-config.yaml**: This defines your cluster configuration, click on the `+` signs to get a general description of some the values
   
-  [Docs examples]()
+  [Red Hat Docs examples]()
   
   ```yaml title="install-config.yaml"
   apiVersion: v1
@@ -73,7 +75,7 @@ The examples below build a compact cluster (HA: 3 control-plane/master/worker) w
 ---
 - **agent-config.yaml**: This defines your node configuration(s), click on the `+` signs to get a general description of some of the values
   
-  [Docs examples]()
+  [Red Hat Docs examples]()
 
   ```yaml title="agent-config.yaml"
   apiVersion: v1alpha1

@@ -1,4 +1,4 @@
-### Mirroring images to disk
+## Mirroring images to disk
 [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-to-disk-v2_about-installing-oc-mirror-v2)
 
 Now that the images are defined, we can mirror them to disk
@@ -61,8 +61,8 @@ Now that the images are defined, we can mirror them to disk
         └── signatures
     ```
   
-#### Extract the openshift-install binary from the release-images mirrored
-To extract the openshift-install that's built for your mirrored images version on the connected side
+### Extract the openshift-install binary from the release-images mirrored
+To extract the openshift-install that's built for your mirrored images version on the connected network
 
 1. Construct the correct URL to download the payload for your release images. Follow one of these steps
     
@@ -110,7 +110,7 @@ To extract the openshift-install that's built for your mirrored images version o
     ```
 4. If the SHA256 values match each other (highlighted values), then you have extracted the correct `openshift-install` binary that can build your cluster with the release images you mirrored.
 
-### Transfer data and tools to the disconnected environment (high-side).
+## Transfer data and tools to the disconnected environment.
 Place these files on a disk and transfer them to your disconnected network
 
 - **mirror_000001.tar** (image set .tar file)

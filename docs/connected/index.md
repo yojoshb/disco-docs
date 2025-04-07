@@ -1,6 +1,6 @@
 # Connected Setup
 
-[Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments)
 
 The connected Linux machine will need to be able to run tools and access Quay.io and redhat.io registries.
 

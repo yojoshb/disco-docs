@@ -1,6 +1,6 @@
 # Disconnected Setup
 
-[Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments)
 
 The disconnected Linux machine will need to be able to run the tools and have adequate disk space on the mirror host as well as the target registry you will be uploading to.
 
