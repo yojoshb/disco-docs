@@ -45,6 +45,7 @@ jobs:
       
       # Build single html only
       - run: |
+          export ENABLED_PRINT_SITE=true
           sed -i -e 's/- navigation.indexes/#- navigation.indexes/' -e 's/- toc.integrate/#- toc.integrate/' mkdocs.yml
           mkdocs build -d site-html
           cd site 
