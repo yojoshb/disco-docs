@@ -16,7 +16,6 @@ plugins:
       add_to_navigation: false
       print_page_title: ""
       print_page_basename: "print_page"
-      add_print_site_banner: true
       # Table of contents
       add_table_of_contents: true
       toc_title: "Table of Contents"
