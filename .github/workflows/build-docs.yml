@@ -2,13 +2,13 @@ name: build-docs
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-    paths-ignore:
-    - ".github/**"
-    - "README.md"
-  pull_request:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
+  #  paths-ignore:
+  #  - ".github/**"
+  #  - "README.md"
+  #pull_request:
+  #  branches: [ "main" ]
 
 permissions:
   contents: write
@@ -32,11 +32,8 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-print-site-plugin htmlark[http,parsers]
+      - run: pip install mkdocs-material
       - run: mkdocs build
-      - run: | 
-          cd site 
-          htmlark print_page.html -o standalone.html
       
       - uses: actions/upload-artifact@v4
         with:

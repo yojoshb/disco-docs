@@ -12,6 +12,7 @@ plugins:
   #- privacy # Not all js bundles are needed, offline and search function fine without this
   - search
   - print-site: # Plugin for compiling the docs into one HTML document, formatting may be broken a bit compared to the full site
+      enabled: !ENV [ENABLED_PRINT_SITE, True]
       add_to_navigation: true
       print_page_title: ""
       print_page_basename: "print_page"
@@ -64,14 +65,14 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
-    #- navigation.sections
+    #- navigation.sections # Expand all nav elements into sections
     #- navigation.tabs
     #- navigation.tabs.sticky
     - navigation.top
-    #- navigation.indexes
+    - navigation.indexes # disable for single-page toc html generation
     - navigation.footer
     - toc.follow
-    #- toc.integrate
+    - toc.integrate # disable for single-page toc html generation
     #- header.autohide
     - announce.dismiss
 
