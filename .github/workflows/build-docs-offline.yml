@@ -32,7 +32,7 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
-      - run: apt-get install weasyprint 
+      - run: sudo apt install -y install weasyprint 
       - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-to-pdf mkdocs-print-site-plugin htmlark[http,parsers]
       
       # Build full site
