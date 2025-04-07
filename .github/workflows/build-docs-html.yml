@@ -48,7 +48,7 @@ jobs:
           export ENABLED_PRINT_SITE=true
           sed -i -e 's/- navigation.indexes/#- navigation.indexes/' -e 's/- toc.integrate/#- toc.integrate/' mkdocs.yml
           mkdocs build -d site-html
-          cd site 
+          cd site-html
           htmlark print_page.html -o standalone.html
       - uses: actions/upload-artifact@v4
         with:
