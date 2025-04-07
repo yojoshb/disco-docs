@@ -54,4 +54,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: doc-html
-          path: site-html/standalone.html
+          path: site-html/standalone.*
