@@ -27,6 +27,11 @@ plugins:
       add_cover_page: true
       cover_page_template: ""
       path_to_pdf: ""
+  - to-pdf:
+      enabled_if_env: ENABLE_PDF_EXPORT
+      cover_logo: assets/openshift-logo.png
+      output_path: document.pdf
+
 
 nav: 
   - Welcome: index.md

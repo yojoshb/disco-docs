@@ -32,7 +32,8 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-print-site-plugin htmlark[http,parsers] weasyprint
+      - run: apt-get install weasyprint 
+      - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-to-pdf mkdocs-print-site-plugin htmlark[http,parsers]
       
       # Build full site
       - run: |
@@ -46,11 +47,11 @@ jobs:
       # Build full site with single html and pdf
       - run: |
           export ENABLED_PRINT_SITE=true
+          export ENABLE_PDF_EXPORT=1
           sed -i -e 's/- navigation.indexes/#- navigation.indexes/' -e 's/- toc.integrate/#- toc.integrate/' mkdocs.yml
           mkdocs build -d site-html
           cd site-html
           htmlark print_page.html -o standalone.html
-          weasyprint print_page.html standalone.pdf
       - uses: actions/upload-artifact@v4
         with:
           name: doc-html
