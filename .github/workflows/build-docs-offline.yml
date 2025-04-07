@@ -50,7 +50,7 @@ jobs:
           mkdocs build -d site-html
           cd site-html
           htmlark print_page.html -o standalone.html
-          weasyprint standalone.html --pdf-variant="pdf/ua-1" standalone.pdf
+          weasyprint print_page.html standalone.pdf
       - uses: actions/upload-artifact@v4
         with:
           name: doc-html
