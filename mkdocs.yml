@@ -11,6 +11,10 @@ plugins:
   - offline
   #- privacy # Not all js bundles are needed, offline and search function fine without this
   - search
+  - to-pdf:
+      enabled_if_env: ENABLE_PDF_EXPORT
+      cover_logo: assets/openshift-logo.png
+      output_path: standalone.pdf
   - print-site: # Plugin for compiling the docs into one HTML document, formatting may be broken a bit compared to the full site
       enabled: !ENV [ENABLED_PRINT_SITE, True]
       add_to_navigation: false
@@ -27,11 +31,6 @@ plugins:
       add_cover_page: true
       cover_page_template: ""
       path_to_pdf: ""
-  - to-pdf:
-      enabled_if_env: ENABLE_PDF_EXPORT
-      cover_logo: assets/openshift-logo.png
-      output_path: document.pdf
-
 
 nav: 
   - Welcome: index.md
