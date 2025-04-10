@@ -103,8 +103,8 @@ The example below builds a bare metal compact cluster (HA: 3 master nodes) with 
     - hostname: m1.cluster.example.com # (3)! Hostname of the node, must be resolvable by dns.
       role: master # (4)! Recommended to explicitly define roles for your hosts, especially if you're defining masters and workers as they would otherwise be applied at random.
       interfaces:
-        - name: enp6s18 # (5)! Name of the interface, you may need to boot the node into linux to find this.
-          macAddress: BC:24:11:EE:DD:C1 # (6)! The MAC address of an interface on the host, used to determine which host to apply the configuration to.
+        - name: enp6s18 # (5)! Name of the interface. If you do not know it, the installer scripts will detect the actual name by mac-address.
+          macAddress: BC:24:11:EE:DD:C1 # (6)! Required! The MAC address of an interface on the host, used to determine which host to apply the configuration to.
       networkConfig:
         interfaces:
           - name: enp6s18
@@ -187,8 +187,8 @@ The example below builds a bare metal compact cluster (HA: 3 master nodes) with 
   2. Can be the IP of any one of the master nodes. This node will become bootstrap machine during install. A worker cannot be the rendezvous machine.
   3. Hostname of the node, must be resolvable by DNS.
   4. Recommended to explicitly define roles for your hosts, especially if you're defining masters and workers as they would otherwise be applied at random.
-  5. Name of the interface, you may need to boot the node into linux to find this.
-  6. The MAC address of an interface on the host, used to determine which host to apply the configuration to.
+  5. Name of the interface. If you do not know it, the installer scripts will detect the actual name by mac-address.
+  6. Required! The MAC address of an interface on the host, used to determine which host to apply the configuration to.
   7. The static IP address of the target bare metal host.
   8. The static IP address’s subnet prefix for the target bare metal host.
   9. The DNS server for the target bare metal host.

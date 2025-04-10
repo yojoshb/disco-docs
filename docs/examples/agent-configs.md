@@ -55,7 +55,7 @@ hosts:
 The `rootDeviceHints` parameter enables the installer to provision the Red Hat Enterprise Linux CoreOS (RHCOS) image to a particular device. The installer examines the devices in the order it discovers them, and compares the discovered values with the hint values. The installer uses the first discovered device that matches the hint value. The configuration can combine multiple hints, but a device must match all hints for the installer to select it.
 
 !!! info
-    By default, `/dev/sda` path is used when no hints are specified. This value is not going to work for NVMe storage. Furthermore, Linux does not guarantee the block device names to be consistent across reboots.
+    By default, `/dev/sda` path is used when no hints are specified. Furthermore, Linux does not guarantee the block device names to be consistent across reboots.
 
 |Subfield|Description|
 |-       |-          |
