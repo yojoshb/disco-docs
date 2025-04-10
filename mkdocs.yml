@@ -13,6 +13,7 @@ plugins:
   - search
   - to-pdf: # Plugin for compiling the docs into one PDF document, formatting may be broken a bit compared to the full site
       enabled_if_env: ENABLE_PDF_EXPORT
+      cover_subtitle: "Good luck, and have fun!"
       cover_logo: assets/openshift-logo.png
       output_path: standalone.pdf
   - print-site: # Plugin for compiling the docs into one HTML document, formatting may be broken a bit compared to the full site
@@ -57,6 +58,9 @@ nav:
   - Optional:
     - Red Hat Mirror Registry: optional/registry.md
     - Core User Password: optional/corepasswd.md
+  - Example Configs:
+    - install-config.yaml: examples/install-configs.md
+    - agent-config.yaml: examples/agent-configs.md
   - About:
     - Release Notes: release-notes.md
 
@@ -141,5 +145,5 @@ extra:
       link: https://github.com/yojoshb/disco-docs
       name: Link to GitHub
     - icon: fontawesome/brands/redhat
-      link: https://docs.redhat.com/en/documentation/openshift_container_platform/
+      link: https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/index
       name: Link to Red Hat Docs

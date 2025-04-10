@@ -1,6 +1,8 @@
 ## Prepare the tools
 
-If you brought the tools over in `.tar` extract them to your `$PATH` like the low-side process, or copy them there if you brought the binaries to your high-side mirror host
+Identify a host on the disconnected network that will be used for installing the cluster. Optionally, identify a host that will become the mirror registry if you are using the Red Hat Mirror Registry.
+
+If you brought the tools over in `.tar` extract them to your `$PATH` like the low-side process, or copy them there if you brought the binaries to your high-side host
 ```bash
 $ sudo cp /mnt/transfer-disk/{oc,oc-mirror,butane} /usr/local/bin/
 
@@ -8,9 +10,22 @@ $ sudo cp /mnt/transfer-disk/{oc,oc-mirror,butane} /usr/local/bin/
 $ oc mirror --v2 --help
 ```
 
-If you brought over the `openshift-install` binary and `mirror-registry.tar.gz` copy those off as well. You can place the openshift-install binary in your $PATH if you want, but it'll only be used to build the cluster ISO and can be discarded after use. 
+If you brought over the `openshift-install` binary copy it to your `$PATH`.  
+```bash
+$ sudo cp /mnt/transfer-disk/openshift-install /usr/local/bin/
+```
+
+Optional: Copy the mirror-registry-amd64.tar.gz file to the host that you want to become your mirror registry. This can be the same host, just make sure you have enough storage space to hold the mirrored images that will be uploaded into the registry
+```bash
+$ cp /mnt/transfer-disk/mirror-registry-amd64.tar.gz /opt
+```
+
 
 ## Create a directory structure
+
+!!! note
+    You can just keep everything on the `transfer-disk` and mirror off of it if you want. Just remember to copy off the generate cluster configs once the mirroring is completed.
+
 1. Do this how you see fit for your environment. Identify a space on your disconnected machine that can hold the imageset-config.yaml, mirror_000001.tar, and generated cluster configs
 ```bash
 $ mkdir /opt/4.17-mirrordata

@@ -33,6 +33,17 @@ Offline disconnected (high-side)
   - DNS server
   - NTP server/source
 
+### Cluster Resources
+
+Recommended cluster resources for the following topologies:
+
+|Topology            |# of master nodes |# of worker nodes |vCPU    |Memory       |Storage |
+|-                   |-                 |-                 |-       |-            |-       |
+|Single-node cluster |1                 |0                 |8 vCPUs |16 GB of RAM |120 GB  |
+|Compact cluster     |3                 |0 or 1            |8 vCPUs |16 GB of RAM |120 GB  |
+|HA cluster          |3                 |2 and above       |8 vCPUs |16 GB of RAM |120 GB  |
+
+
 ### FIPS Compliance
 Only pertains to the install being performed on the high-side.
 
