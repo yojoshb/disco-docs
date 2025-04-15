@@ -1,4 +1,4 @@
-name: Make Release
+name: build-release
 
 on:
   workflow_dispatch:
@@ -46,7 +46,7 @@ jobs:
         uses: datamonsters/replace-action@v2
         with:
           files: 'docs/release-notes.md'
-          replacements: 'VERSION=${{ github.event.inputs.version_number }}'
+          replacements: 'GITHUB_RELEASE=${{ github.event.inputs.version_number }}'
       
       - name: Build full site
         run: |
@@ -58,6 +58,7 @@ jobs:
         with:
           name: docs-full
           path: docs-full-${{ github.event.inputs.version_number }}.zip
+          if-no-files-found: error
 
       - name: Build standalone html/pdf
         run: |
@@ -74,6 +75,7 @@ jobs:
         with:
           name: docs-standalone
           path: docs-standalone-${{ github.event.inputs.version_number }}.zip
+          if-no-files-found: error
   
   create_release:
     name: Create Release
