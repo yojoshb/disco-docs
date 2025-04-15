@@ -83,7 +83,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: .
-          pattern: *.zip
+          pattern: docs*.zip
       - name: Show artifacts
         run: ls -R
       #- name: Create Release
