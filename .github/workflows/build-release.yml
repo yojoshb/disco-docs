@@ -84,10 +84,11 @@ jobs:
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
-        #with:
-        #  path: .
+        with:
+          path: builds
+          merge-multiple: true
       - name: Show artifacts
-        run: ls -R
+        run: ls -R builds/
       #- name: Create Release
       #  uses: ncipollo/release-action@v1
       #  with:
