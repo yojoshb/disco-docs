@@ -5,7 +5,7 @@ By default, Red Hat Enterprise Linux CoreOS (RHCOS) creates a user named `core` 
 This can be helpful, for example, if a node is down and you cannot access that node by using SSH or the `oc debug node` command. However, by default, there is no password for this user, so you cannot log in without creating one. You can create a password for the `core` user by using a machine config.
 
 ## OpenShift 4.7 to 4.12 Procedure
-[Red Hat KCS Article](https://access.redhat.com/solutions/7010657)
+[Red Hat KCS Article](https://access.redhat.com/solutions/7010657){:target="_blank"}
 
 1. Create a base64-encoded string in the format `username:password`, with the username as `core` and the password being hashed with SHA512 (`openssl passwd -6`) in order to avoid storing cleartext passwords. Replace `MYPASSWORD` in the command below with the password of your choice:
 
@@ -61,7 +61,7 @@ This can be helpful, for example, if a node is down and you cannot access that n
         Be aware that SSH password-based login would not be possible still as it is **disabled** by default on RHCOS `sshd` configuration, allowing only key-based authentication. Also, these steps could be taken before the issue arises, as a safeguard.
 
 ## OpenShift 4.13 and up Procedure
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/machine_configuration/machine-configs-configure#core-user-password_machine-configs-configure)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/machine_configuration/machine-configs-configure#core-user-password_machine-configs-configure){:target="_blank"}
 
 You can create a password for the `core` user by using a machine config. The Machine Config Operator (MCO) assigns the password and injects the password into the `/etc/shadow` file, allowing you to log in with the `core` user. The MCO does not examine the password hash. As such, the MCO cannot report if there is a problem with the password.
 

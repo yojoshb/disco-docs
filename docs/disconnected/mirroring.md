@@ -1,6 +1,6 @@
 ## Mirroring images from disk to your mirror
 
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#disk-mirror-v2_about-installing-oc-mirror-v2)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#disk-mirror-v2_about-installing-oc-mirror-v2){:target="_blank"}
 
 Now that the images are on the disk and you have a target registry with push/pull permissions to mirror to, we can mirror them to your registry
 

@@ -1,6 +1,6 @@
 ## Examples of agent-config.yaml files
 
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer){:target="_blank"}
 
 Various examples of common agent-configs. Sub in your data as appropriate.
 
@@ -105,4 +105,15 @@ hosts:
               next-hop-address: 172.16.1.254
               next-hop-interface: enp6s18
               table-id: 254
+```
+
+### DHCP
+If you want to utilize DHCP, the config is very simple and you can leave out the `networkConfig` enitirely. Make sure to at least create a static reservation for the `rendezvousIP` and master nodes if you want them to be on specific machines.
+
+```yaml
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: cluster
+rendezvousIP: 172.16.10.10
 ```

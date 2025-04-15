@@ -1,6 +1,6 @@
 ## Create DNS records
 
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_on_bare_metal/installing-restricted-networks-bare-metal#installation-dns-user-infra_installing-restricted-networks-bare-metal)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_on_bare_metal/installing-restricted-networks-bare-metal#installation-dns-user-infra_installing-restricted-networks-bare-metal){:target="_blank"}
 
 These records are mandatory for the cluster to function. Technically the cluster can function without an external DNS source, but it will be much harder to use and access the cluster and recourses it provides/hosts and each node will need a curated `/etc/hosts` file provisioned.
 

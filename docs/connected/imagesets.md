@@ -48,7 +48,7 @@
 
 2. Initialize a image set template, it will take a minute or so. The template will default to latest OpenShift version content so we will modify it further to get what we want. Comments have been added to describe what these values mean. 
   
-    [Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/disconnected_environments/index#oc-mirror-creating-image-set-config_installing-mirroring-disconnected)
+    [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/disconnected_environments/index#oc-mirror-creating-image-set-config_installing-mirroring-disconnected){:target="_blank"}
  
     - You can initialize a imageset-config using `oc mirror init > imageset-config.yaml`
       
@@ -60,7 +60,7 @@
 
     Be aware of yaml formatting, **line indentation matters**
     
-      - [Doc examples](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/disconnected_environments/index#oc-mirror-image-set-examples_installing-mirroring-disconnected)
+      - [Red Hat Doc examples](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/disconnected_environments/index#oc-mirror-image-set-examples_installing-mirroring-disconnected){:target="_blank"}
       - The example below is for OpenShift 4.17 stable, with the `lvms-operator` to use node attached disks for persistent storage and the `cincinnati-operator` to make cluster updating easier using OSUS consuming graph data pulled from Red Hat.
       
     !!! note "oc-mirror v2 changes"

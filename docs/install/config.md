@@ -17,7 +17,7 @@ $ mkdir ~/my_cluster
 
 1. Create the files `install-config.yaml` and `agent-config.yaml` in the directory you defined.
 
-The example below builds a bare metal compact cluster (HA: 3 master nodes) with static IP's. The cluster is called `cluster.example.com`. Each node is called m(1-3).cluster.example.com. 
+The example below builds a bare metal compact cluster (3 master/control-plane/worker nodes) with static IP's. The cluster is called `cluster.example.com`. Each node is called m(1-3).cluster.example.com. You can use these procedures as a basis and modify according to your requirements.
 
 - **install-config.yaml**: This defines your cluster configuration, click on the `+` signs to get a general description of some the values
   

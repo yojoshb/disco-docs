@@ -1,6 +1,6 @@
 ## Mirror Registry for Red Hat OpenShift
 
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/disconnected_environments/index#installing-mirroring-creating-registry)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/disconnected_environments/index#installing-mirroring-creating-registry){:target="_blank"}
 
 - This is a quick install config for the Red Hat provided mirror registry if you want to use it. Make sure you have transferred the `mirror-registry-amd64.tar.gz` from the connected side.
     - There are a few ways to install this, refer to the Red Hat docs above for additional installation examples and configurations.

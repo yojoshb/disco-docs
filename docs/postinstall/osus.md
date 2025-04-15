@@ -1,6 +1,6 @@
 ## Configuring the OpenShift Update Service
 
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#updating-disconnected-cluster-osus)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#updating-disconnected-cluster-osus){:target="_blank"}
 
 This is kind of a pain but should only need to be set up one time. We essentially have to tell the cluster to look at our registry for graph-data and release-images like it does when connected to the Internet. Perform these steps only if you mirrored graph data and the cincinnati-operator to your mirror registry.
 
@@ -14,7 +14,7 @@ The following steps outline the high-level workflow on how to update a cluster i
 1. Perform a supported update procedure from the documentation as you would with a connected cluster.
 
 ### Configure access to the secured registry
-  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/registry/configuring-registry-operator#images-configuration-cas_configuring-registry-operator) 
+  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/registry/configuring-registry-operator#images-configuration-cas_configuring-registry-operator){:target="_blank"}
 
   Create a config map in the openshift-config namespace and use its name in AdditionalTrustedCA in the `image.config.openshift.io` custom resource to provide additional CAs that should be trusted when contacting external registries. 
 
@@ -41,7 +41,7 @@ The following steps outline the high-level workflow on how to update a cluster i
         additionalTrustedCA:
           name: registry-config
       ```
-    - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#images-update-global-pull-secret_updating-disconnected-cluster-osus) 
+    - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#images-update-global-pull-secret_updating-disconnected-cluster-osus){:target="_blank"} 
     
         You can update the global pull secret for your cluster by either replacing the current pull secret or appending a new pull secret. The procedure is required when users use a separate registry to store images than the registry used during installation. If you are using the same registry that you installed from (recommended), you can skip this.
 
@@ -49,7 +49,7 @@ The following steps outline the high-level workflow on how to update a cluster i
   
 #### UI Install
     
-  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-install-web-console_updating-disconnected-cluster-osus)
+  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-install-web-console_updating-disconnected-cluster-osus){:target="_blank"}
   
   1. In the web console, click **Operators > OperatorHub**.
   2. Choose **OpenShift Update Service** from the list of available Operators, and click **Install**.
@@ -66,7 +66,7 @@ The following steps outline the high-level workflow on how to update a cluster i
 ---
 #### CLI install
   
-  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-install-cli_updating-disconnected-cluster-osus)
+  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-install-cli_updating-disconnected-cluster-osus){:target="_blank"}
   
   1. Create a namespace for the OpenShift Update Service Operator:
       - Create a `Namespace` object YAML file, for example, `update-service-namespace.yaml`, for the OpenShift Update Service Operator:
@@ -153,7 +153,7 @@ The following steps outline the high-level workflow on how to update a cluster i
   
   Here we'll deploy the service pods, pointing to graph-data to the one we mirrored to our registry, and pointing the release-images our registry mirror rather than Red Hat's CDN. 
 
-  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-create-service-cli_updating-disconnected-cluster-osus)
+  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-create-service-cli_updating-disconnected-cluster-osus){:target="_blank"}
 
   1. Configure the OpenShift Update Service target namespace, for example, `openshift-update-service`:
       ```bash
@@ -188,7 +188,7 @@ The following steps outline the high-level workflow on how to update a cluster i
 
 ### Configuring the Cluster Version Operator (CVO) 
 
-  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-configure-cvo)
+  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-configure-cvo){:target="_blank"}
   
   After the OpenShift Update Service Operator has been installed and the OpenShift Update Service application has been created, the Cluster Version Operator (CVO) can be updated to pull graph data from the OpenShift Update Service installed in your environment.
 
@@ -215,7 +215,7 @@ The following steps outline the high-level workflow on how to update a cluster i
 
 ### Configure the cluster-wide proxy
   
-  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/networking/#enable-cluster-wide-proxy)
+  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/networking/#enable-cluster-wide-proxy){:target="_blank"}
 
   Finally, configure the cluster-wide proxy to configure the CA to trust the update server we created.
 
