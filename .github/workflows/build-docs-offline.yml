@@ -58,7 +58,7 @@ jobs:
           path: site-html/standalone.*
       - name: Download build artifacts
         uses: actions/download-artifact@v4
-        #with:
-        #  path: .
+        with:
+          path: builds
       - name: Show artifacts
-        run: ls -R
+        run: ls -R builds/
