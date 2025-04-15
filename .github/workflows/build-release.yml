@@ -51,13 +51,13 @@ jobs:
       - name: Build full site
         run: |
           mkdocs build
-          zip docs.zip -r site/
+          zip docs-full.zip -r site/
       - name: Tag zip with version
-        run: mv docs.zip docs-${{ github.event.inputs.version_number }}.zip
+        run: mv docs-full.zip docs-full-${{ github.event.inputs.version_number }}.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: docs
-          path: docs-${{ github.event.inputs.version_number }}.zip
+          name: docs-full
+          path: docs-full-${{ github.event.inputs.version_number }}.zip
 
       - name: Build standalone html/pdf
         run: |
@@ -82,8 +82,8 @@ jobs:
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
-        with:
-          path: .
+        #with:
+        #  path: .
       - name: Show artifacts
         run: ls -R
       #- name: Create Release
