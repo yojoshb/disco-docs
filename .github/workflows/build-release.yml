@@ -85,21 +85,24 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          path: builds
+          path: disco-docs
           merge-multiple: true
       - name: Show artifacts
-        run: ls -R builds/
-      #- name: Create Release
-      #  uses: ncipollo/release-action@v1
-      #  with:
+        run: ls -R disco-docs/
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
       #    token: ${{ secrets.GITHUB_TOKEN }}
-      #    tag: ${{ github.event.inputs.version_number }}
-      #    name: Version ${{ github.event.inputs.version_number }}
-      #    draft: true
-      #    prerelease: false
-      #    artifacts: "*.zip"
-      #    body: |
-      #      ${{ github.event.inputs.info }}
-      #      
-      #      ---
-      #      ## Contains both the full offline site, as well as the standalone html/pdf single docs
+          tag: ${{ github.event.inputs.version_number }}
+          name: Version ${{ github.event.inputs.version_number }}
+          draft: true
+          prerelease: false
+          artifacts: "disco-docs/*.zip"
+          allowUpdates: true
+          body: |
+            ${{ github.event.inputs.info }}
+            
+            ---
+            ### Release contains both builds
+            - docs-standalone-${{ github.event.inputs.version_number }}.zip: Single HTML/PDF for offline viewing
+            - docs-${{ github.event.inputs.version_number }}.zip: Full site for offline viewing

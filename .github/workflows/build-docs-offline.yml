@@ -56,9 +56,4 @@ jobs:
         with:
           name: docs-standalone
           path: site-html/standalone.*
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: builds
-      - name: Show artifacts
-        run: ls -R builds/
+          
