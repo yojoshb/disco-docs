@@ -1,7 +1,7 @@
 ## Mirroring images to disk
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-to-disk-v2_about-installing-oc-mirror-v2){:target="_blank"}
 
-Now that the images are defined, we can mirror them to disk
+Now that the images are defined, we can mirror them to disk. Repeat this process for updates or additions to your cluster.
 
 - Pass in the image set configuration file that was created. This procedure assumes that it is named `imageset-config.yaml`. If you named your's differently, sub in your name of the file.
 - Specify the target directory where you want to output the image set tar file. The target directory path must start with `file://`. This procedure assumes you want to store the image set in `/opt/4.17-mirrordata`. Store it anywhere that has available disk space. Can even be the mounted drive you're going to use to transfer the data to the high-side.
@@ -20,6 +20,32 @@ Now that the images are defined, we can mirror them to disk
         - It goes through the images from your ISC but it won't pull them if they're already in the cache. You can compare the elapsed times by running a second time with the images already cached.
     - The cache takes up a lot of disk space can it be deleted?
         - Yes the cache can be removed, oc mirror will just re-download what's needed
+
+1. Perform a dry-run of the mirror to disk process to verify your imageset-config is valid and the tools can gather the data
+    
+    !!! info
+        Ignore the warning for `images necessary for mirroring are not available in the cache.` This is just letting you know nothing has actually been downloaded to the cache yet as this is a dry-run, except the graph-data image...
+
+        Currently the `--dry-run` process still downloads the graph-image to cache
+    
+    ```bash
+    $ oc mirror -c imageset-config.yaml file:///opt/4.17-mirrordata --dry-run --v2
+    [INFO]   : 👋 Hello, welcome to oc-mirror
+    [INFO]   : ⚙️  setting up the environment for you...
+    [INFO]   : 🔀 workflow mode: mirrorToDisk
+    [INFO]   : 🕵  going to discover the necessary images...
+    [INFO]   : 🔍 collecting release images...
+    [INFO]   : 🔍 collecting operator images...
+    ✓   (2m53s) Collecting catalog registry.redhat.io/redhat/redhat-operator-index:v4.17
+    [INFO]   : 🔍 collecting additional images...
+    [INFO]   : 🔍 collecting helm images...
+    [WARN]   : ⚠️  193/194 images necessary for mirroring are not available in the cache.
+    [WARN]   : List of missing images in : /opt/4.17-mirrordata/working-dir/dry-run/missing.txt.
+    please re-run the mirror to disk process
+    [INFO]   : 📄 list of all images for mirroring in : /opt/4.17-mirrordata/working-dir/dry-run/mapping.txt
+    [INFO]   : mirror time     : 24.392878858s
+    [INFO]   : 👋 Goodbye, thank you for using oc-mirror
+    ```
 
 1. Perform the mirror to disk process    
     ```bash

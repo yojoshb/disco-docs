@@ -1,21 +1,15 @@
-name: build-docs
-
+name: gh-pages
 on:
   workflow_dispatch:
-  #push:
-  #  branches: [ "main" ]
-  #  paths-ignore:
-  #  - ".github/**"
-  #  - "README.md"
-  #pull_request:
-  #  branches: [ "main" ]
-
+  #workflow_run:
+  #  workflows: ['build-release']
+  #  types: [completed]
 permissions:
   contents: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure Git Credentials
@@ -33,5 +27,10 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material
-      - run: mkdocs build
+      - name: Set Version
+        uses: datamonsters/replace-action@v2
+        with:
+          files: 'docs/release.md'
+          replacements: 'GITHUB_RELEASE=${{ github.event.inputs.version_number }}'
+      - run: mkdocs gh-deploy --force
       

@@ -2,7 +2,7 @@
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#updating-disconnected-cluster-osus){:target="_blank"}
 
-This is kind of a pain but should only need to be set up one time. We essentially have to tell the cluster to look at our registry for graph-data and release-images like it does when connected to the Internet. Perform these steps only if you mirrored graph data and the cincinnati-operator to your mirror registry.
+This is kind of a pain but should only need to be set up one time. We essentially have to tell the cluster to look at our registry for graph data and release images like it does when connected to the Internet. Perform these steps only if you mirrored graph data and the `cincinnati-operator` to your mirror registry.
 
 The following steps outline the high-level workflow on how to update a cluster in a disconnected environment using OSUS:
 
@@ -242,29 +242,3 @@ The following steps outline the high-level workflow on how to update a cluster i
         trustedCA:
           name: router-bundle
       ```
-
----
-
-
-### ODF Packages and reqs
-Packages to include for OpenShift Data Foundation
-
-- When you prune the redhat-operator index image, include the following list of packages for the OpenShift Data Foundation deployment:
-
-  - ocs-operator
-  - odf-operator
-  - mcg-operator
-  - odf-csi-addons-operator
-  - odr-cluster-operator
-  - odr-hub-operator
-  - Optional: local-storage-operator
-
-Node requirements
-
-- The cluster must consist of at least three OpenShift Container Platform worker or infrastructure nodes with locally attached-storage devices on each of them.
-
-- Each of the three selected nodes must have at least one raw block device available. OpenShift Data Foundation uses the one or more available raw block devices.
-
-  - Note: Make sure that the devices have a unique by-id device name for each available raw block device.
-
-- The devices you use must be empty, the disks must not include Physical Volumes (PVs), Volume Groups (VGs), or Logical Volumes (LVs) remaining on the disk.

@@ -125,9 +125,10 @@ imageDigestSources: # (15)! Your image mirrors, this in the idms-oc-mirror.yaml 
 6. The network that the cluster shares for assigning IPs to PODS. Each node will get a /23 (500~ usable IP addresses). Make sure this IP space does not conflict with anything on your LAN.
 7. The network that connects the cluster to your LAN. This is the IP space that resides on your LAN.
 8. Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
-9.  You can set the platform to `vsphere`, `baremetal`, or `none` for multi-node clusters.
-10. Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
-11. A pull secret for your internal image registry
-12. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
-13. The rootCA.pem certificate of your internal image registry
-14. Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
+9. API ip address
+10. Ingress API ip address
+11. Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
+12. A pull secret for your internal image registry
+13. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
+14. The rootCA.pem certificate of your internal image registry
+15. Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml

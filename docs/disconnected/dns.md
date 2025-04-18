@@ -14,10 +14,11 @@ These records are mandatory for the cluster to function. Technically the cluster
   |Control plane machines |<control_plane\><n\>.<cluster_name\>.<base_domain\>. |DNS A/AAAA or CNAME and DNS PTR record |To identify each machine for the control plane nodes. These records must be resolvable by the nodes within the cluster.|
   |Compute machines |<compute\><n\>.<cluster_name\>.<base_domain\>. |DNS A/AAAA or CNAME and DNS PTR record |To identify each machine for the worker nodes. These records must be resolvable by the nodes within the cluster.|
 
-- Here's and example for a 3 node high-avalablity compact cluster using the builtin HAProxy load balancer that OpenShift comes with out of the box. The cluster name is `cluster` and the base domain is `example.com`. The `registry.example.com` record is displayed here as well, showing that it's necessary to be DNS resolvable by your OpenShift nodes on your network. 
+- Here's and example for a 3 node high-avalablity compact cluster. The cluster name is `cluster` and the base domain is `example.com`. The `registry.example.com` record is displayed here as well, showing that it's necessary to be DNS resolvable by your OpenShift nodes on your network. The registry does not have to belong to the cluster sub-domain. 
   
     !!! note
-        This is not a true load balancer as traffic will always go to the pod where Ingress VIP is attached.
+        This example is using the builtin HAProxy load balancer for the Kubernetes API that OpenShift comes with out of the box.
+        This is not a true load balancer as traffic will always go to the pod where Ingress VIP is attached but you can make it a different IP as you would with a external load-balancer.
 
   |Component        |Record                       |IP Address   |Type               |
   |-                |-                            |-            |-                  |
@@ -28,6 +29,16 @@ These records are mandatory for the cluster to function. Technically the cluster
   |Master node 2    |m2.cluster.example.com       |172.16.1.11  |DNS A/PTR record   |
   |Master node 3    |m3.cluster.example.com       |172.16.1.12  |DNS A/PTR record   |
   |Registry         |registry.example.com         |172.16.1.1   |DNS A/PTR record   |
+
+- For Single Node OpenShift (SNO) the Kubernetes API and Routes all must point to the SNO if you aren't using a external load-balancer. The cluster name is `sno` and the base domain is `example.com`.
+
+  |Component        |Record                  |IP Address   |Type               |
+  |-                |-                       |-            |-                  |
+  |Kubernetes API   |api.sno.example.com     |172.16.1.10  |DNS A/PTR record   |
+  |Kubernetes API   |api-int.sno.example.com |172.16.1.10  |DNS A/PTR record   |
+  |Routes           |*.apps.sno.example.com  |172.16.1.10  |DNS wildcard record|
+  |Single node 1    |n1.sno.example.com      |172.16.1.10  |DNS A/PTR record   |
+  |Registry         |registry.example.com    |172.16.1.1   |DNS A/PTR record   |
 
 - Check forward, reverse, and wildcard DNS resolution
     - Forward lookup for the record `api.cluster.example.com` answered by the DNS server at `172.16.1.254`

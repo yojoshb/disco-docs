@@ -3,7 +3,7 @@
 Here is where the cluster is defined. We'll use two files, `install-config.yaml` and `agent-config.yaml` along with the `openshift-install` binary we extracted earlier to create the install `agent.iso`. Examples are given below. Create a directory somewhere to house the config files. This directory will also hold the credentials for API access to the cluster when it is built.
 
 
-1. Install nmstate
+1. Install the `nmstate` package
 
 ```bash
 $ sudo dnf install /usr/bin/nmstatectl -y
@@ -15,9 +15,34 @@ $ sudo dnf install /usr/bin/nmstatectl -y
 $ mkdir ~/my_cluster
 ```
 
+1. Get the rootCA of your Registry
+    1. Grab the cert using openssl or by some other means
+    ```bash
+    $ openssl s_client -connect registry.example.com:8443 -showcerts | awk '/BEGIN/,/END/{print $0}' | tee ./rootCA.pem
+    
+    # If you want your system to trust the registry CA
+    $ sudo cp ./rootCA.pem /etc/pki/ca-trust/source/anchors/
+    $ sudo update-ca-trust
+    ```
+
+    1. If you installed Red Hat Quay following this documentation, it is also located on disk where you specified the `quayRoot`
+    ```bash
+    $ cp /opt/quay-root/quay-rootCA/rootCA.pem ./rootCA.pem
+    
+    # If you want your system to trust the registry CA
+    $ sudo cp ./rootCA.pem /etc/pki/ca-trust/source/anchors/
+    $ sudo update-ca-trust
+    ```
+    
+    !!! info 
+        For the `additionalTrustBundle`, the data must be indented as displayed in the example `install-config.yaml`. You can add indentation with a quick `sed` command to then paste it into your install-config.yaml.
+        ```bash
+        $ sed "s/^/  /" /opt/quay-root/quay-rootCA/rootCA.pem
+        ```
+
 1. Create the files `install-config.yaml` and `agent-config.yaml` in the directory you defined.
 
-The example below builds a bare metal compact cluster (3 master/control-plane/worker nodes) with static IP's. The cluster is called `cluster.example.com`. Each node is called m(1-3).cluster.example.com. You can use these procedures as a basis and modify according to your requirements.
+The example below builds a bare metal compact cluster (3 master/control-plane/worker nodes) with static IP's and no external load-balancer. The cluster is called `cluster.example.com`. Each node is called m(1-3).cluster.example.com. You can use these procedures as a basis and modify according to your requirements.
 
 - **install-config.yaml**: This defines your cluster configuration, click on the `+` signs to get a general description of some the values
   

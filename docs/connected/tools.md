@@ -64,7 +64,7 @@ $ oc mirror --v2 --help
 $ cat ./pull-secret | jq . > rh-pull-secret.json
 ``` 
 
-3. Specify the path to the folder to store the pull secret in and a name for the JSON file that you create. You can store this file in `/home/$USER/.docker/config.json` or `$XDG_RUNTIME_DIR/containers/auth.json`. If one of the directories aren't there, create them.
+1. Specify the path to the folder to store the pull secret in and a name for the JSON file that you create. You can store this file in `/home/$USER/.docker/config.json` or `$XDG_RUNTIME_DIR/containers/auth.json`. If one of the directories aren't there, create them.
     - The contents of the file resemble the following example:
 ```json
 {
@@ -87,4 +87,11 @@ $ cat ./pull-secret | jq . > rh-pull-secret.json
     }
   }
 }
+```
+
+1. Verify you can authenticate to `registry.redhat.io`
+```bash
+$ podman login registry.redhat.io
+Authenticating with existing credentials for registry.redhat.io
+Existing credentials are valid. Already logged in to registry.redhat.io
 ```

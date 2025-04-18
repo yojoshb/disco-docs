@@ -62,6 +62,7 @@
     
       - [Red Hat Doc examples](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/disconnected_environments/index#oc-mirror-image-set-examples_installing-mirroring-disconnected){:target="_blank"}
       - The example below is for OpenShift 4.17 stable, with the `lvms-operator` to use node attached disks for persistent storage and the `cincinnati-operator` to make cluster updating easier using OSUS consuming graph data pulled from Red Hat.
+      - You can look at several [imageset-config.yaml examples here in this document](../examples/imageset-configs.md)
       
     !!! note "oc-mirror v2 changes"
         

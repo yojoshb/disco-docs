@@ -59,10 +59,10 @@ nav:
     - Red Hat Mirror Registry: optional/registry.md
     - Core User Password: optional/corepasswd.md
   - Example Configs:
+    - imageset-config.yaml: examples/imageset-configs.md
     - install-config.yaml: examples/install-configs.md
     - agent-config.yaml: examples/agent-configs.md
-  - About:
-    - Release Notes: release-notes.md
+  - About: release.md
 
 theme:
   name: material
@@ -117,6 +117,8 @@ markdown_extensions:
       anchor_linenums: true
       line_spans: __span
       use_pygments: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - attr_list
   - tables
   - md_in_html

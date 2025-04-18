@@ -1,6 +1,6 @@
 # Disconnected Cluster Install
 
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments){:target="_blank"}
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/installing-disconnected-environments#installing-agent_installing-disconnected-environments){:target="_blank"}
 
 Now that the images have been uploaded/mirrored to your environment we can build the cluster ISO and boot OpenShift.
 
