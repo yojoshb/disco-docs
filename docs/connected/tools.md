@@ -24,7 +24,7 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
     
     !!! warning "Important"
         This binary is specific to the release version of OpenShit you are installing. The binary must match the release images that you mirror. 
-    - We can acquire this binary on the low-side, or high-side. Steps will be included for both methods
+    - We can acquire this binary on the low-side, or high-side. Steps will be included for both methods.
   ---
 
 - **mirror-registry** (optional): Small registry that can host the required container images to install, update, and maintain the cluster.
@@ -37,22 +37,6 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.12/html/installation_configuration/installing-customizing#installation-special-config-butane-install_installing-customizing){:target="_blank"}
     - Always use the latest version available for your architecture.
     - `$ wget https://mirror.openshift.com/pub/openshift-v4/clients/butane/latest/butane-amd64`
-
-
-## Install/configure tools
-
-1. Put `oc` and `oc-mirror` tools we need on the low-side in your `$PATH`. Either `/usr/local/bin` or somewhere like `/home/$USER/bin` or `/home/$USER/.local/bin`
-```bash
-$ sudo tar -xzvf openshift-client-linux.tar.gz -C /usr/local/bin/
-$ sudo tar -xzvf oc-mirror.tar.gz -C /usr/local/bin/ # RHEL 8
-$ sudo tar -xzvf oc-mirror.rhel9.tar.gz -C /usr/local/bin/ # RHEL 9
-$ sudo chmod +x /usr/local/bin/oc-mirror
-```
-1. Make sure you have set the umask parameter to `0022` on the operating system that uses oc-mirror
-1. Verify that the oc-mirror v2 plugin is successfully installed by running the following command
-```bash
-$ oc mirror --v2 --help
-```
 
 ## Grab your pull-secret from your Red Hat Account 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#installation-adding-registry-pull-secret_installing-mirroring-disconnected){:target="_blank"}
@@ -94,4 +78,21 @@ $ cat ./pull-secret | jq . > rh-pull-secret.json
 $ podman login registry.redhat.io
 Authenticating with existing credentials for registry.redhat.io
 Existing credentials are valid. Already logged in to registry.redhat.io
+```
+
+## Install/configure tools
+
+!!! info "You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like."
+
+1. Put `oc` and `oc-mirror` tools we need on the low-side in your `$PATH`. Either `/usr/local/bin` or somewhere like `/home/$USER/bin` or `/home/$USER/.local/bin`
+```bash
+$ sudo tar -xzvf openshift-client-linux.tar.gz -C /usr/local/bin/
+$ sudo tar -xzvf oc-mirror.tar.gz -C /usr/local/bin/ # RHEL 8
+$ sudo tar -xzvf oc-mirror.rhel9.tar.gz -C /usr/local/bin/ # RHEL 9
+$ sudo chmod +x /usr/local/bin/oc-mirror
+```
+1. Make sure you have set the umask parameter to `0022` on the operating system that uses oc-mirror
+1. Verify that the oc-mirror v2 plugin is successfully installed by running the following command
+```bash
+$ oc mirror --v2 --help
 ```

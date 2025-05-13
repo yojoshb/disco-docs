@@ -3,7 +3,7 @@ site_url: ""
 site_author: "jbezotte@redhat.com"
 copyright: ""
 site_description: >-
-  Documentation for disconnected OpenShift installs. Conatains all required js, css, and html for the site to function offline.
+  Documentation for disconnected OpenShift installs. Contains all required js, css, and html for the site to function offline.
   If you want just the markdown, download the source repository and extract the markdown files in the docs/ directory.
 use_directory_urls: false
 

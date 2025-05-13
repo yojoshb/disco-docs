@@ -51,7 +51,7 @@
     - If the users `$HOME` is on NFS network storage, adjustments will need to be made
         - Refer to this article: https://www.redhat.com/en/blog/rootless-podman-nfs
     
-    - The user running podman must be a local Linux account, or have SUBUID/SUBGID explicitly defined in `/etc/subuid` and `/etc/subgid`. Network accounts such as Active Directory don't exist in `/etc/passwd` so the podman tools have no idea how to create these maps for you at the moment
+    - The user running podman must be a local Linux account, **or** have SUBUID/SUBGID explicitly mapped in `/etc/subuid` and `/etc/subgid`. Network accounts such as Active Directory don't exist in `/etc/passwd` so the podman tools have no idea how to create these maps for you.
     
     - Installing as root is not recommended but can be done, ssh access as root will need to be enabled for the install though which is highly frowned upon
     

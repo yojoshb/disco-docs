@@ -125,10 +125,10 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-to-pdf mkdocs-print-site-plugin
       - name: Set Version
         uses: datamonsters/replace-action@v2
         with:
           files: 'docs/release.md'
           replacements: 'GITHUB_RELEASE=${{ github.event.inputs.version_number }}'
+      - run: pip install mkdocs-material mkdocs-to-pdf mkdocs-print-site-plugin
       - run: mkdocs gh-deploy --force
