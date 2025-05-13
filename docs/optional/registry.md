@@ -42,6 +42,7 @@
 !!! warning "If this system is DISA STIG'd, or otherwise not a vanilla RHEL install the following changes may need to be made/adjusted"
     
     - `sysctl user.max_user_namespaces` must **not** be set to `0`. Namespaces are needed for rootless podman
+        - If you have issues with the install such as `error creating events dirs: mkdir /run/user/1000: permission denied`, take a look at this [KCS Article](https://access.redhat.com/solutions/7050672). There may be timing issues with enabling user_namespaces and loginctl not creating the required directory during the boot process.
     
     - `noexec` must **not** be enabled on `/home`, **or** podman must be configured to use a different `rootless_storage_path` directory on a filesystem that allows exec. `rootless_storage_path` is defined in `/etc/containers/storage.conf`. 
         - This can be overridden on a per-user basis as well if needed by creating `~/.config/containers/storage.conf` and making edits there
@@ -68,10 +69,12 @@
 ## Create your pull/push secret for your mirror registry
 Generate a secret from the mirror registry and save it to your machine. 
 
-1. Make a copy of your pull secret in JSON format:
-    ```bash
-    $ cat ./pull-secret | jq . > registry-pull-secret.json
-    ``` 
+1. Navigate to Quay in your web browser, then create an account in Quay and login
+> You can use the init account if you want, it's best practice to create your own and change the password 
+
+1. Click on your username in the top right
+    - **Account Settings** > **Docker CLI Password** > **Generate Encrypted Password** > **Docker Configuration**
+        - Either Download username-auth.json, or view it and copy/paste it into the appropriate directory specified below
 
 1. Specify the path to the folder to store the pull secret in and a name for the JSON file that you create. You can store this file in `/home/$USER/.docker/config.json` or `$XDG_RUNTIME_DIR/containers/auth.json`. If one of the directories aren't there, create them.
     - The contents of the file resemble the following example:

@@ -35,7 +35,7 @@ $ mkdir ~/my_cluster
     ```
     
     !!! info 
-        For the `additionalTrustBundle`, the data must be indented as displayed in the example `install-config.yaml`. You can add indentation with a quick `sed` command to then paste it into your install-config.yaml.
+        For the `additionalTrustBundle`, the data must be indented as displayed in the example `install-config.yaml` below. You can add indentation with a quick `sed` command to then paste it into your install-config.yaml.
         ```bash
         $ sed "s/^/  /" /opt/quay-root/quay-rootCA/rootCA.pem
         ```
@@ -80,7 +80,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
         - 172.16.1.4 # (10)! Ingress API ip address
   fips: true # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
   pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry
-  sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (13)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
+  sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (13)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes by default
   additionalTrustBundle: | # (14)! The rootCA.pem certificate of your internal image registry
     -----BEGIN CERTIFICATE-----
     MIID1jCCAr6gAwIBAgIUZ11j30+eBRjNEl7IPufQdzMl6oAwDQYJKoZIhvcNAQEL
@@ -109,7 +109,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
   10. Ingress API ip address
   11. Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
   12. A pull secret for your internal image registry
-  13. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
+  13. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes by default
   14. The rootCA.pem certificate of your internal image registry
   15. Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
 

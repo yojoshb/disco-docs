@@ -65,3 +65,5 @@ If you do not have a registry in your target environment that can store the mirr
     Authenticating with existing credentials for registry.example.com:8443
     Existing credentials are valid. Already logged in to registry.example.com:8443
     ```
+
+1. By the end, you should have a Registry account that can push/pull (so oc-mirror can push images to it) and a account that can only pull (so the cluster can access the images for installing/updating). This registry should only be used to hold OpenShift release images. Follow your organizations best practice to administer this process.
