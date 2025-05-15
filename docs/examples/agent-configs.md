@@ -2,6 +2,8 @@
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer){:target="_blank"}
 
+[Red Hat Docs: Agent Configuration Parameters](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installation-config-parameters-agent#agent-configuration-parameters_installation-config-parameters-agent){:target="_blank"}
+
 Various examples of common agent-configs. Sub in your data as appropriate.
 
 ### Bonds/Link Aggregation
@@ -116,4 +118,20 @@ kind: AgentConfig
 metadata:
   name: cluster
 rendezvousIP: 172.16.10.10
+hosts:
+  - hostname: m1.cluster.example.com
+    role: master
+    interfaces:
+      - name: enp6s18
+        macAddress: BC:24:11:EE:DD:C1
+  - hostname: m2.cluster.example.com
+    role: master
+    interfaces:
+      - name: enp6s18
+        macAddress: BC:24:11:EE:DD:C2
+  - hostname: m3.cluster.example.com
+    role: master
+    interfaces:
+      - name: enp6s18
+        macAddress: BC:24:11:EE:DD:C3
 ```

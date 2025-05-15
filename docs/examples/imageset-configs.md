@@ -58,7 +58,7 @@ mirror:
     - type: ocp
       name: stable-4.17
       minVersion: 4.17.17
-      maxVersion: 4.14.21
+      maxVersion: 4.17.21
 ```
 
 - You can also pin to a specific version
@@ -74,7 +74,7 @@ mirror:
     - type: ocp
       name: stable-4.17
       minVersion: 4.17.21
-      maxVersion: 4.14.21
+      maxVersion: 4.17.21
 ```
 
 ### OpenShift Update Service (OSUS)

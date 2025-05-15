@@ -2,6 +2,8 @@
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer)
 
+[Red Hat Docs: Install Configuration Parameters](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installation-config-parameters-agent#installation-configuration-parameters_installation-config-parameters-agent){:target="_blank"}
+
 Various examples of common install-configs. Sub in your data as appropriate.
 
 ### Single-Node OpenShift (SNO)
