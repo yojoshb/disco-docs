@@ -4,7 +4,10 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
 - [https://console.redhat.com/openshift/downloads](https://console.redhat.com/openshift/downloads){:target="_blank"} has the latest version of all the tools. 
     - Look through the [public mirror site](https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/){:target="_blank"} if you need to get a specific version.
     - Or access specific versions through the [OpenShift Container Platform downloads page on the Red Hat Customer Portal](https://access.redhat.com/downloads/content/290){:target="_blank"}
-    !!! info "This document will go over the ways to check and verify that you have the correct packages before proceeding."
+    !!! info
+        This document will go over the ways to check and verify that you have the correct packages before proceeding.
+        
+        You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like.
   ---
 
 - **oc**: The OpenShift command line tool to interact with the cluster, also needed to use CLI plugins.
@@ -24,7 +27,7 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
     
     !!! warning "Important"
         This binary is specific to the release version of OpenShit you are installing. The binary must match the release images that you mirror. 
-    - We can acquire this binary on the low-side, or high-side. Steps will be included for both methods.
+    - We can acquire this binary on the low-side, or high-side. We'll do it on the low-side as it needs less configuration.
   ---
 
 - **mirror-registry** (optional): Small registry that can host the required container images to install, update, and maintain the cluster.
@@ -81,8 +84,6 @@ Existing credentials are valid. Already logged in to registry.redhat.io
 ```
 
 ## Install/configure tools
-
-!!! info "You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like."
 
 1. Put `oc` and `oc-mirror` tools we need on the low-side in your `$PATH`. Either `/usr/local/bin` or somewhere like `/home/$USER/bin` or `/home/$USER/.local/bin`
 ```bash

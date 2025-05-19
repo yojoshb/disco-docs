@@ -2,14 +2,16 @@
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/machine_configuration/index#machine-config-index){:target="_blank"}
 
+!!! info
+    If you set `additionalNTPSources` in your agent-config.yaml, you should not need to do this as NTP should be configured during install.
+
 We need to apply a custom Network Time Protocol (NTP) configuration to the nodes, because by default, internet connectivity is assumed in OpenShift Container Platform and `chronyd` is configured to use the `*.rhel.pool.ntp.org` servers.
 
 <div class="annotate" markdown>
 
-1. Create a Butane config including the contents of the `chrony.conf` file. For example, to configure chrony on master nodes, create a `99-master-chrony.bu` file.
+1. Create a Butane config including the contents of the `chrony.conf` file. For example, to configure chrony on master nodes, create a `99-master-chrony.bu` file. Do the same for worker nodes by swapping the metadata `name` and the `machineconfiguration.openshift.io/role` label.
 
-    !!! note
-        The Butane version you specify in the config file should match the OpenShift Container Platform version and always ends in `0`. For example, `4.17.0`.
+    !!! note "The Butane version you specify in the config file should match the OpenShift Container Platform version and always ends in `0`. For example, `4.17.0`."
 
 ```yaml
 variant: openshift

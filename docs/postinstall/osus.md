@@ -2,6 +2,8 @@
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#updating-disconnected-cluster-osus){:target="_blank"}
 
+[Red Hat Blog on updating clusters](https://www.redhat.com/en/blog/the-ultimate-guide-to-openshift-release-and-upgrade-process-for-cluster-administrators){:target="_blank"}
+
 This is kind of a pain but should only need to be set up one time. We essentially have to tell the cluster to look at our registry for graph data and release images like it does when connected to the Internet. Perform these steps only if you mirrored graph data and the `cincinnati-operator` to your mirror registry.
 
 The following steps outline the high-level workflow on how to update a cluster in a disconnected environment using OSUS:

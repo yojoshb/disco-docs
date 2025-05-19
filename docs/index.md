@@ -1,6 +1,6 @@
 ---
 hide:
-  - navigation
+  #- navigation
   - toc
 ---
 # OpenShift in a Disconnected Environment: Streamlined
@@ -9,3 +9,7 @@ This documentions purpose is for consolidating information to stand up a OpenShi
 This in not a one-size fits all, this is not specific to any team/org, this is rough and simple to at least put the important things to know in one centralized document. 
 
 Relevant Red Hat docs/articles will be linked in each section if applicable.
+
+---
+
+![disco-diagram](./assets/images/disco-diagram.png)

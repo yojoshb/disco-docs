@@ -88,7 +88,7 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
     ```
   
 ### Extract the openshift-install binary from the release-images mirrored
-To extract the openshift-install that's built for your mirrored images version on the connected network
+This binary will be used to create the ISO that you will boot on your hardware to install the cluster. To extract the openshift-install that's built for your mirrored images version on the connected network:
 
 1. Construct the correct URL to download the payload for your release images. Follow one of these steps
     
@@ -134,7 +134,7 @@ To extract the openshift-install that's built for your mirrored images version o
     release image quay.io/openshift-release-dev/ocp-release@sha256:{==40a0dce2a37e3278adc2fd64f63bca67df217b7dd8f68575241b66fdae1f04a3==}
     release architecture amd64
     ```
-4. If the SHA256 values match each other (highlighted values), then you have extracted the correct `openshift-install` binary that can build your cluster with the release images you mirrored.
+4. If the SHA256 values match each other (highlighted values), then you have extracted the correct `openshift-install` binary that can build your cluster ISO with the release images you mirrored.
 
 ## Transfer data and tools to the disconnected environment.
 Place these files on a disk and transfer them to your disconnected network

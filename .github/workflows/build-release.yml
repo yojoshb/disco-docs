@@ -41,13 +41,11 @@ jobs:
           packages: weasyprint zip
           version: 1.0
       - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-to-pdf mkdocs-print-site-plugin htmlark[http,parsers]
-      
       - name: Set Version
         uses: datamonsters/replace-action@v2
         with:
           files: 'docs/release.md'
           replacements: 'GITHUB_RELEASE=${{ github.event.inputs.version_number }}'
-      
       - name: Build full site
         run: |
           mkdocs build
@@ -59,7 +57,6 @@ jobs:
           name: docs-full
           path: docs-full-${{ github.event.inputs.version_number }}.zip
           if-no-files-found: error
-
       - name: Build standalone html/pdf
         run: |
           export ENABLED_PRINT_SITE=true
