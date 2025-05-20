@@ -4,6 +4,8 @@
 
 [Red Hat Blog on updating clusters](https://www.redhat.com/en/blog/the-ultimate-guide-to-openshift-release-and-upgrade-process-for-cluster-administrators){:target="_blank"}
 
+[Handy Update tool](https://access.redhat.com/labs/ocpupgradegraph/update_path/){:target="_blank"}
+
 This is kind of a pain but should only need to be set up one time. We essentially have to tell the cluster to look at our registry for graph data and release images like it does when connected to the Internet. Perform these steps only if you mirrored graph data and the `cincinnati-operator` to your mirror registry.
 
 The following steps outline the high-level workflow on how to update a cluster in a disconnected environment using OSUS:
@@ -18,30 +20,30 @@ The following steps outline the high-level workflow on how to update a cluster i
 ### Configure access to the secured registry
   [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/registry/configuring-registry-operator#images-configuration-cas_configuring-registry-operator){:target="_blank"}
 
-  Create a config map in the openshift-config namespace and use its name in AdditionalTrustedCA in the `image.config.openshift.io` custom resource to provide additional CAs that should be trusted when contacting external registries. 
+  Create a configmap in the openshift-config namespace and use its name in AdditionalTrustedCA in the `image.config.openshift.io` custom resource to provide additional CAs that should be trusted when contacting external registries for images. 
 
   1. Grab the CA in pem format for the container registry that the graph-image is in and create a new `configmap` object in the `openshift-config` namespace that defines your registry to be used for the updateservice.
       
       - The OpenShift Update Service Operator needs the config map key name `updateservice-registry` in the registry CA cert.
       
-      - If the registry has the port, such as `registry.example.com:5000`, `:` should be replaced with `..`
-      
       ```bash
+      # Since the OSUS image is on the Quay Mirror Registry I need it's rootCA
       $ cp /opt/quay-data/quay-rootCA/rootCA.pem ca.crt
-      $ oc create configmap registry-config --from-file=registry.example.com..8443=ca.crt --from-file=updateservice-registry=ca.crt -n openshift-config
+
+      $ oc create configmap image-ca-bundle --from-file=updateservice-registry=ca.crt -n openshift-config
       ```
       
     !!! info
-        Here we copied the rootCA of our registry to our current directory and called it `ca.crt`. Then created a configmap called `registry-config` in the openshift-config namespace using that certificate.
+        Here we copied the rootCA of our registry to our current directory and called it `ca.crt`. Then created a configmap called `image-ca-bundle` in the openshift-config namespace using that certificate.
       
-  2. Edit the custom resource and add the config map you just created to the additionalTrustedCA spec.
+  2. Edit the `Image` custom resource and add the configmap you just created to the additionalTrustedCA spec.
       ```bash
       $ oc edit image.config.openshift.io cluster
       ```
       ```yaml
       spec:
         additionalTrustedCA:
-          name: registry-config
+          name: image-ca-bundle
       ```
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#images-update-global-pull-secret_updating-disconnected-cluster-osus){:target="_blank"} 
     
@@ -166,11 +168,11 @@ The following steps outline the high-level workflow on how to update a cluster i
       ```bash
       $ NAME=service
       ```
-  3. Configure the registry and repository for the release images as configured in "Mirroring the OpenShift Container Platform image repository", for example, `registry.example.com:8443/v4.17/openshift/release-images`:
+  3. Configure the registry and repository for the release images as configured for example, `registry.example.com:8443/v4.17/openshift/release-images`:
       ```bash
       $ RELEASE_IMAGES=registry.example.com:8443/v4.17/openshift/release-images
       ```  
-  4. Set the local pullspec for the graph data image to the graph data container image created in "Creating the OpenShift Update Service graph data container image", for example, `registry.example.com:8443/v4.17/openshift/graph-image:latest`:
+  4. Set the local pullspec for the graph data image to the graph data container image for example, `registry.example.com:8443/v4.17/openshift/graph-image:latest`:
       ```bash
       $ GRAPH_DATA_IMAGE=registry.example.com:8443/v4.17/openshift/graph-image:latest
       ```

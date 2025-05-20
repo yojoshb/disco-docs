@@ -145,6 +145,6 @@ Place these files on a disk and transfer them to your disconnected network
 - **oc-mirror**
 - **butane**
 - **mirror-registry** (if using)
-- **openshift-install** (if you extracted the binary)
+- **openshift-install**
 
 ---

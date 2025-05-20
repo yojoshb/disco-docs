@@ -13,6 +13,7 @@ plugins:
   - search
   - to-pdf: # Plugin for compiling the docs into one PDF document, formatting may be broken a bit compared to the full site
       enabled_if_env: ENABLE_PDF_EXPORT
+      #cover: false
       cover_subtitle: "Good luck, and have fun!"
       cover_logo: assets/openshift-logo.png
       output_path: standalone.pdf
@@ -29,7 +30,7 @@ plugins:
       add_full_urls: true
       enumerate_headings: false
       enumerate_figures: true
-      add_cover_page: true
+      add_cover_page: false
       cover_page_template: ""
       path_to_pdf: ""
 
@@ -55,6 +56,7 @@ nav:
     - 4.1 Apply Cluster Resources: postinstall/resources.md
     - 4.2 NTP Setup: postinstall/ntp.md
     - 4.3 OpenShift Update Service: postinstall/osus.md
+    - 4.4 Additional Tasks: postinstall/tasks.md
   - Optional:
     - Red Hat Mirror Registry: optional/registry.md
     - Core User Password: optional/corepasswd.md
@@ -97,7 +99,7 @@ theme:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
+      primary: black
       accent: indigo
       toggle:
         icon: material/brightness-7

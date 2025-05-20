@@ -20,11 +20,11 @@ Version: GITHUB_RELEASE
     - [x] Applying cluster resources
     - [x] NTP
     - [x] OSUS
+    - [x] Additional tasks
 - [ ] Optional configs
     - [x] core passwd
     - [x] registry
-    - [ ] Additional cluster configs
-- [ ] Operations (shutdown, auth, etc)
+    - [ ] Additional cluster configs?
 - [x] Example configs
     - [x] install-config.yaml
     - [x] agent-config.yaml

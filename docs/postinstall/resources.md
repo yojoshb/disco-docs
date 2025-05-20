@@ -1,3 +1,10 @@
+## Patch the OperatorHub
+Before importing these catalog sources, it is necessary to disable all default catalog sources with this command (as they will not work in a disconnected environment)
+```bash
+$ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
+operatorhub.config.openshift.io/cluster patched
+```
+
 ## Cluster Resources
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#oc-mirror-custom-resources-v2_about-installing-oc-mirror-v2){:target="_blank"}
@@ -18,13 +25,6 @@ From your `oc mirror` command, you could have the following files in your workin
         If you have any **ClusterCatalogs** i.e `cc-redhat-operator-index-v4-17.yaml`, they will only work on OpenShift 4.18 or newer. Ignore errors from ClusterCatalogs when applying resources if you are on an older version of OpenShift
 
         This is due to changes in the Operator Lifecycle Manager (OLM) architecture moving from OLM classic to v1 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/extensions/catalogs){:target="_blank"}
-
-## Patch the OperatorHub
-Before importing these catalog sources, it is necessary to disable all default catalog sources with this command (as they will not work in a disconnected environment)
-```bash
-$ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
-operatorhub.config.openshift.io/cluster patched
-```
 
 ## Configure the cluster to use the resources you mirrored
 
