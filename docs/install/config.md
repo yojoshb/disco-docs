@@ -91,10 +91,10 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
     -----END CERTIFICATE----- 
   imageDigestSources: # (15)! Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
   - mirrors:
-    - registry.example.com:8443/v4.17/openshift/release-images # (16)! # You must have a direct reference to both the openshift-release-dev/ocp-release and openshift-release-dev/ocp-v4.0-art-dev paths. These two are the only ones required to complete an installation of OpenShift
+    - registry.example.com:8443/ocp/openshift/release-images # (16)! # You must have a direct reference to both the openshift-release-dev/ocp-release and openshift-release-dev/ocp-v4.0-art-dev paths. These two are the only ones required to complete an installation of OpenShift
     source: quay.io/openshift-release-dev/ocp-release
   - mirrors:
-    - registry.example.com:8443/v4.17/openshift/release
+    - registry.example.com:8443/ocp/openshift/release
     source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
   ```
 
@@ -170,7 +170,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
             ipv4:
               enabled: true
               address:
-                - ip: 172.99.99.11
+                - ip: 172.16.1.11
                   prefix-length: 24
               dhcp: false
         dns-resolver:
@@ -263,7 +263,7 @@ $ cp -R my_cluster/ my_cluster_bak/
 ```bash
 $ openshift-install --dir my_cluster/ agent create image
 INFO Configuration has 3 master replicas and 0 worker replicas
-WARNING The imageDigestSources configuration in install-config.yaml should have at least one source field matching the releaseImage value registry.example.com:8443/v4.17/openshift/release-images@sha256:fd8f5562f0403504b35cc62e064b04c34e6baeb48384bddebffc98c3c69a2af3
+WARNING The imageDigestSources configuration in install-config.yaml should have at least one source field matching the releaseImage value registry.example.com:8443/ocp/openshift/release-images@sha256:fd8f5562f0403504b35cc62e064b04c34e6baeb48384bddebffc98c3c69a2af3
 INFO The rendezvous host IP (node0 IP) is 172.16.1.10
 INFO Extracting base ISO from release payload
 INFO Base ISO obtained from release and cached at [/home/admin/.cache/agent/image_cache/coreos-x86_64.iso]

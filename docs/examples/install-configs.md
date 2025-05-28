@@ -46,10 +46,10 @@ additionalTrustBundle: | # (13)! The rootCA.pem certificate of your internal ima
   -----END CERTIFICATE----- 
 imageDigestSources: # (14)! Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
 - mirrors:
-  - registry.example.com:8443/v4.17/openshift/release-images
+  - registry.example.com:8443/ocp/openshift/release-images
   source: quay.io/openshift-release-dev/ocp-release
 - mirrors:
-  - registry.example.com:8443/v4.17/openshift/release
+  - registry.example.com:8443/ocp/openshift/release
   source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
 ```
 
@@ -112,10 +112,10 @@ additionalTrustBundle: | # (14)! The rootCA.pem certificate of your internal ima
   -----END CERTIFICATE----- 
 imageDigestSources: # (15)! Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
 - mirrors:
-  - registry.example.com:8443/v4.17/openshift/release-images
+  - registry.example.com:8443/ocp/openshift/release-images
   source: quay.io/openshift-release-dev/ocp-release
 - mirrors:
-  - registry.example.com:8443/v4.17/openshift/release
+  - registry.example.com:8443/ocp/openshift/release
   source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
 ```
 
@@ -134,3 +134,82 @@ imageDigestSources: # (15)! Your image mirrors, this in the idms-oc-mirror.yaml 
 13. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
 14. The rootCA.pem certificate of your internal image registry
 15. Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml
+
+### Cluster Capabilites
+
+[Capabilites config for the v4.18 install](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installation_overview/cluster-capabilities){:target="_blank"}
+
+By default, all capabilites will be included in the cluster for the version you are installing. You can choose to remove capabilites at install time. You can enable cluster capabilities at anytime after installation
+
+!!! note
+    You cannot cannot disable a cluster capability after it is enabled.
+
+    If you customize your cluster by enabling or disabling specific cluster capabilities, you must manually maintain your `install-config.yaml` file. New OpenShift Container Platform updates might declare new capability handles for existing components, or introduce new components altogether. Users who customize their `install-config.yaml` file should consider periodically updating their `install-config.yaml` file as OpenShift Container Platform is updated.
+
+```yaml title="install-config.yaml: SNO cluster with capabilites defined"
+apiVersion: v1
+baseDomain: example.com
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  replicas: 0
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  replicas: 1
+metadata:
+  name: cluster
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 172.16.1.0/24
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  none: {}
+capabilities:
+  baselineCapabilitySet: None # (1)! Easiest method is to set the baseline to None, then choose enabled capabilites in the additionalEnabledCapabilities stanza
+  additionalEnabledCapabilities: # (2)! Here define what capabilites you want the cluster to have. Remove whatever you don't want
+    - Build
+    - CSISnapshot
+    - CloudControllerManager
+    - CloudCredential
+    - Console
+    - DeploymentConfig
+    - ImageRegistry
+    - Ingress                    # OpenShift v4.16+
+    - Insights                   # If you don't want to unclude Insights since the cluster is disconnected, although disconnected Insights is coming soon..
+    - MachineAPI                 # Mandatory with "baremetal" IPI
+    - NodeTuning
+    - OperatorLifecycleManager
+    - OperatorLifecycleManagerV1 # OpenShift v4.18+
+    - Storage
+    - baremetal
+    - marketplace
+    - openshift-samples
+fips: true
+pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}'
+sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....'
+additionalTrustBundle: |
+  -----BEGIN CERTIFICATE-----
+  MIID1jCCAr6gAwIBAgIUZ11j30+eBRjNEl7IPufQdzMl6oAwDQYJKoZIhvcNAQEL
+  BQAwajELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlZBMREwDwYDVQQHDAhOZXcgWW9y
+  azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xGTAXBgNVBAMMEHJl
+  ...
+  -----END CERTIFICATE----- 
+imageDigestSources:
+- mirrors:
+  - registry.example.com:8443/ocp/openshift/release-images
+  source: quay.io/openshift-release-dev/ocp-release
+- mirrors:
+  - registry.example.com:8443/ocp/openshift/release
+  source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+```
+
+1. Easiest method is to set the baseline to None, then choose enabled capabilites in the additionalEnabledCapabilities stanza
+2. Here define what capabilites you want the cluster to have. Remove whatever you don't want

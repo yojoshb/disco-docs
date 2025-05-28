@@ -25,12 +25,12 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
-      #- run: sudo apt install -y weasyprint 
+      #- run: sudo apt install -y weasyprint zip gcc g++ python3-dev
       - uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: weasyprint 
           version: 1.0
-      - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-to-pdf mkdocs-print-site-plugin htmlark[http,parsers]
+      - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-to-pdf mkdocs-print-site-plugin htmlark[http,parsers] mkdocs-autorefs
       # Build full site, upload artifacts
       - run: mkdocs build
       - uses: actions/upload-artifact@v4

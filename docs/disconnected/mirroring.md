@@ -7,7 +7,7 @@ Now that the images are on the disk and you have a target registry with push/pul
 - Specify the image set configuration file that you brought over or created. This example assumes that it is in `/opt/4.17-mirrordata/imageset-config.yaml`. If you named your's differently, sub in your name and path of the file.
 - Specify the target directory where the `mirror_000001.tar` file is. The target directory path must start with `file://`. This procedure assumes you want to upload the mirror_000001.tar **from** `/opt/4.17-mirrordata/`.
     - The target directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. Keep this directory safe, and do not modify it. It will be used again for updates and additions to your cluster
-- Specify the registry you will be mirroring the images to. In this example `registry.example.com:8443/` is our registry, and we will upload it to the `v4.17` namespace.
+- Specify the registry you will be mirroring the images to. In this example `registry.example.com:8443/` is our registry, and we will upload it to the `ocp` namespace in our registry.
 - Be aware of the caching system, this will also take up considerable space on the disk depending on how many images are being uploaded to your mirror
   
 !!! question "Caching"
@@ -27,7 +27,7 @@ Now that the images are on the disk and you have a target registry with push/pul
 ---
 1. Upload your images to your mirror
   ```bash
-  $ oc mirror -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/v4.17 --v2
+  $ oc mirror -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2
   ...
   ...
   [INFO]   : === Results ===
@@ -53,7 +53,7 @@ Now that the images are on the disk and you have a target registry with push/pul
 
     - If your mirror registry is using a self-signed certificate and your machine doesn't trust it internally use the `--dest-tls-verify=false` flag
     ```bash
-    $ oc mirror --dest-tls-verify=false -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/v4.17 --v2
+    $ oc mirror --dest-tls-verify=false -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2
     ```
     - If you get an error like the one below, your registry most likely cannot write the data fast enough. You can try doing it again with less parallel operations using the `--parallel-images` flag
     ```
@@ -61,7 +61,7 @@ Now that the images are on the disk and you have a target registry with push/pul
     ```
     ```bash
     # Default is 8 parallel
-    oc mirror --dest-tls-verify=false --parallel-images 4 -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/v4.17 --v2
+    oc mirror --dest-tls-verify=false --parallel-images 4 -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2
     ```
 
 1. Verify the cluster resources were generated

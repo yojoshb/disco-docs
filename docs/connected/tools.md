@@ -8,6 +8,9 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
         This document will go over the ways to check and verify that you have the correct packages before proceeding.
         
         You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like.
+        
+        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/rhel-oc-tools.sh`
+
   ---
 
 - **oc**: The OpenShift command line tool to interact with the cluster, also needed to use CLI plugins.

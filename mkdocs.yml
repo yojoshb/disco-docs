@@ -11,6 +11,9 @@ plugins:
   - offline
   #- privacy # Not all js bundles are needed, offline and search function fine without this
   - search
+  - autorefs:
+      resolve_closest: true
+      link_titles: true
   - to-pdf: # Plugin for compiling the docs into one PDF document, formatting may be broken a bit compared to the full site
       enabled_if_env: ENABLE_PDF_EXPORT
       #cover: false
@@ -80,6 +83,7 @@ theme:
     - navigation.top
     - navigation.indexes # disable for single-page toc html generation
     - navigation.footer
+    - navigation.tracking
     - toc.follow
     - toc.integrate # disable for single-page toc html generation
     #- header.autohide
@@ -87,7 +91,6 @@ theme:
 
   logo: assets/openshift-logo.png
   icon:
-    #logo: material/laptop
     annotation: material/plus-circle
   favicon: assets/openshift-logo.png
   palette: 
@@ -121,6 +124,10 @@ markdown_extensions:
       use_pygments: true
   - pymdownx.tasklist:
       custom_checkbox: true
+  - toc:
+      permalink: true
+      #permalink_title: Anchor link to this section for reference
+      toc_depth: 3
   - attr_list
   - tables
   - md_in_html
@@ -149,5 +156,5 @@ extra:
       link: https://github.com/yojoshb/disco-docs
       name: Link to GitHub
     - icon: fontawesome/brands/redhat
-      link: https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/index
+      link: https://docs.redhat.com/en/documentation/openshift_container_platform/
       name: Link to Red Hat Docs

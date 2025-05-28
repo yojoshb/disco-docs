@@ -35,12 +35,12 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
-      #- run: sudo apt install -y weasyprint 
+      #- run: sudo apt install -y weasyprint zip gcc g++ python3-dev
       - uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: weasyprint zip
           version: 1.0
-      - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-to-pdf mkdocs-print-site-plugin htmlark[http,parsers]
+      - run: pip install mkdocs-material mkdocs-pandoc-plugin mkdocs-to-pdf mkdocs-print-site-plugin htmlark[http,parsers] mkdocs-autorefs
       - name: Set Version
         uses: datamonsters/replace-action@v2
         with:
@@ -127,5 +127,5 @@ jobs:
         with:
           files: 'docs/release.md'
           replacements: 'GITHUB_RELEASE=${{ github.event.inputs.version_number }}'
-      - run: pip install mkdocs-material mkdocs-to-pdf mkdocs-print-site-plugin
+      - run: pip install mkdocs-material mkdocs-to-pdf mkdocs-print-site-plugin mkdocs-autorefs
       - run: mkdocs gh-deploy --force

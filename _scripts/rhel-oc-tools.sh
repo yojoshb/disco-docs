@@ -82,15 +82,13 @@ chmod a+x oc kubectl
 if [ "$INSTALLER" = "1" ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; then
   if [ "$FIPS" = "1" ]; then
     echo "Extracting openshift-install-fips binary"
-    ./oc adm release extract --command=openshift-install-fips $RELEASE_IMAGE
+    ./oc adm release extract --command=openshift-install-fips $RELEASE_IMAGE && echo "openshift-install-fips binary extracted"
     chmod a+x openshift-install-fips
-    ./openshift-install-fips version
     mv openshift-install-fips ..
   else
     echo "Extracting openshift-install binary"
-    ./oc adm release extract --command=openshift-install $RELEASE_IMAGE
+    ./oc adm release extract --command=openshift-install $RELEASE_IMAGE && echo "openshift-install binary extracted"
     chmod a+x openshift-install
-    ./openshift-install version
     mv openshift-install ..
   fi
 fi

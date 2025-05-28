@@ -168,13 +168,13 @@ The following steps outline the high-level workflow on how to update a cluster i
       ```bash
       $ NAME=service
       ```
-  3. Configure the registry and repository for the release images as configured for example, `registry.example.com:8443/v4.17/openshift/release-images`:
+  3. Configure the registry and repository for the release images as configured for example, `registry.example.com:8443/ocp/openshift/release-images`:
       ```bash
-      $ RELEASE_IMAGES=registry.example.com:8443/v4.17/openshift/release-images
+      $ RELEASE_IMAGES=registry.example.com:8443/ocp/openshift/release-images
       ```  
-  4. Set the local pullspec for the graph data image to the graph data container image for example, `registry.example.com:8443/v4.17/openshift/graph-image:latest`:
+  4. Set the local pullspec for the graph data image to the graph data container image for example, `registry.example.com:8443/ocp/openshift/graph-image:latest`:
       ```bash
-      $ GRAPH_DATA_IMAGE=registry.example.com:8443/v4.17/openshift/graph-image:latest
+      $ GRAPH_DATA_IMAGE=registry.example.com:8443/ocp/openshift/graph-image:latest
       ```
   5. Create an OpenShift Update Service application object:
       ```bash
