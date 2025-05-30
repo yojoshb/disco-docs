@@ -2,7 +2,7 @@
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_on_bare_metal/installing-restricted-networks-bare-metal#installation-dns-user-infra_installing-restricted-networks-bare-metal){:target="_blank"}
 
-These records are mandatory for the cluster to function. Technically the cluster can function without an external DNS source, but it will be much harder to use and access the cluster and recourses it provides/hosts and each node will need a curated `/etc/hosts` file provisioned.
+These records are mandatory for the cluster to function. Technically the cluster can function without an external DNS source, but it will be much harder to use and access the cluster and it's resources. Each host wanting to interact with the cluster will need a curated `/etc/hosts` file provisioned for every endpoint on the cluster.
 
 - The following DNS records are required for a user-provisioned OpenShift Container Platform cluster and they must be in place before installation. In each record, `<cluster_name>` is the cluster name and `<base_domain>` is the base domain that you specify in the install-config.yaml file. A complete DNS record takes the form: `<component>.<cluster_name>.<base_domain>.`
 

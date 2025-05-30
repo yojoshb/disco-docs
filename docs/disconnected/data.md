@@ -5,6 +5,15 @@ Identify a host on the disconnected network that will be used for installing the
 If you brought the tools over in `.tar` extract them to your `$PATH` like the low-side process, or copy them there if you brought the binaries to your high-side host
 ```bash
 $ sudo cp /mnt/transfer-disk/{oc,oc-mirror,butane} /usr/local/bin/
+$ sudo chmod +x /usr/local/bin/{oc,oc-mirror,butane}
+
+# If selinux is enabled
+$ sudo restorecon -v /usr/local/bin/{oc,oc-mirror,butane}
+```
+
+Make sure you have set the umask parameter to `0022` on the operating system that uses oc-mirror
+```bash
+$ umask 0022
 
 # Verify oc mirror works
 $ oc mirror --v2 --help
@@ -13,6 +22,10 @@ $ oc mirror --v2 --help
 If you brought over the `openshift-install` binary copy it to your `$PATH`.  
 ```bash
 $ sudo cp /mnt/transfer-disk/openshift-install /usr/local/bin/
+$ sudo chmod +x /usr/local/bin/openshift-install
+
+# If selinux is enabled
+$ sudo restorecon -v /usr/local/bin/openshift-install
 ```
 
 Optional: Copy the mirror-registry-amd64.tar.gz file to the host that you want to become your mirror registry. This can be the same host, just make sure you have enough storage space to hold the mirrored images that will be uploaded into the registry
@@ -20,11 +33,28 @@ Optional: Copy the mirror-registry-amd64.tar.gz file to the host that you want t
 $ cp /mnt/transfer-disk/mirror-registry-amd64.tar.gz /opt
 ```
 
+!!! info
+    If the system is STIG'd and using fapolicyd either disable it, or make changes as it automatically blocks any binary that is not an RPM.
+
+    You can add the binaries to the policy like so:
+    
+    ```bash
+    $ systemctl stop fapolicyd.service
+    
+    $ sudo fapolicyd-cli --file add /usr/local/bin/oc
+    $ sudo fapolicyd-cli --file add /usr/local/bin/oc-mirror
+    $ sudo fapolicyd-cli --file add /usr/local/bin/butane
+    $ sudo fapolicyd-cli --file add /usr/local/bin/openshift-install
+    $ sudo fapolicyd-cli --update
+    
+    $ systemctl start fapolicyd.service; systemctl status fapolicyd.service
+    ```
+
 
 ## Create a directory structure
 
 !!! note
-    You can just keep everything on the `transfer-disk` and mirror off of it if you want. Just remember to copy off the generate cluster configs once the mirroring is completed.
+    You can just keep everything on the `transfer-disk` and mirror off of it if you want and skip this step.
 
 1. Do this how you see fit for your environment. Identify a space on your disconnected machine that can hold the imageset-config.yaml, mirror_000001.tar, and generated cluster configs
 ```bash
@@ -33,7 +63,7 @@ $ mkdir /opt/4.17-mirrordata
 
 1.  Copy the imageset-config and mirror_000001.tar to that directory
 ```bash 
-$ cp /mnt/transfer-disk/{imageset-config.yaml,mirror_000001.tar} /opt/4.17-mirrordata
+$ cp /mnt/transfer-disk/{imageset-config.yaml,mirror_000001.tar} /opt/4.17-mirrordata/
 ```
 
 ## Create your pull/push secret for your mirror registry

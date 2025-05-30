@@ -41,6 +41,11 @@ $ mkdir ~/my_cluster
         $ sed "s/^/  /" rootCA.pem
         ```
 
+1. Get the pull secret for your mirror registry. This is required for the `install-config.yaml` file. Using `jq` you can print it to stdout in a single line like so:
+```bash
+jq -c . $XDG_RUNTIME_DIR/containers/auth.json
+```
+
 1. Create the files `install-config.yaml` and `agent-config.yaml` in the directory you defined.
 
 The example below builds a bare metal compact cluster (3 master/control-plane/worker nodes) with static IP's and no external load-balancer. The cluster is called `cluster.example.com`. Each node is called m(1-3).cluster.example.com. You can use these procedures as a basis and modify according to your requirements.
@@ -80,7 +85,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
       ingressVIPs:
         - 172.16.1.4 # (10)! Ingress API ip address
   fips: true # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
-  pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry
+  pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry. Best practive is for this secret to only have pull permissions
   sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (13)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes by default
   additionalTrustBundle: | # (14)! The rootCA.pem certificate of your internal image registry. Note the indentation
     -----BEGIN CERTIFICATE-----
@@ -109,7 +114,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
   9. API ip address
   10. Ingress API ip address
   11. Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
-  12. A pull secret for your internal image registry
+  12. A pull secret for your internal image registry. Best practive is for this secret to only have pull permissions
   13. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes by default
   14. The rootCA.pem certificate of your internal image registry. Note the indentation
   15. Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
@@ -271,3 +276,8 @@ INFO Consuming Install Config from target directory
 INFO Consuming Agent Config from target directory
 {==INFO Generated ISO at my_cluster/agent.x86_64.iso.==}
 ```
+
+    - For FIPS, do the same thing but use the FIPS binary
+    ```bash
+    $ openshift-install-fips --dir my_cluster/ agent create image
+    ```

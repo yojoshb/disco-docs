@@ -8,7 +8,7 @@ Now that the images are on the disk and you have a target registry with push/pul
 - Specify the target directory where the `mirror_000001.tar` file is. The target directory path must start with `file://`. This procedure assumes you want to upload the mirror_000001.tar **from** `/opt/4.17-mirrordata/`.
     - The target directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. Keep this directory safe, and do not modify it. It will be used again for updates and additions to your cluster
 - Specify the registry you will be mirroring the images to. In this example `registry.example.com:8443/` is our registry, and we will upload it to the `ocp` namespace in our registry.
-- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images are being uploaded to your mirror
+- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images are being uploaded to your mirror. Caching still occurs with the 'disk to mirror' workflow.
   
 !!! question "Caching"
     - How does the cache work?
@@ -20,11 +20,16 @@ Now that the images are on the disk and you have a target registry with push/pul
     - During the mirroring process, is there a way to resume if something goes wrong?
         - Yes, by re-running oc mirror
     - I intentionally canceled the task and re-ran the mirroring process, but it seemed to start from the beginning.
-        - It goes through the images from your ISC but it won't pull them if they're already in the cache. You can compare the elapsed times by running a second time with the images already cached.
+        - It goes through the images from your ISC but it won't pull them from the tarball if they're already in the cache. You can compare the elapsed times by running a second time with the images already cached.
     - The cache takes up a lot of disk space can it be deleted?
-        - Yes the cache can be removed, oc mirror will just re-download what's needed
+        - Yes the cache can be removed, oc mirror will just re-pull what's needed from the tarball
 
 ---
+1. You have set the umask parameter to `0022` on the operating system that uses oc-mirror.
+    ```
+    $ umask 0022
+    ```
+
 1. Upload your images to your mirror
   ```bash
   $ oc mirror -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2

@@ -42,17 +42,27 @@
 !!! warning "If this system is DISA STIG'd, or otherwise not a vanilla RHEL install the following changes may need to be made/adjusted"
     
     - `sysctl user.max_user_namespaces` must **not** be set to `0`. Namespaces are needed for rootless podman
-        - If you have issues with the install such as `error creating events dirs: mkdir /run/user/1000: permission denied`, take a look at this [KCS Article](https://access.redhat.com/solutions/7050672). There may be timing issues with enabling user_namespaces and loginctl not creating the required directory during the boot process.
+        - If you have issues with the install such as `error creating events dirs: mkdir /run/user/1000: permission denied`, take a look at this [KCS Article](https://access.redhat.com/solutions/7050672){:target="_blank"}. There may be timing issues with enabling user_namespaces and loginctl not creating the required directory during the boot process.
     
     - `noexec` must **not** be enabled on `/home`, **or** podman must be configured to use a different `rootless_storage_path` directory on a filesystem that allows exec. `rootless_storage_path` is defined in `/etc/containers/storage.conf`. 
         - This can be overridden on a per-user basis as well if needed by creating `~/.config/containers/storage.conf` and making edits there
     
     - `fapolicyd` may need to be adjusted or disabled
+        - You can add the binary to the policy like so:
+        ```bash
+        $ systemctl stop fapolicyd.service
+        
+        $ sudo fapolicyd-cli --file add /opt/mirror-registry/mirror-registry
+        $ sudo fapolicyd-cli --update
+        
+        $ systemctl start fapolicyd.service; systemctl status fapolicyd.service
+        ```
     
     - If the users `$HOME` is on NFS network storage, adjustments will need to be made
-        - Refer to this article: https://www.redhat.com/en/blog/rootless-podman-nfs
+        - Refer to this article: [Red Hat Blog: rootless-podman-nfs](https://www.redhat.com/en/blog/rootless-podman-nfs){:target="_blank"}
     
     - The user running podman must be a local Linux account, **or** have SUBUID/SUBGID explicitly mapped in `/etc/subuid` and `/etc/subgid`. Network accounts such as Active Directory don't exist in `/etc/passwd` so the podman tools have no idea how to create these maps for you.
+        - IdM/IPA can handle the creating of these if configured to do so: [IdM Generate subID ranges](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/configuring_and_managing_identity_management/assembly_managing-subid-ranges-manually_configuring-and-managing-idm#proc_generating-subid-ranges-using-idm-cli_assembly_managing-subid-ranges-manually)
     
     - Installing as root is not recommended but can be done, ssh access as root will need to be enabled for the install though which is highly frowned upon
     
@@ -95,5 +105,7 @@ Generate a secret from the mirror registry and save it to your machine.
     Authenticating with existing credentials for registry.example.com:8443
     Existing credentials are valid. Already logged in to registry.example.com:8443
     ```
+
+1. By the end, you should have a Registry account that can push/pull (so oc-mirror can push images to it) and a account that can only pull (so the cluster can access the images for installing/updating). This registry should only be used to hold OpenShift release images. Follow your organizations best practice to administer this process.
 
 1. Continue to [mirroring images to registry](../disconnected/mirroring.md)

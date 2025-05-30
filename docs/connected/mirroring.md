@@ -21,6 +21,12 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
     - The cache takes up a lot of disk space can it be deleted?
         - Yes the cache can be removed, oc mirror will just re-download what's needed
 
+1. You have set the umask parameter to `0022` on the operating system that uses oc-mirror.
+
+    ```
+    $ umask 0022
+    ```
+
 1. Perform a dry-run of the mirror to disk process to verify your imageset-config is valid and the tools can gather the data
     
     !!! info
@@ -101,7 +107,7 @@ This binary will be used to create the ISO that you will boot on your hardware t
     # Store this in a variable so we can use it to curate the URL to extract the installer from without copying and pasting 
     $ export HASH=$(ls working-dir/signatures/4.17.70-x86_64-sha256-40a0dce2a37e3278adc2fd64f63bca67df217b7dd8f68575241b66fdae1f04a3 | awk -F'sha256-' '{print $2}')
     ```
-    2. For both oc-mirror v1/2, we can construct the entire URL based on the version we specified in the imageset config file. Read the warning below to understand the potential issue you could run into.
+    2. For both oc-mirror v1/2, we can construct the entire URL based on the version we specified in the imageset config file. Read the warning below to understand the potential issue you could run into with this method.
     ```bash
     $ export VERSION=stable-4.17
     $ export RELEASE_ARCH=amd64
@@ -117,15 +123,19 @@ This binary will be used to create the ISO that you will boot on your hardware t
 2. Use `oc adm` to extract the openshift-install binary that is purpose built for the version of images you mirrored. This command will extract the `openshift-install` or `openshift-install-fips` binary to your current directory. You can pass in the `--dir='<path>'` to extract the binary to a specific location on your filesystem. 
     ```bash
     $ oc adm release extract --command=openshift-install quay.io/openshift-release-dev/ocp-release@sha256:$HASH
-    ```
-    If you are installing OpenShift 4.16 or later and requiring FIPS, change the `--command=` flag from `openshift-install` to `openshift-install-fips`
-    ```bash
+
+    # If you are installing OpenShift 4.16 or later and requiring FIPS
     $ oc adm release extract --command=openshift-install-fips quay.io/openshift-release-dev/ocp-release@sha256:$HASH
     ```
+    
     If you constructed the entire URL
     ```bash
     $ oc adm release extract --command=openshift-install $RELEASE_IMAGE
+    
+    # If you are installing OpenShift 4.16 or later and requiring FIPS
+    $ oc adm release extract --command=openshift-install-fips $RELEASE_IMAGE
     ```
+
 3. Now check the SHA256 hash against the release signatures we looked at before by running `./openshift-install version`
     ```bash
     $ ./openshift-install version
@@ -134,7 +144,8 @@ This binary will be used to create the ISO that you will boot on your hardware t
     release image quay.io/openshift-release-dev/ocp-release@sha256:{==40a0dce2a37e3278adc2fd64f63bca67df217b7dd8f68575241b66fdae1f04a3==}
     release architecture amd64
     ```
-4. If the SHA256 values match each other (highlighted values), then you have extracted the correct `openshift-install` binary that can build your cluster ISO with the release images you mirrored.
+
+If the SHA256 values match each other (highlighted values), then you have extracted the correct `openshift-install` binary that can build your cluster ISO with the release images you mirrored. If the hashes do not match, you will need to either go find the correct `openshift-install` binary version for your images, or mirror the images again to the correct version of the install binary.
 
 ## Transfer data and tools to the disconnected environment.
 Place these files on a disk and transfer them to your disconnected network
@@ -145,6 +156,6 @@ Place these files on a disk and transfer them to your disconnected network
 - **oc-mirror**
 - **butane**
 - **mirror-registry** (if using)
-- **openshift-install**
+- **openshift-install** or **openshift-install-fips**
 
 ---
