@@ -7,6 +7,8 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
 
     !!! info
         You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like. Make sure to edit the script's variables to define what version/arch/binaries you want to download.
+
+        Set up up your [Red Hat pull-secret](#grab-your-pull-secret-from-your-red-hat-account) before using the script if you intend to extract the `openshift-installer` as it will need valid credentials for access.
         
         `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/rhel-oc-tools.sh`
 
@@ -25,8 +27,8 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#about-installing-oc-mirror-v2){:target="_blank"}
     - Always use the latest version available for your architecture.
     - **oc-mirror v2** is new, and GA'd for OpenShift 4.18, but is backwards compatible with older releases down to v4.12.
-    - RHEL 9 latest: `$ wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/oc-mirror.rhel9.tar.gz`
-    - RHEL 8 latest: `$ wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/oc-mirror.tar.gz`
+    - RHEL 9 latest: `wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/oc-mirror.rhel9.tar.gz`
+    - RHEL 8 latest: `wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/oc-mirror.tar.gz`
   ---
 
 - **openshift-install**: Program that will create the OpenShift install disk that will bootstrap and install the cluster on your hardware. 
@@ -39,20 +41,20 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
 - **mirror-registry** (optional): Small registry that can host the required container images to install, update, and maintain the cluster.
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#installing-mirroring-creating-registry){:target="_blank"}
     - Always use the latest version available for your architecture.
-    - `$ wget https://mirror.openshift.com/pub/cgw/mirror-registry/latest/mirror-registry-amd64.tar.gz`
+    - `wget https://mirror.openshift.com/pub/cgw/mirror-registry/latest/mirror-registry-amd64.tar.gz`
   ---
 
 - **butane**: CLI tool to create machine config files to customize OpenShift nodes in your environment. 
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.12/html/installation_configuration/installing-customizing#installation-special-config-butane-install_installing-customizing){:target="_blank"}
     - Always use the latest version available for your architecture.
-    - `$ wget https://mirror.openshift.com/pub/openshift-v4/clients/butane/latest/butane-amd64`
+    - `wget https://mirror.openshift.com/pub/openshift-v4/clients/butane/latest/butane-amd64`
 
 ## Grab your pull-secret from your Red Hat Account 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#installation-adding-registry-pull-secret_installing-mirroring-disconnected){:target="_blank"}
 
 1. Download or copy your [pull secret from the Red Hat OpenShift Console](https://console.redhat.com/openshift/install/pull-secret){:target="_blank"}. These are your credentials for accessing Red Hat container registries.
 
-1. Make a copy of your pull secret in JSON format:
+1. Make a copy of your pull secret in readable JSON format:
 ```bash
 $ cat ./pull-secret | jq . > rh-pull-secret.json
 ``` 

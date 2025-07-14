@@ -1,5 +1,5 @@
 ## Patch the OperatorHub
-Before importing these catalog sources, it is necessary to disable all default catalog sources with this command (as they will not work in a disconnected environment)
+Before importing these cluster sources, it's best to disable all default catalog sources with this command (as OperatorHub will be activly trying to connect to the Internet to fetch them)
 ```bash
 $ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
 operatorhub.config.openshift.io/cluster patched
@@ -16,7 +16,19 @@ From your `oc mirror` command, you could have the following files in your workin
   - `cs-redhat-operator-index-v4-17.yaml`: This is the CatalogSource for RedHat Operators. 
       
     !!! note
-        Rename the catalog source in the YAML file from `cs-redhat-operator-index-v4-17` to `redhat-operators` as many operators reference this exact catalog source name. Not always the case but it's a good idea to do this.
+        Rename the catalog source {++in the YAML++} file from `cs-redhat-operator-index-v4-17` to `redhat-operators` as some operators are hardcoded reference this exact catalog source name. Not always the case but it's a good idea to do this. Example below:
+        
+        ```yaml hl_lines="4"
+        apiVersion: operators.coreos.com/v1alpha1
+        kind: CatalogSource
+        metadata:
+          name: redhat-operators
+          namespace: openshift-marketplace
+        spec:
+          image: registry.example.com:8443/ocp/redhat/redhat-operator-index:v4.17
+          sourceType: grpc
+        status: {}
+        ```
   
   - `cs-certified-operator-index-v4-17.yaml`: This is the catalog for operators certified by Red Hat but not necessarily developed by Red Hat.
   - `cs-community-operator-index-v4-17.yaml`: This is the catalog source for all community based operators.
@@ -24,7 +36,7 @@ From your `oc mirror` command, you could have the following files in your workin
     !!! info
         If you have any **ClusterCatalogs** i.e `cc-redhat-operator-index-v4-17.yaml`, they will only work on OpenShift 4.18 or newer. Ignore errors from ClusterCatalogs when applying resources if you are on an older version of OpenShift
 
-        This is due to changes in the Operator Lifecycle Manager (OLM) architecture moving from OLM classic to v1 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/extensions/catalogs){:target="_blank"}
+        This is due to changes in the Operator Lifecycle Manager (OLM) architecture moving from OLM classic to OLMv1 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/extensions/catalogs){:target="_blank"}
 
 ## Configure the cluster to use the resources you mirrored
 
@@ -57,7 +69,7 @@ $ oc apply -f cluster-resources/signature-configmap.json
 
 ## Verify resources have been applied
 
-1. Verify the CatalogSource has been installed
+1. Verify the CatalogSource has been installed. You may have some, all, or none of these depending on what Operators you mirrored.
 ```bash
 $ oc get catalogsource -A
 NAMESPACE               NAME                                DISPLAY   TYPE   PUBLISHER   AGE

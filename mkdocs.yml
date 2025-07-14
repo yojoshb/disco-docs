@@ -74,7 +74,7 @@ theme:
   custom_dir: overrides
   font: false
   features:
-    - content.code.copy
+    #- content.code.copy
     - content.code.annotate
     - content.tooltips
     #- navigation.sections # Expand all nav elements into sections

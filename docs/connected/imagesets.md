@@ -70,7 +70,7 @@
         
         `storageConfig`: no longer needed as it's using a caching system rather than a metadata storage directory  
 
-    ```yaml title="Example: imageset-config.yaml"
+    ```{ .yaml .copy title="Example: imageset-config.yaml" }
     kind: ImageSetConfiguration
     apiVersion: mirror.openshift.io/v2alpha1
     

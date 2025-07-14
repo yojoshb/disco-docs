@@ -46,6 +46,7 @@
     
     - `noexec` must **not** be enabled on `/home`, **or** podman must be configured to use a different `rootless_storage_path` directory on a filesystem that allows exec. `rootless_storage_path` is defined in `/etc/containers/storage.conf`. 
         - This can be overridden on a per-user basis as well if needed by creating `~/.config/containers/storage.conf` and making edits there
+        - Refer to this article: [Red Hat Blog: rootless-podman-nfs](https://www.redhat.com/en/blog/nfs-rootless-podman){:target="_blank"}
     
     - `fapolicyd` may need to be adjusted or disabled
         - You can add the binary to the policy like so:
@@ -58,8 +59,9 @@
         $ systemctl start fapolicyd.service; systemctl status fapolicyd.service
         ```
     
-    - If the users `$HOME` is on NFS network storage, adjustments will need to be made
-        - Refer to this article: [Red Hat Blog: rootless-podman-nfs](https://www.redhat.com/en/blog/rootless-podman-nfs){:target="_blank"}
+    - If the users `$HOME` is on NFS network storage, podman must be configured to use a different `rootless_storage_path` directory on a filesystem. `rootless_storage_path` is defined in `/etc/containers/storage.conf`. 
+        - This can be overridden on a per-user basis as well if needed by creating `~/.config/containers/storage.conf` and making edits there
+        - Refer to this article: [Red Hat Blog: rootless-podman-nfs](https://www.redhat.com/en/blog/nfs-rootless-podman){:target="_blank"}
     
     - The user running podman must be a local Linux account, **or** have SUBUID/SUBGID explicitly mapped in `/etc/subuid` and `/etc/subgid`. Network accounts such as Active Directory don't exist in `/etc/passwd` so the podman tools have no idea how to create these maps for you.
         - IdM/IPA can handle the creating of these if configured to do so: [IdM Generate subID ranges](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/configuring_and_managing_identity_management/assembly_managing-subid-ranges-manually_configuring-and-managing-idm#proc_generating-subid-ranges-using-idm-cli_assembly_managing-subid-ranges-manually)
@@ -104,6 +106,12 @@ Generate a secret from the mirror registry and save it to your machine.
     $ podman login --tls-verify=false registry.example.com:8443
     Authenticating with existing credentials for registry.example.com:8443
     Existing credentials are valid. Already logged in to registry.example.com:8443
+    ```
+
+1. If you want your system to trust the registry, anchor the CA to the system and update the trust. This will allow registry authentication without having to use `--tls-verify=false`
+    ```bash
+    $ sudo cp /opt/quay-root/quay-rootCA/rootCA.pem /etc/pki/ca-trust/source/anchors/
+    $ sudo update-ca-trust
     ```
 
 1. By the end, you should have a Registry account that can push/pull (so oc-mirror can push images to it) and a account that can only pull (so the cluster can access the images for installing/updating). This registry should only be used to hold OpenShift release images. Follow your organizations best practice to administer this process.

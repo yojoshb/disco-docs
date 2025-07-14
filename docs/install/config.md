@@ -54,7 +54,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
   
   You can look at several [install-config.yaml examples here in this document](../examples/install-configs.md)
   
-  ```yaml title="install-config.yaml: Compact cluster"
+  ```{ .yaml .copy title="install-config.yaml: Compact cluster" }
   apiVersion: v1
   baseDomain: example.com # (1)! The base domain name of the cluster. All DNS records must be sub-domains of this base and include the cluster name.
   compute:
@@ -125,13 +125,13 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
   
   You can look at several [agent-config.yaml examples here in this document](../examples/agent-configs.md)
 
-  ```yaml title="agent-config.yaml: Static IP assignment"
+  ```{ .yaml .copy title="agent-config.yaml: Static IP assignment" }
   apiVersion: v1alpha1
   kind: AgentConfig
   metadata:
     name: cluster # (1)! The cluster name that you specified in your DNS records.
   rendezvousIP: 172.16.1.10 # (2)! Can be the IP of any one of the master nodes. This node will become bootstrap machine during install. A worker cannot be the rendezvous machine.
-  additionalNTPSources: # (3)! Optional but recommended for disconnected installs. The install can work without NTP but it'll rely on the system clocks to be correct which may not always be true
+  additionalNTPSources: # (3)! Optional but recommended for disconnected installs. The install can work without NTP but it'll rely on the system clocks to be correct which may not always be true. IP address or hostname is accepatable 
     - ntp.example.com 
   hosts:
     - hostname: m1.cluster.example.com # (4)! Hostname of the node, must be resolvable by dns.
@@ -219,7 +219,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
 
   1. The cluster name that you specified in your DNS records.
   2. Can be the IP of any one of the master nodes. This node will become bootstrap machine during install. A worker cannot be the rendezvous machine.
-  3. Optional but recommended for disconnected installs. The install can work without NTP but it'll rely on the system clocks to be correct which may not always be true
+  3. Optional but recommended for disconnected installs. The install can work without NTP but it'll rely on the system clocks to be correct which may not always be true. IP address or hostname is accepatable 
   4. Hostname of the node, must be resolvable by DNS.
   5. Recommended to explicitly define roles for your hosts, especially if you're defining masters and workers as they would otherwise be applied at random.
   6. Name of the interface. If you do not know it, the installer scripts will detect the actual name by mac-address.
@@ -259,9 +259,9 @@ my_cluster
 0 directories, 2 files
 ```
 
-1. Make a copy of this directory and it's contents. When you run `openshift-install` against it, all the files are consumed to build the image. A backup is a good idea incase of any issues that may arrise.
+1. Make a copy of this directory and it's contents. When you run `openshift-install` against it, all the files are consumed to build the image.
 ```bash
-$ cp -R my_cluster/ my_cluster_bak/
+$ cp -r my_cluster/ my_cluster_bak/
 ```
 
 1. Create the agent image. It will be saved in the target directory that had the configs.

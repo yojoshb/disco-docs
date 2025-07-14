@@ -12,10 +12,10 @@ Version: GITHUB_RELEASE
     - [x] Mirror Registry install
     - [x] disk-2-mirror
     - [x] DNS
-- [ ] Disconnected install
+- [x] Disconnected install
     - [x] Build ISO
     - [x] Boot ISO
-    - [ ] Troubleshooting
+    - [x] Troubleshooting
 - [x] Post install
     - [x] Applying cluster resources
     - [x] NTP

@@ -6,14 +6,14 @@ The connected Linux machine will need to be able to run provided tools and acces
 
   - The current CDN access needed for the mirror host:
   
-  [Red Hat KCS](https://access.redhat.com/solutions/4919821){:target="_blank"}, [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installation_configuration/configuring-firewall#configuring-firewall_configuring-firewall){:target="_blank"}
-  
-  |URL                    |Port|Function|
-  |-                      |-   |-       |
-  |`registry.redhat.io`   |443 |Provides core container images |
-  |`*.quay.io`            |443 |Provides core container images |
-  |`sso.redhat.com`       |443 |https://cloud.redhat.com/openshift site uses authentication from `sso.redhat.com`. |
-  |`mirror.openshift.com` |443 |Required to access mirrored installation content and images. |
+    [Red Hat KCS](https://access.redhat.com/solutions/4919821){:target="_blank"}, [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installation_configuration/configuring-firewall#configuring-firewall_configuring-firewall){:target="_blank"}
+    
+    |URL                    |Port|Function|
+    |-                      |-   |-       |
+    |`registry.redhat.io`   |443 |Provides core container images |
+    |`*.quay.io`            |443 |Provides core container images |
+    |`sso.redhat.com`       |443 |`https://cloud.redhat.com/openshift` site uses authentication from `sso.redhat.com`. |
+    |`mirror.openshift.com` |443 |Required to access mirrored installation content and images. |
 
 The general flow of a disconnected OpenShift install starts with: 
 

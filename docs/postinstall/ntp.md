@@ -26,7 +26,7 @@ storage:
     mode: 0644 # (3)! Specify an octal value mode for the mode field in the machine config file
     overwrite: true
     contents:
-      inline: | # (4)! Specify any valid, reachable time source. `172.16.10.123` is an example time server
+      inline: | # (4)! Specify any valid, reachable time source. `172.16.10.123` is an example time server. IP address or hostname is accepatable 
         pool 172.16.10.123 iburst
         driftfile /var/lib/chrony/drift
         makestep 1.0 3
@@ -62,4 +62,4 @@ $ oc apply -f ./99-master-chrony.yaml
 1. On worker nodes, change `master` to `worker`
 2. On worker nodes, change `master` to `worker`
 3. Specify an octal value mode for the `mode` field in the machine config file. After creating the file and applying the changes, the `mode` is converted to a decimal value. You can check the YAML file with the command `oc get mc <mc-name> -o yaml`
-4. Specify any valid, reachable time source. `172.16.10.123` is an example time server
+4. Specify any valid, reachable time source. `172.16.10.123` is an example time server. IP address or hostname is accepatable 

@@ -94,7 +94,10 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
     ```
   
 ### Extract the openshift-install binary from the release-images mirrored
-This binary will be used to create the ISO that you will boot on your hardware to install the cluster. To extract the openshift-install that's built for your mirrored images version on the connected network:
+This binary will be used to create the ISO that you will boot on your hardware to install the cluster. This binary has to match the exact version of OpenShift release images that you have mirrored. To extract the openshift-install that's built for your mirrored images version on the connected network:
+
+!!! note
+    If you used the `rhel-oc-tools.sh` script and chose to extract the binary you do not need to do this. 
 
 1. Construct the correct URL to download the payload for your release images. Follow one of these steps
     
@@ -118,7 +121,7 @@ This binary will be used to create the ISO that you will boot on your hardware t
     !!! warning
         Be aware that this could end up downloading a different version of installer if you mirrored the images at a earlier time.
 
-        Example: You mirrored the images a week ago, now you go to extract the binary, but Red Hat updated the `stable-4.17` images from `4.17.70` to `4.17.71`. The binary would be downloaded for the newer stable branch and be the incorrect version with the images you mirrored prior.
+        Example: You mirrored the `stable-4.17` the images a week ago, the stable channel was pinned to version `4.17.70`. Now you go to extract the binary a week later, but Red Hat updated the `stable-4.17` images from `4.17.70` to `4.17.71`. The binary would be downloaded for the newer stable branch `4.17.71` and be the incorrect version with the images you mirrored prior.
 
 2. Use `oc adm` to extract the openshift-install binary that is purpose built for the version of images you mirrored. This command will extract the `openshift-install` or `openshift-install-fips` binary to your current directory. You can pass in the `--dir='<path>'` to extract the binary to a specific location on your filesystem. 
     ```bash

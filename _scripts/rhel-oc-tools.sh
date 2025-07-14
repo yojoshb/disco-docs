@@ -6,13 +6,13 @@ set -e
 ### Variables to modify
 DL_DIR="$(pwd)/bin"           # Download directory: /some/path
 RHEL_VERSION="9"              # Major version of RHEL: 8 or 9
-RELEASE_VERSION="stable-4.17" # OpenShift Channel and version: latest, stable, stable-4.20, etc
+RELEASE_VERSION="stable-4.18" # OpenShift Channel and version: latest, stable, stable-4.20, etc
 RELEASE_ARCH="amd64"          # OpenShift and Tools architecture: amd64, arm64, ppc64le, s390x, multi
-MIRROR_REGISTRY=0             # 1=true or 0=false, to download the mirror-registry or not
-INSTALLER=0                   # 1=true or 0=false, to extract the openshift-install binary or not. $RHEL_VERSION must match your current machine so the correct 'oc' binary is used for extraction
-FIPS=0                        # 1=true or 0=false, only for OpenShift version 4.16 and later to determine if the openshift-install binary needs to be a FIPS version or not. Only used if INSTALLER=1
+MIRROR_REGISTRY=false         # boolean true or false, to download the mirror-registry or not
+INSTALLER=false               # boolean true or false, to extract the openshift-install binary or not. $RHEL_VERSION must match your current machine so the correct 'oc' binary is used for extraction
+FIPS=false                    # boolean true or false, only for OpenShift version 4.16 and later to determine if the openshift-install binary needs to be a FIPS version or not. Only used if INSTALLER=true
 
-### Shouldn't need to modify, only used if INSTALLER=1
+### Shouldn't need to modify, only used if INSTALLER=true
 RELEASE_IMAGE=$(curl -s https://mirror.openshift.com/pub/openshift-v4/$RELEASE_ARCH/clients/ocp/$RELEASE_VERSION/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}')
 RUNTIME_RHEL_VERSION=$(cat /etc/redhat-release | cut -f1 -d. | tr -d -c 0-9)
 
@@ -35,21 +35,21 @@ echo "Architecture: $RELEASE_ARCH"
 echo "OS: RHEL$RHEL_VERSION"
 echo "Download directory: $DL_DIR"
 
-if [ "$MIRROR_REGISTRY" = "1" ]; then
+if [ "$MIRROR_REGISTRY" = true ]; then
   echo "Mirror Registry download: True"
 else
   echo "Mirror Registry download: False"
 fi
 
-if [ "$INSTALLER" = "1" ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; then
-  if [ "$FIPS" = "1" ]; then
+if [ "$INSTALLER" = true ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; then
+  if [ "$FIPS" = true ]; then
     echo "OpenShift Install binary: True, extracting FIPS binary from $RELEASE_IMAGE"
   else
     echo "OpenShift Install binary: True, extracting binary from $RELEASE_IMAGE"
   fi
 else
-  echo "OpenShift Install binary: False, either INSTALLER=0 or your runtime version of RHEL does not match the RHEL_VERSION you defined."
-  INSTALLER=0
+  echo "OpenShift Install binary: False, either INSTALLER=false or your runtime version of RHEL does not match the RHEL_VERSION you defined."
+  INSTALLER=false
 fi
 echo ""
 read -p "Press [ENTER] to continue  |  Press [CTRL-C] to abort"
@@ -68,7 +68,7 @@ wget -q --show-progress $DL_OC
 if [ "$RHEL_VERSION" = "9" ]; then wget -q --show-progress $DL_OCMIRROR_EL9; else wget -q --show-progress $DL_OCMIRROR_EL8; fi
 
 # If true, download mirror-registry
-if [ "$MIRROR_REGISTRY" = "1" ]; then wget -q --show-progress -P ../ $DL_MIRROR_REGISTRY; fi
+if [ "$MIRROR_REGISTRY" = true ]; then wget -q --show-progress -P ../ $DL_MIRROR_REGISTRY; fi
 
 # Extract tools
 for tar in *.tar.gz; do
@@ -79,8 +79,8 @@ done
 chmod a+x oc kubectl
 
 # If true, extract the openshift-install binary for fips or non fips
-if [ "$INSTALLER" = "1" ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; then
-  if [ "$FIPS" = "1" ]; then
+if [ "$INSTALLER" = true ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; then
+  if [ "$FIPS" = true ]; then
     echo "Extracting openshift-install-fips binary"
     ./oc adm release extract --command=openshift-install-fips $RELEASE_IMAGE && echo "openshift-install-fips binary extracted"
     chmod a+x openshift-install-fips
@@ -100,4 +100,4 @@ mv oc kubectl butane oc-mirror ..
 # Remove tmp directory
 cd ..
 rm -rf tmp
-echo -e "\nTools downloaded to: $DL_DIR"
+echo -e "\nTools downloaded to: $DL_DIR\n"
