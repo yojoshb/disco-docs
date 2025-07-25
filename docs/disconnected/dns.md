@@ -30,7 +30,7 @@ These records are mandatory for the cluster to function. Technically the cluster
   |Master node 3    |m3.cluster.example.com       |172.16.1.12  |DNS A/PTR record   |
   |Registry         |registry.example.com         |172.16.1.1   |DNS A/PTR record   |
 
-- For Single Node OpenShift (SNO) the Kubernetes API and Routes all must point to the SNO if you aren't using a external load-balancer. The cluster name is `sno` and the base domain is `example.com`.
+- For Single Node OpenShift (SNO) the Kubernetes API and Routes all must point to the SNO node itself if you aren't using a external load-balancer. The cluster name is `sno` and the base domain is `example.com`.
 
   |Component        |Record                  |IP Address   |Type               |
   |-                |-                       |-            |-                  |
@@ -42,9 +42,10 @@ These records are mandatory for the cluster to function. Technically the cluster
 
 - Check forward, reverse, and wildcard DNS resolution
     - Forward lookup for the record `api.cluster.example.com` answered by the DNS server at `172.16.1.254`
-    ```bash hl_lines="15 18"
-    $ dig api.cluster.example.com
-  
+    ```{ .bash }
+    dig api.cluster.example.com
+    ```
+    ```{ . .no-copy hl_lines="13 16" title="Example Output" }
     ; <<>> DiG 9.16.23-RH <<>> api.cluster.example.com
     ;; global options: +cmd
     ;; Got answer:
@@ -65,9 +66,10 @@ These records are mandatory for the cluster to function. Technically the cluster
     ;; MSG SIZE  rcvd: 64
     ```
     - Reverse lookup for the record `172.16.1.5` answered by the DNS server at `172.16.1.254`
-    ```bash hl_lines="15 18"
-    $ dig -x 172.16.1.5
-  
+    ```{ .bash }
+    dig -x 172.16.1.5
+    ```
+    ```{ . .no-copy hl_lines="13 16" title="Example Output" }
     ; <<>> DiG 9.16.23-RH <<>> -x 172.16.1.5
     ;; global options: +cmd
     ;; Got answer:
@@ -88,9 +90,10 @@ These records are mandatory for the cluster to function. Technically the cluster
     ;; MSG SIZE  rcvd: 91 
     ```
     - Wildcard lookup for the record `someapp.apps.cluster.example.com` answered by the DNS server at `172.16.1.254`
-    ```bash hl_lines="15 18"
-    $ dig someapp.apps.cluster.example.com
-  
+    ```{ .bash }
+    dig someapp.apps.cluster.example.com
+    ```
+    ```{ . .no-copy hl_lines="13 16" title="Example Output" }
     ; <<>> DiG 9.16.23-RH <<>> someapp.apps.cluster.example.com
     ;; global options: +cmd
     ;; Got answer:

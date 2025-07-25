@@ -44,14 +44,13 @@ Recommended cluster resources for the following topologies:
 |Compact cluster     |3                 |0 or 1            |8 vCPUs |16 GB of RAM |120 GB  |
 |HA cluster          |3                 |2 and above       |8 vCPUs |16 GB of RAM |120 GB  |
 
-### Enclave support
+### Enclave Support
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/disconnected_environments/mirroring-in-disconnected-environments#oc-mirror-enclave-how-to_about-installing-oc-mirror-v2){:target="_blank"}
 
-You can also mirror into an enclave by following the docs linked in this section. This allows you to mirror for multiple disconnected environments within your organization.
+You can also mirror into an enclave by following the docs linked above. This allows you to mirror for multiple disconnected environments within your organization.
 
 
 ### FIPS Compliance
-Only pertains to the install being performed on the high-side.
 
 **OpenShift version 4.12 to 4.15** 
 

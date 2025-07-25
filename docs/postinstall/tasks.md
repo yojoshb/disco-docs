@@ -1,6 +1,6 @@
 ## Additional Post-Install Tasks
 
-Many of these settings have already been applied if you deployed the cluster with the appropriate customizations but it's good to double check everything. Much of this is regurgitated information from [Kens disconnected-openshift Repo](https://github.com/kenmoini/disconnected-openshift/blob/main/post-install-config/README.md#post-installation-cluster-configuration){:target="_blank"} which is a great resource for additional diconnected install information/configs/tools.
+Many of these settings have already been applied if you deployed the cluster with the appropriate customizations but it's good to double check everything. Much of this is regurgitated information from [Source: Kens disconnected-openshift Repo](https://github.com/kenmoini/disconnected-openshift/blob/main/post-install-config/README.md#post-installation-cluster-configuration){:target="_blank"} which is a great resource for additional diconnected install information/configs/tools.
 
 ## Cluster-wide CA Certs
 

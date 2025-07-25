@@ -28,9 +28,9 @@ The following steps outline the high-level workflow on how to update a cluster i
       
       ```bash
       # Since the OSUS image is on the Quay Mirror Registry I need it's rootCA
-      $ cp /opt/quay-data/quay-rootCA/rootCA.pem ca.crt
+      cp /opt/quay-data/quay-rootCA/rootCA.pem ca.crt
 
-      $ oc create configmap image-ca-bundle --from-file=updateservice-registry=ca.crt -n openshift-config
+      oc create configmap image-ca-bundle --from-file=updateservice-registry=ca.crt -n openshift-config
       ```
       
     !!! info
@@ -38,7 +38,7 @@ The following steps outline the high-level workflow on how to update a cluster i
       
   2. Edit the `Image` custom resource and add the configmap you just created to the additionalTrustedCA spec.
       ```bash
-      $ oc edit image.config.openshift.io cluster
+      oc edit image.config.openshift.io cluster
       ```
       ```yaml
       spec:
@@ -88,10 +88,8 @@ The following steps outline the high-level workflow on how to update a cluster i
 
       - Create the namespace:
       ```bash
-      $ oc create -f <filename>.yaml
-      
       # Example
-      $ oc create -f update-service-namespace.yaml
+      oc create -f update-service-namespace.yaml
       ```
 
   2. Install the OpenShift Update Service Operator by creating the following objects:
@@ -109,10 +107,8 @@ The following steps outline the high-level workflow on how to update a cluster i
 
       - Create an `OperatorGroup` object:
       ```bash
-      $ oc -n openshift-update-service create -f <filename>.yaml
-      
       # Example
-      $ oc -n openshift-update-service create -f update-service-operator-group.yaml
+      oc -n openshift-update-service create -f update-service-operator-group.yaml
       ```
       - Create a `Subscription` object YAML file, for example, `update-service-subscription.yaml`:
         - **Example Subscription**
@@ -133,22 +129,24 @@ The following steps outline the high-level workflow on how to update a cluster i
       ```bash
       # Heres a way to see what catalog source the cluster is configured for
       $ oc get service -n openshift-marketplace
+      ```
+      ```{ . .no-copy title="Example Output" }
       NAME                             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)             AGE
-      cs-redhat-operator-index-v4-17   ClusterIP   172.30.79.90   <none>        50051/TCP           12d
+      redhat-operators                 ClusterIP   172.30.79.90   <none>        50051/TCP           12d
       marketplace-operator-metrics     ClusterIP   172.30.26.63   <none>        8383/TCP,8081/TCP   13d
       ```
       - Create the Subscription object:
       ```bash
-      $ oc create -f <filename>.yaml
-      
       # Example
-      $ oc -n openshift-update-service create -f update-service-subscription.yaml
+      oc -n openshift-update-service create -f update-service-subscription.yaml
       ```
       The OpenShift Update Service Operator is installed to the openshift-update-service namespace and targets the openshift-update-service namespace.
 
   3. Verify the Operator installation:
       ```bash
-      $ oc -n openshift-update-service get clusterserviceversions
+      oc -n openshift-update-service get clusterserviceversions
+      ```
+      ```{ . .no-copy title="Example Output" }
       NAME                             DISPLAY                    VERSION   REPLACES                         PHASE
       update-service-operator.v5.0.3   OpenShift Update Service   5.0.3     update-service-operator.v5.0.2   Succeeded
       ```
@@ -161,24 +159,24 @@ The following steps outline the high-level workflow on how to update a cluster i
 
   1. Configure the OpenShift Update Service target namespace, for example, `openshift-update-service`:
       ```bash
-      $ NAMESPACE=openshift-update-service
+      NAMESPACE=openshift-update-service
       ```
       The namespace must match the `targetNamespaces` value from the operator group.
   2. Configure the name of the OpenShift Update Service application, for example, service:
       ```bash
-      $ NAME=service
+      NAME=service
       ```
   3. Configure the registry and repository for the release images as configured for example, `registry.example.com:8443/ocp/openshift/release-images`:
       ```bash
-      $ RELEASE_IMAGES=registry.example.com:8443/ocp/openshift/release-images
+      RELEASE_IMAGES=registry.example.com:8443/ocp/openshift/release-images
       ```  
   4. Set the local pullspec for the graph data image to the graph data container image for example, `registry.example.com:8443/ocp/openshift/graph-image:latest`:
       ```bash
-      $ GRAPH_DATA_IMAGE=registry.example.com:8443/ocp/openshift/graph-image:latest
+      GRAPH_DATA_IMAGE=registry.example.com:8443/ocp/openshift/graph-image:latest
       ```
   5. Create an OpenShift Update Service application object:
       ```bash
-      $ oc -n "${NAMESPACE}" create -f - <<EOF
+      oc -n "${NAMESPACE}" create -f - <<EOF
       apiVersion: updateservice.operator.openshift.io/v1
       kind: UpdateService
       metadata:
@@ -198,23 +196,23 @@ The following steps outline the high-level workflow on how to update a cluster i
 
   1. Set the OpenShift Update Service target namespace, for example, `openshift-update-service`:
       ```bash
-      $ NAMESPACE=openshift-update-service
+      NAMESPACE=openshift-update-service
       ```
   2. Set the name of the OpenShift Update Service application, for example, `service`:
       ```bash
-      $ NAME=service
+      NAME=service
       ```
   3. Obtain the policy engine route:
       ```bash
-      $ POLICY_ENGINE_GRAPH_URI="$(oc -n "${NAMESPACE}" get -o jsonpath='{.status.policyEngineURI}/api/upgrades_info/v1/graph{"\n"}' updateservice "${NAME}")"
+      POLICY_ENGINE_GRAPH_URI="$(oc -n "${NAMESPACE}" get -o jsonpath='{.status.policyEngineURI}/api/upgrades_info/v1/graph{"\n"}' updateservice "${NAME}")"
       ```
   4. Set the patch for the pull graph data:
       ```bash
-      $ PATCH="{\"spec\":{\"upstream\":\"${POLICY_ENGINE_GRAPH_URI}\"}}"
+      PATCH="{\"spec\":{\"upstream\":\"${POLICY_ENGINE_GRAPH_URI}\"}}"
       ```
   5. Patch the CVO to use the OpenShift Update Service in your environment:
       ```bash
-      $ oc patch clusterversion version -p $PATCH --type merge
+      oc patch clusterversion version -p $PATCH --type merge
       ```
 
 ### Configure the cluster-wide proxy
@@ -227,11 +225,11 @@ The following steps outline the high-level workflow on how to update a cluster i
 
   1. Get the ingress-router CA and save it to a file
       ```bash
-      $ oc get -n openshift-ingress-operator secret router-ca -o jsonpath="{.data.tls\.crt}" | base64 -d > ca-bundle.crt
+      oc get -n openshift-ingress-operator secret router-ca -o jsonpath="{.data.tls\.crt}" | base64 -d > ca-bundle.crt
       ```
   2. Create a configmap from that CA and store it in the openshift-config namespace
       ```bash
-      $ oc create configmap router-bundle --from-file=ca-bundle.crt -n openshift-config
+      oc create configmap router-bundle --from-file=ca-bundle.crt -n openshift-config
       ```
       
     !!! info
@@ -239,7 +237,7 @@ The following steps outline the high-level workflow on how to update a cluster i
   
   3. Edit the cluster proxy and add the config map you just created to the TrustedCA spec
       ```bash
-      $ oc edit proxy cluster
+      oc edit proxy cluster
       ```
       ```yaml
       spec:

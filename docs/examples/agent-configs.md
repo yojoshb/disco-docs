@@ -8,7 +8,7 @@ Various examples of common agent-configs. Sub in your data as appropriate.
 
 ### Bonds/Link Aggregation
 
-```yaml
+```{ .yaml .copy }
 apiVersion: v1alpha1
 kind: AgentConfig
 metadata:
@@ -71,7 +71,7 @@ The `rootDeviceHints` parameter enables the installer to provision the Red Hat E
 |`rotational`|A boolean indicating whether the device must be a rotating disk (true) or not (false). Examples of non-rotational devices include SSD and NVMe storage.|
 
 
-```yaml
+```{ .yaml .copy }
 apiVersion: v1alpha1
 kind: AgentConfig
 metadata:
@@ -112,7 +112,7 @@ hosts:
 ### DHCP
 If you want to utilize DHCP, the config is very simple and you can leave out the `networkConfig` enitirely. Make sure to at least create a static reservation for the `rendezvousIP` and master nodes if you want them to be on specific machines.
 
-```yaml
+```{ .yaml .copy }
 apiVersion: v1alpha1
 kind: AgentConfig
 metadata:

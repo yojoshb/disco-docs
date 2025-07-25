@@ -3,7 +3,7 @@
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/machine_configuration/index#machine-config-index){:target="_blank"}
 
 !!! info
-    If you set `additionalNTPSources` in your agent-config.yaml, you should not need to do this as NTP should be configured during install.
+    If you set `additionalNTPSources` in your agent-config.yaml, skip this step, you do not need to do this as NTP would've been configured during install.
 
 We need to apply a custom Network Time Protocol (NTP) configuration to the nodes, because by default, internet connectivity is assumed in OpenShift Container Platform and `chronyd` is configured to use the `*.rhel.pool.ntp.org` servers.
 
@@ -37,7 +37,7 @@ storage:
 2. Use Butane to generate a <code>MachineConfig</code> object file, <code>99-master-chrony.yaml</code>, containing the configuration to be delivered to the nodes
 
 ```bash
-$ butane 99-master-chrony.bu -o 99-master-chrony.yaml
+butane 99-master-chrony.bu -o 99-master-chrony.yaml
 ```
 </ol>
 
@@ -53,7 +53,7 @@ If the cluster is already running, apply the file
 </ul></li>
 
 ```bash
-$ oc apply -f ./99-master-chrony.yaml
+oc apply -f ./99-master-chrony.yaml
 ```
 
 </ol>

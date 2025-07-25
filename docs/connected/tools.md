@@ -55,13 +55,13 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
 1. Download or copy your [pull secret from the Red Hat OpenShift Console](https://console.redhat.com/openshift/install/pull-secret){:target="_blank"}. These are your credentials for accessing Red Hat container registries.
 
 1. Make a copy of your pull secret in readable JSON format:
-```bash
-$ cat ./pull-secret | jq . > rh-pull-secret.json
+```{ .bash }
+cat ./pull-secret | jq . > rh-pull-secret.json
 ``` 
 
 1. Specify the path to the folder to store the pull secret in and a name for the JSON file that you create. You can store this file in `/home/$USER/.docker/config.json` or `$XDG_RUNTIME_DIR/containers/auth.json`. If one of the directories aren't there, create them.
     - The contents of the file resemble the following example:
-```json title="$XDG_RUNTIME_DIR/containers/auth.json"
+```{ .json .no-copy title="$XDG_RUNTIME_DIR/containers/auth.json" }
 {
   "auths": {
     "cloud.openshift.com": {
@@ -85,8 +85,10 @@ $ cat ./pull-secret | jq . > rh-pull-secret.json
 ```
 
 1. Verify you can authenticate to `registry.redhat.io`
-```bash
-$ podman login registry.redhat.io
+```{ .bash }
+podman login registry.redhat.io
+```
+```{ . .no-copy title="Example Output" }
 Authenticating with existing credentials for registry.redhat.io
 Existing credentials are valid. Already logged in to registry.redhat.io
 ```
@@ -94,23 +96,28 @@ Existing credentials are valid. Already logged in to registry.redhat.io
 ## Install/configure tools
 
 1. Put `oc` and `oc-mirror` tools we need on the low-side in your `$PATH`. Either `/usr/local/bin` or somewhere like `/home/$USER/bin` or `/home/$USER/.local/bin`
-```bash
-$ sudo tar -xzvf openshift-client-linux.tar.gz -C /usr/local/bin/
-$ sudo tar -xzvf oc-mirror.tar.gz -C /usr/local/bin/ # RHEL 8
-$ sudo tar -xzvf oc-mirror.rhel9.tar.gz -C /usr/local/bin/ # RHEL 9
-$ sudo chmod +x /usr/local/bin/{oc,oc-mirror}
+```{ .bash .no-copy }
+sudo tar -xzvf openshift-client-linux.tar.gz -C /usr/local/bin/
+
+# RHEL 8
+sudo tar -xzvf oc-mirror.tar.gz -C /usr/local/bin/
+
+# RHEL 9
+sudo tar -xzvf oc-mirror.rhel9.tar.gz -C /usr/local/bin/
+
+sudo chmod +x /usr/local/bin/{oc,oc-mirror}
 
 # If selinux is enabled
-$ sudo restorecon -v /usr/local/bin/{oc,oc-mirror}
+sudo restorecon -v /usr/local/bin/{oc,oc-mirror}
 ```
 1. Make sure you have set the umask parameter to `0022` on the operating system that uses oc-mirror
-```bash
-$ umask 0022
+```{ .bash }
+umask 0022
 ```
 
 1. Verify that the oc-mirror v2 plugin is successfully installed by running the following command
-```bash
-$ oc mirror --v2 --help
+```{ .bash }
+oc mirror --v2 --help
 ```
 
 !!! info
@@ -118,12 +125,12 @@ $ oc mirror --v2 --help
 
     You can add the binaries to the policy like so:
     
-    ```bash
-    $ systemctl stop fapolicyd.service
+    ```{ .bash .no-copy }
+    systemctl stop fapolicyd.service
     
-    $ sudo fapolicyd-cli --file add /usr/local/bin/oc
-    $ sudo fapolicyd-cli --file add /usr/local/bin/oc-mirror
-    $ sudo fapolicyd-cli --update
+    sudo fapolicyd-cli --file add /usr/local/bin/oc
+    sudo fapolicyd-cli --file add /usr/local/bin/oc-mirror
+    sudo fapolicyd-cli --update
     
-    $ systemctl start fapolicyd.service; systemctl status fapolicyd.service
+    systemctl start fapolicyd.service; systemctl status fapolicyd.service
     ```

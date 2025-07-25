@@ -6,43 +6,43 @@ Here is where the cluster is defined. We'll use two files, `install-config.yaml`
 
 
 1. Install the `nmstate` package
-```bash
-$ sudo dnf install /usr/bin/nmstatectl -y
+```{ .bash }
+sudo dnf install /usr/bin/nmstatectl -y
 ```
 1. Create a directory to store the cluster configuration, we'll call this directory `my_cluster` for this example and it's in the $HOME directory
-```bash
-$ mkdir ~/my_cluster
+```{ .bash }
+mkdir ~/my_cluster
 ```
 
 1. Get the rootCA of your Registry. This is required for the `install-config.yaml` file.
     
     1. Grab the cert using openssl or by some other means
-    ```bash
-    $ openssl s_client -connect registry.example.com:8443 -showcerts | awk '/BEGIN/,/END/{print $0}' | tee ./rootCA.pem
-    $ cat rootCA.pem
+    ```{ .bash .no-copy }
+    openssl s_client -connect registry.example.com:8443 -showcerts | awk '/BEGIN/,/END/{print $0}' | tee ./rootCA.pem
+    cat rootCA.pem
     
     # If you want your system to trust the registry CA
-    $ sudo cp ./rootCA.pem /etc/pki/ca-trust/source/anchors/
-    $ sudo update-ca-trust
+    sudo cp ./rootCA.pem /etc/pki/ca-trust/source/anchors/
+    sudo update-ca-trust
     ```
 
     1. If you installed Red Hat Quay following this documentation, it is also located on disk where you specified the `quayRoot`.
-    ```bash
-    $ cat /opt/quay-root/quay-rootCA/rootCA.pem
+    ```{ .bash .no-copy }
+    cat /opt/quay-root/quay-rootCA/rootCA.pem
     
     # If you want your system to trust the registry CA
-    $ sudo cp /opt/quay-root/quay-rootCA/rootCA.pem /etc/pki/ca-trust/source/anchors/
-    $ sudo update-ca-trust
+    sudo cp /opt/quay-root/quay-rootCA/rootCA.pem /etc/pki/ca-trust/source/anchors/
+    sudo update-ca-trust
     ```
     
     !!! info 
         For the `additionalTrustBundle`, the data must be indented as displayed in the example `install-config.yaml` below. You can add indentation with a quick `sed` command to then paste it into your install-config.yaml.
-        ```bash
-        $ sed "s/^/  /" rootCA.pem
+        ```{ .bash }
+        sed "s/^/  /" rootCA.pem
         ```
 
 1. Get the pull secret for your mirror registry. This is required for the `install-config.yaml` file. Using `jq` you can print it to stdout in a single line like so:
-```bash
+```{ .bash }
 jq -c . $XDG_RUNTIME_DIR/containers/auth.json
 ```
 
@@ -250,8 +250,10 @@ The Agent-based Installer performs validation checks on user defined YAML files 
 ## Creating the agent image
 
 1. Your cluster build directory should look like this
-```bash
-$ tree my_cluster
+```{ .bash }
+tree my_cluster
+```
+```{ . .no-copy title="Example Output" }
 my_cluster
 ├── agent-config.yaml
 └── install-config.yaml
@@ -260,13 +262,15 @@ my_cluster
 ```
 
 1. Make a copy of this directory and it's contents. When you run `openshift-install` against it, all the files are consumed to build the image.
-```bash
-$ cp -r my_cluster/ my_cluster_bak/
+```{ .bash }
+cp -r my_cluster/ my_cluster_backup/
 ```
 
 1. Create the agent image. It will be saved in the target directory that had the configs.
-```bash
-$ openshift-install --dir my_cluster/ agent create image
+```{ .bash }
+openshift-install --dir my_cluster/ agent create image
+```
+```{ . .no-copy title="Example Output" }
 INFO Configuration has 3 master replicas and 0 worker replicas
 WARNING The imageDigestSources configuration in install-config.yaml should have at least one source field matching the releaseImage value registry.example.com:8443/ocp/openshift/release-images@sha256:fd8f5562f0403504b35cc62e064b04c34e6baeb48384bddebffc98c3c69a2af3
 INFO The rendezvous host IP (node0 IP) is 172.16.1.10
@@ -278,6 +282,15 @@ INFO Consuming Agent Config from target directory
 ```
 
     - For FIPS, do the same thing but use the FIPS binary
-    ```bash
-    $ openshift-install-fips --dir my_cluster/ agent create image
+    ```{ .bash }
+    openshift-install-fips --dir my_cluster/ agent create image
     ```
+
+    !!! info
+        If you have built an ISO before, there may be issues with the caching system that will cause a new build to fail.
+
+        Remove the existing cache, it will exist in the `$HOME` of the installation user
+
+        ```{ .bash }
+        rm -rf ~/.cache/agent
+        ```
