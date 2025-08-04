@@ -13,7 +13,7 @@ We need to apply a custom Network Time Protocol (NTP) configuration to the nodes
 
     !!! note "The Butane version you specify in the config file should match the OpenShift Container Platform version and always ends in `0`. For example, `4.17.0`."
 
-```yaml
+```{ .yaml }
 variant: openshift
 version: 4.17.0
 metadata:
@@ -36,7 +36,7 @@ storage:
 <ol start=2>
 2. Use Butane to generate a <code>MachineConfig</code> object file, <code>99-master-chrony.yaml</code>, containing the configuration to be delivered to the nodes
 
-```bash
+```{ .bash }
 butane 99-master-chrony.bu -o 99-master-chrony.yaml
 ```
 </ol>
@@ -52,7 +52,7 @@ If the cluster is not running yet, after you generate manifest files, add the <c
 If the cluster is already running, apply the file
 </ul></li>
 
-```bash
+```{ .bash }
 oc apply -f ./99-master-chrony.yaml
 ```
 

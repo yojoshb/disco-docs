@@ -81,6 +81,21 @@
 ## Troubleshooting
 Things may not go as planned so sometimes manual intervention may be required. The `openshift-install --dir my_cluster/ agent wait-for` commands should let you know if an error occurs, but sometimes it's best to get directly on the nodes and troubleshoot.
 
+#### HA Cluster without a external Load Balancer
+If you build a HA cluster (3 masters, 2+ workers), without a external Load Balancer, the router pods will not be able to redirect `*.apps` routes to anything outside of the cluster. Move the router pods to the master nodes, and scale the deployment accordingly
+
+- To move the router, the following patch on the IngressController will add both the node selector and toleration:
+
+```{ .bash }
+oc patch ingresscontrollers.operator.openshift.io default -n  openshift-ingress-operator  --type=merge -p '{"spec":{"nodePlacement": {"nodeSelector": {"matchLabels": {"node-role.kubernetes.io/master": ""}},"tolerations": [{"key": "node-role.kubernetes.io/master","operator": "Exists","effect":"NoSchedule"}]}}}'
+```
+
+- The router is configured by default to have only 2 replicas, but with 3 infrastructure nodes the following patch is required to scale to 3 routers.
+
+```{ .bash }
+oc patch ingresscontroller/default -n openshift-ingress-operator --type=merge -p '{"spec":{"replicas": 3}}'
+```
+
 #### Direct SSH access
 - Since there's an SSH key injected into the ISO, you can SSH directly to the node using the public key
 ```{ .bash }

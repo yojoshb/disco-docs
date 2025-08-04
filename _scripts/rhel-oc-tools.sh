@@ -57,7 +57,7 @@ if [ "$INSTALLER" = true ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; the
   else
     echo "OpenShift Install binary: $INSTALLER, extracting binary from $RELEASE_IMAGE"
   fi
-  echo "    Make sure you have either $HOME/.docker/config.json or $XDG_RUNTIME_DIR/containers/auth.json populated with your Red Hat Pull Secret"
+  echo "> Make sure you have either $HOME/.docker/config.json or $XDG_RUNTIME_DIR/containers/auth.json populated with your Red Hat Pull Secret"
 else
   echo "OpenShift Install binary: false, either INSTALLER=false or your runtime version of RHEL does not match the RHEL_VERSION you defined."
   INSTALLER=false

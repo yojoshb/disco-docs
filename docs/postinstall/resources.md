@@ -1,5 +1,5 @@
 ## Patch the OperatorHub
-Before importing these cluster sources, it's best to disable all default catalog sources with this command (as OperatorHub will be activley trying to connect to the Internet to fetch them)
+Before importing these cluster sources, it's best to disable all default catalog sources with this command (as OperatorHub will be actively trying to connect to the Internet to fetch them)
 ```{ .bash }
 oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
 ```
@@ -12,7 +12,7 @@ From your `oc mirror` command, you could have the following files in your workin
 
   - `idms-oc-mirror.yaml`: This is a list of mappings between the original public registry and your local registry for all images that are identified by their digest (ImageDigestMirrorSet).
   - `itms-oc-mirror.yaml`: This is a list of mappings between the original public registry and your local registry for all images that are identified by their tag (ImageTagMirrorSet).
-  - `cs-redhat-operator-index-v4-17.yaml`: This is the CatalogSource for RedHat Operators. 
+  - `cs-redhat-operator-index-v4-17.yaml/cc-redhat-operator-index-v4-17.yaml`: This is the CatalogSource/ClusterCatalog for RedHat Operators. 
       
     !!! warning "Important!"
         Change the **name** the `cs-redhat-operator-index-v4-17.yaml/cc-redhat-operator-index-v4-17.yaml` catalog source ==in the YAML== file to `redhat-operators` as some operators are hardcoded reference this exact catalog source name. Examples below with the highlighted value:

@@ -9,8 +9,10 @@ Many of these settings have already been applied if you deployed the cluster wit
 Typically you'll have custom internal Root Certificate Authorities that sign TLS certs for services. If you provided the certificates during installation (your mirror registry for example), you should find them in the `user-ca-bundle` ConfigMap in the `openshift-config` Namespace under the `ca-bundle.crt` key. 
 
 1. Verify that the contents match what you have for your Root CAs
-```bash
-$ oc get cm/user-ca-bundle -n openshift-config -o yaml
+```{ .bash }
+oc get cm/user-ca-bundle -n openshift-config -o yaml
+```
+```{ . .no-copy title="Example Output" }
 apiVersion: v1
 data:
   ca-bundle.crt: |
@@ -25,7 +27,7 @@ kind: ConfigMap
 ```
 
 2. If you need to add additional CA's, modify this ConfigMap with the cert data
-```yaml title="user-ca-bundle.yaml"
+```{ .yaml title="user-ca-bundle.yaml" }
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -46,18 +48,18 @@ data:
 ```
 
     !!! warning "This may cause nodes to reboot so be prepared"
-```bash
+```{ .bash }
 # Edit from the cmdline and copy/paste contents
-$ oc edit configmaps user-ca-bundle -n openshift-config
+oc edit configmaps user-ca-bundle -n openshift-config
 
 # Or
 
 # Apply the yaml file if you created one
-$ oc apply -f user-ca-bundle.yaml
+oc apply -f user-ca-bundle.yaml
 ```
 
 3. With the Root CA Certificates in the cluster-wide ConfigMap, you can now create other ConfigMaps with a special label that will inject all the trusted Root CA certificates into it which makes it easy to be used by applications
-```yaml title="image-additional-trust-bundle.yaml"
+```{ .yaml title="image-additional-trust-bundle.yaml" }
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -68,16 +70,18 @@ metadata:
     # This label will create the .data['ca-bundle.crt'] key with all the system trusted roots, custom and default
     config.openshift.io/inject-trusted-cabundle: 'true'
 ```
-```bash
+```{ .bash }
 # Apply the yaml file
-$ oc apply -f image-additional-trust-bundle.yaml
+oc apply -f image-additional-trust-bundle.yaml
 ```
 
 ## Disabling the Insights Operator
 This is probably already set to be unmanaged (disabled) but check it if it's not. Look for `managementState: Unmanaged` under the `spec:` section.
 
-```bash hl_lines="8"
-$ oc get insightsoperator.operator.openshift.io/cluster -o yaml
+```{ .bash }
+oc get insightsoperator.operator.openshift.io/cluster -o yaml
+```
+```{ .yaml .no-copy hl_lines="7" }
 apiVersion: operator.openshift.io/v1
 kind: InsightsOperator
 metadata:
@@ -89,7 +93,7 @@ spec:
 ```
 
 If you need to set it to Unmanaged
-```yaml title="insights-disable.yaml"
+```{ .yaml .no-copy title="insights-disable.yaml" }
 ---
 apiVersion: operator.openshift.io/v1
 kind: InsightsOperator
@@ -99,14 +103,14 @@ spec:
   # Change from Managed to Unmanaged
   managementState: Unmanaged
 ```
-```bash
+```{ .bash }
 # Edit from the cmdline and copy/paste contents
-$ oc edit insightsoperator.operator.openshift.io/cluster
+oc edit insightsoperator.operator.openshift.io/cluster
 
 # Or
 
 # Apply the yaml file if you created one
-$ oc apply -f insights-disable.yaml
+oc apply -f insights-disable.yaml
 ```
 
 ## Image CR and additional Container Registries
@@ -119,7 +123,7 @@ To define Root CA certificates, you have to create a ConfigMap. This ConfigMap n
 
 When configuring the Root CA for the registry that hosts the OpenShift Releases served by the OpenShift Update Service there is an `updateservice-registry` key that is used. This is outlined in the [OSUS Install Doc: Configure access to the secured registry](./osus.md)
 
-```yaml title="image-ca-bundle.yaml"
+```{ .yaml title="image-ca-bundle.yaml" }
 # Root CA definitions for use by the config/Image CR
 # Each image registry URL should have a corresponding entry in this ConfigMap
 # with the registry URL as the key and the CA certificate as the value.
@@ -147,20 +151,20 @@ data:
     ... cert text here ...
     -----END CERTIFICATE-----
 ```
-```bash
+```{ .bash }
 # Edit from the cmdline and copy/paste contents
-$ oc edit configmaps image-ca-bundle -n openshift-config
+oc edit configmaps image-ca-bundle -n openshift-config
 
 # Or
 
 # Apply the yaml file if you created one
-$ oc apply -f image-ca-bundle.yaml
+oc apply -f image-ca-bundle.yaml
 ```
 
 
 With that ConfigMap created, you can now configure the Image CR with it and any other configuration you want
 
-```yaml title="image-config-cr.yaml"
+```{ .yaml title="image-config-cr.yaml" }
 ---
 apiVersion: config.openshift.io/v1
 kind: Image
@@ -206,12 +210,12 @@ spec:
       - test-registry.example.com:8443
 ```
 
-```bash
+```{ .bash }
 # Edit from the cmdline and copy/paste contents
-$ oc edit image.config.openshift.io cluster
+oc edit image.config.openshift.io cluster
 
 # Or
 
 # Apply the yaml file if you created one
-$ oc apply -f image-config-cr.yaml
+oc apply -f image-config-cr.yaml
 ```
