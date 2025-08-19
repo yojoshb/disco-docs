@@ -152,7 +152,7 @@ data:
     -----END CERTIFICATE-----
 ```
 ```{ .bash }
-# Edit from the cmdline and copy/paste contents
+# Edit from the cmdline if the resource already exists and copy/paste contents
 oc edit configmaps image-ca-bundle -n openshift-config
 
 # Or

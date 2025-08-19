@@ -2,17 +2,16 @@
 
 1. Boot the agent.iso on your hardware. This example output is for a single node OpenShift install, the node is named `sno.cluster.example.com`. The commands are the same for whatever type of cluster your are installing with the agent based installer. Normally installs take around 45 minutes give or take.
 
-!!! info
-    
-    When you boot your ISO, make sure to set the ISO as a one-time boot option. The node(s) will reboot automatically during install and you don't want them rebooting into the installation ISO accidentally.
-    
-    For FIPS, do the same thing but use the FIPS binary
-    
-    ```{ .bash }
-    openshift-install-fips --dir my_cluster/ agent wait-for <command>
-    ```
+    !!! info    
+        When you boot your ISO, make sure to set the ISO as a one-time boot option. The node(s) will reboot automatically during install and you don't want them rebooting into the installation ISO accidentally.
+      
+        For FIPS, do the same thing but use the FIPS binary
+      
+        ```{ .bash }
+        openshift-install-fips --dir my_cluster/ agent wait-for <command>
+        ```
 
-   - Watch for the bootstrap to complete and the Kube API initialization. These commands should tell you if there's anything worng during the installation.
+2. Watch for the bootstrap to complete and the Kube API initialization. These commands should tell you if there's anything worng during the installation.
     ```{ .bash }
     openshift-install --dir my_cluster/ agent wait-for bootstrap-complete --log-level=info
     ```
@@ -57,7 +56,7 @@
     INFO Bootstrap is complete
     INFO cluster bootstrap is complete
     ```
-  - Once the bootstrap fully completes, the command will exit and dump you to back to the terminal. Now you can switch to waiting for the install to complete.
+3. Once the bootstrap fully completes, the command will exit and dump you to back to the terminal. Now you can switch to waiting for the install to complete.
     ```{ .bash }
     openshift-install --dir my_cluster/ agent wait-for install-complete
     ```
@@ -74,9 +73,13 @@
     INFO Login to the console with user: "kubeadmin", and password: "gbEsF-FxsIQ-Y7zNt-P5xvv"
     ```
 
-
-2. Now that the cluster is installed, use the information provided from the end of the log to access the API/WebGUI.
-3. **Wait at least 24 hours before rebooting the cluster or making any changes that will reboot the nodes.** KubeAPI certificates will be propagated to all components in the cluster during the first 24 hours. If the nodes get rebooted before the certs get approved by all components, there is a high chance the cluster will not initilize correctly and be unhappy. You'll have to manually approve them on all the nodes through an SSH connection. 
+4. Now that the cluster is installed, use the information provided from the end of the log to access the API/WebGUI.
+5. The API will be available immediately, but it may take a few more minutes before the WebUI is accessable. The ClusterOperators take a bit longer to fully initialize.
+    - Check the cluster operators status using the oc command line tool: 
+    ```{ .bash }
+    oc get clusteroperators
+    ```
+6. **Wait at least 24 hours before rebooting the cluster or making any changes that will reboot the nodes.** KubeAPI certificates will be propagated to all components in the cluster during the first 24 hours. If the nodes get rebooted before the certs get approved by all components, there is a high chance the cluster will not initilize correctly and be unhappy. You'll have to manually approve them on all the nodes through an SSH connection. 
 
 ## Troubleshooting
 Things may not go as planned so sometimes manual intervention may be required. The `openshift-install --dir my_cluster/ agent wait-for` commands should let you know if an error occurs, but sometimes it's best to get directly on the nodes and troubleshoot.

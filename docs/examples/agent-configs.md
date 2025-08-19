@@ -6,6 +6,9 @@
 
 Various examples of common agent-configs. Sub in your data as appropriate.
 
+!!! important
+    For each host you configure, you must provide the MAC address of an interface on the host to specify which host you are configuring.
+
 ### Bonds/Link Aggregation
 
 ```{ .yaml .copy }
@@ -50,6 +53,66 @@ hosts:
           - destination: 0.0.0.0/0
             next-hop-address: 172.16.10.254
             next-hop-interface: bond0
+            table-id: 254
+```
+
+### VLANs & Bonds/Link Aggregation
+
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer)
+
+```{ .yaml .copy }
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: cluster
+rendezvousIP: 172.16.10.10
+hosts:
+  - hostname: master1.cluster.example.com
+    role: master
+    interfaces:
+     - name: eno1
+       macAddress: 00:ef:44:21:e6:a1
+     - name: eno2
+       macAddress: 00:ef:44:21:e6:a2
+    networkConfig:
+      interfaces:
+        - name: bond0.300
+          type: vlan
+          state: up
+          vlan:
+            base-iface: bond0
+            id: 300
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.16.10.10
+                prefix-length: 24
+            dhcp: false
+        - name: bond0
+          description: Access mode bond using ports eno1 and eno2
+          type: bond
+          state: up
+          mac-address: 00:ef:44:21:e6:a1
+          ipv4:
+            enabled: false
+          ipv6:
+            enabled: false
+          link-aggregation:
+            mode: active-backup  # mode=1 active-backup, mode=2 balance-xor or mode=4 802.3ad
+            options:
+              miimon: '150'
+            port:
+            - eno1
+            - eno2
+      dns-resolver:
+        config:
+          server:
+            - 172.16.10.1
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.16.10.254
+            next-hop-interface: bond0.300
             table-id: 254
 ```
 

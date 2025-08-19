@@ -27,7 +27,7 @@ The following steps outline the high-level workflow on how to update a cluster i
       - The OpenShift Update Service Operator needs the config map key name `updateservice-registry` in the registry CA cert.
       
       ```bash
-      # Since the OSUS image is on the Quay Mirror Registry I need it's rootCA
+      # Since the OSUS image is on the Quay Mirror Registry we need it's rootCA
       cp /opt/quay-data/quay-rootCA/rootCA.pem ca.crt
 
       oc create configmap image-ca-bundle --from-file=updateservice-registry=ca.crt -n openshift-config
@@ -121,7 +121,7 @@ The following steps outline the high-level workflow on how to update a cluster i
       spec:
         channel: v1
         installPlanApproval: "Automatic"
-        source: "cs-redhat-operator-index-v4-17" # Specify the correct source
+        source: "redhat-operators" # Specify the correct source
         sourceNamespace: "openshift-marketplace"
         name: "cincinnati-operator"
       ```
@@ -153,6 +153,19 @@ The following steps outline the high-level workflow on how to update a cluster i
 
 ### Create an OpenShift Update Service application
   
+!!! info
+    oc-mirror will generate a `updateService.yaml` file for you when mirroring from disk to mirror. It will be located in the `working-dir/cluster-resources/` directory.
+
+    The name of the service it will create is: `update-service-oc-mirror`
+
+    Make sure to apply the service in the same namespace as the operator i.e. `openshift-update-service`
+    
+    ```bash
+    oc -n openshift-update-service apply -f /opt/4.17-mirrordata/working-dir/cluster-resources/updateService.yaml
+    ```
+
+    You can use that service file, or create one by following the steps below.
+
   Here we'll deploy the service pods, pointing to graph-data to the one we mirrored to our registry, and pointing the release-images our registry mirror rather than Red Hat's CDN. 
 
   [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-create-service-cli_updating-disconnected-cluster-osus){:target="_blank"}
@@ -162,9 +175,9 @@ The following steps outline the high-level workflow on how to update a cluster i
       NAMESPACE=openshift-update-service
       ```
       The namespace must match the `targetNamespaces` value from the operator group.
-  2. Configure the name of the OpenShift Update Service application, for example, service:
+  2. Configure the name of the OpenShift Update Service application, for example, `update-service`:
       ```bash
-      NAME=service
+      NAME=update-service
       ```
   3. Configure the registry and repository for the release images as configured for example, `registry.example.com:8443/ocp/openshift/release-images`:
       ```bash
@@ -198,9 +211,12 @@ The following steps outline the high-level workflow on how to update a cluster i
       ```bash
       NAMESPACE=openshift-update-service
       ```
-  2. Set the name of the OpenShift Update Service application, for example, `service`:
+  2. Use the name of the OpenShift Update Service application created previously, for example, `update-service`:
       ```bash
-      NAME=service
+      NAME=update-service
+
+      # If you used the oc mirror generated updateService.yaml
+      NAME=update-service-oc-mirror
       ```
   3. Obtain the policy engine route:
       ```bash
