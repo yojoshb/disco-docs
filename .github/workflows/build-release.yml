@@ -48,6 +48,7 @@ jobs:
           replacements: 'GITHUB_RELEASE=${{ github.event.inputs.version_number }}'
       - name: Build full site
         run: |
+          export OFFLINE=true
           mkdocs build
           zip docs-full.zip -r site/
       - name: Tag zip with version
@@ -59,6 +60,7 @@ jobs:
           if-no-files-found: error
       - name: Build standalone html/pdf
         run: |
+          export OFFLINE=true
           export ENABLED_PRINT_SITE=true
           export ENABLE_PDF_EXPORT=1
           sed -i -e 's/- navigation.indexes/#- navigation.indexes/' -e 's/- toc.integrate/#- toc.integrate/' mkdocs.yml

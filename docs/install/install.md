@@ -1,17 +1,17 @@
-## Booting the agent ISO and watching the installation process
+## Booting the agent ISO and watching the installation
 
 1. Boot the agent.iso on your hardware. This example output is for a single node OpenShift install, the node is named `sno.cluster.example.com`. The commands are the same for whatever type of cluster your are installing with the agent based installer. Normally installs take around 45 minutes give or take.
 
     !!! info    
         When you boot your ISO, make sure to set the ISO as a one-time boot option. The node(s) will reboot automatically during install and you don't want them rebooting into the installation ISO accidentally.
       
-        For FIPS, do the same thing but use the FIPS binary
+        For FIPS, do the same thing but use the FIPS variant of the openshift-install binary
       
         ```{ .bash }
         openshift-install-fips --dir my_cluster/ agent wait-for <command>
         ```
 
-2. Watch for the bootstrap to complete and the Kube API initialization. These commands should tell you if there's anything worng during the installation.
+2. Watch for the bootstrap to complete and the Kube API initialization. These commands should tell you if there's anything wrong during the bootstrapping process.
     ```{ .bash }
     openshift-install --dir my_cluster/ agent wait-for bootstrap-complete --log-level=info
     ```
@@ -74,7 +74,7 @@
     ```
 
 4. Now that the cluster is installed, use the information provided from the end of the log to access the API/WebGUI.
-5. The API will be available immediately, but it may take a few more minutes before the WebUI is accessable. The ClusterOperators take a bit longer to fully initialize.
+5. The API will be available immediately, but it may take a few more minutes before the console WebUI is accessable. The ClusterOperators generally take a bit longer to fully initialize.
     - Check the cluster operators status using the oc command line tool: 
     ```{ .bash }
     oc get clusteroperators
@@ -86,6 +86,9 @@ Things may not go as planned so sometimes manual intervention may be required. T
 
 #### HA Cluster without a external Load Balancer
 If you build a HA cluster (3 masters, 2+ workers), without a external Load Balancer, the router pods will not be able to redirect `*.apps` routes to anything outside of the cluster. Move the router pods to the master nodes, and scale the deployment accordingly
+
+!!! important
+    Make sure your wildcard (`*.apps.cluster.example.com`) DNS record is pointing to the same IP Address of the API (`api.cluster.example.com`) record so HAproxy workers can forward the requests correctly. (p.s. not sure why this is the case at all, still trying to figure out why the ingress VIP behaves this way..)
 
 - To move the router, the following patch on the IngressController will add both the node selector and toleration:
 
@@ -100,7 +103,7 @@ oc patch ingresscontroller/default -n openshift-ingress-operator --type=merge -p
 ```
 
 #### Direct SSH access
-- Since there's an SSH key injected into the ISO, you can SSH directly to the node using the public key
+- Since there's an SSH key injected into the ISO, you can SSH directly to the node using the same ssh key specified in the install-config.yaml.
 ```{ .bash }
 ssh core@sno.cluster.example.com
 ```
@@ -111,11 +114,11 @@ ssh core@sno.cluster.example.com
 [root@sno ~]$
 
 # From here we can poke around the system to view any potential issues
-[root@sno ~]$ journalctl -f
+[root@sno ~]$ journalctl -f --no-pager
 ```
 
 #### KubeAPI Certificate Issues
-If you powered down the cluster before 24 hours, or the cluster has been down for a extended amount of time (> 30 days), there may be some kubelet certificate issues that will cause the API fail to initialize. The kubeapi-server CA has likely expired and cannot issue certs on it's behalf. 
+If you powered down the cluster before 24 hours, or the cluster has been down for a extended amount of time (> 30 days), there may be some kubelet certificate issues that will cause the KubeAPI fail to initialize. The kubeapi-server CA has likely expired and cannot issue certs on it's behalf. 
 
 - SSH to the master node(s), then use the `localhost.kubeconfig` to inspect the Certificate Signing Requests (csr's) 
 ```{ .bash }

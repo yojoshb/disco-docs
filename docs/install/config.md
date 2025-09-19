@@ -2,14 +2,14 @@
 
 [Red Hat Docs: Install Configuration Parameters](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-basic#installing-ocp-agent_installing-with-agent-basic){:target="_blank"}
 
-Here is where the cluster is defined. We'll use two files, `install-config.yaml` and `agent-config.yaml` along with the `openshift-install` binary we extracted earlier to create the install `agent.iso`. Examples are given below. Create a directory somewhere to house the config files. This directory will also hold the credentials for API access to the cluster when it is built.
+Here is where the cluster is defined. We'll use two files, `install-config.yaml` and `agent-config.yaml` along with the `openshift-install` binary we extracted earlier to create the install `agent.iso`. Examples are given below. Create a directory somewhere to house the config files. This directory will also hold the credentials for API and console access to the cluster when it is built.
 
 
 1. Install the `nmstate` package
 ```{ .bash }
 sudo dnf install /usr/bin/nmstatectl -y
 ```
-1. Create a directory to store the cluster configuration, we'll call this directory `my_cluster` for this example and it's in the $HOME directory
+1. Create a directory to store the cluster configuration, we'll call this directory `my_cluster` for this example and it's in the users $HOME directory
 ```{ .bash }
 mkdir ~/my_cluster
 ```
@@ -84,6 +84,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
         - 172.16.1.5 # (9)! API ip address
       ingressVIPs:
         - 172.16.1.4 # (10)! Ingress API ip address
+      provisioningNetwork: Disabled
   fips: true # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
   pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry. Best practive is for this secret to only have pull permissions
   sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (13)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes by default
@@ -94,6 +95,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
     azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xGTAXBgNVBAMMEHJl
     ...
     -----END CERTIFICATE----- 
+  additionalTrustBundlePolicy: Always
   imageDigestSources: # (15)! Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
   - mirrors:
     - registry.example.com:8443/ocp/openshift/release-images # (16)! # You must have a direct reference to both the openshift-release-dev/ocp-release and openshift-release-dev/ocp-v4.0-art-dev paths. These two are the only ones required to complete an installation of OpenShift
@@ -236,7 +238,7 @@ The Agent-based Installer performs validation checks on user defined YAML files 
 
   - `baremetal`, `vsphere` and `none` platforms are supported.
   - If `none` is used as a platform, the number of control plane replicas must be `1` and the total number of worker replicas must be `0`.
-  - The `networkType` parameter must be `OVNKubernetes` in the case of none platform. Stick with `OVNKubernetes` for all installs.
+  - The `networkType` parameter must be `OVNKubernetes` in the case of none platform. Generally stick with `OVNKubernetes` for all installs.
   - `apiVIPs` and `ingressVIPs` parameters must be set for bare metal and vSphere platforms.
   - Some host-specific fields in the bare metal platform configuration that have equivalents in `agent-config.yaml` file are ignored. A warning message is logged if these fields are set.
 

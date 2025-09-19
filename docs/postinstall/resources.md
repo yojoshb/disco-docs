@@ -8,7 +8,7 @@ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disab
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#oc-mirror-custom-resources-v2_about-installing-oc-mirror-v2){:target="_blank"}
 
-From your `oc mirror` command, you could have the following files in your working-dir i.e. `/opt/4.17-mirrordata/working-dir/cluster-resources/`. It all depends on what you mirrored.
+From your `oc mirror` command, you could have the following files in your working-dir i.e. `/opt/4.17-mirrordata/working-dir/cluster-resources/`. It all depends on what you mirrored. 
 
   - `idms-oc-mirror.yaml`: This is a list of mappings between the original public registry and your local registry for all images that are identified by their digest (ImageDigestMirrorSet).
   - `itms-oc-mirror.yaml`: This is a list of mappings between the original public registry and your local registry for all images that are identified by their tag (ImageTagMirrorSet).
@@ -17,6 +17,13 @@ From your `oc mirror` command, you could have the following files in your workin
     !!! warning "Important!"
         Change the **name** the `cs-redhat-operator-index-v4-17.yaml/cc-redhat-operator-index-v4-17.yaml` catalog source ==in the YAML== file to `redhat-operators` as some operators are hardcoded reference this exact catalog source name. Examples below with the highlighted value:
         
+        !!! tip
+            Use a quick `sed` command to set the name in both files
+            ```bash
+            sed -i 's/name: cs-redhat-operator-index-v4-17/name: redhat-operators/' /opt/4.17-mirrordata/working-dir/cluster-resources/cs-redhat-operator-index-v4-17.yaml
+            sed -i 's/name: cc-redhat-operator-index-v4-17/name: redhat-operators/' /opt/4.17-mirrordata/working-dir/cluster-resources/cc-redhat-operator-index-v4-17.yaml
+            ```
+
         ```{ .yaml .no-copy title="Example: cs-redhat-operator-index-v4-17.yaml" hl_lines="4" }
         apiVersion: operators.coreos.com/v1alpha1
         kind: CatalogSource

@@ -4,12 +4,13 @@ site_author: "jbezotte@redhat.com"
 copyright: ""
 site_description: >-
   Documentation for disconnected OpenShift installs. Contains all required js, css, and html for the site to function offline.
-  If you want just the markdown, download the source repository and extract the markdown files in the docs/ directory.
+  If you want just the markdown, download the git repository and extract the markdown files in the docs/ directory.
 use_directory_urls: false
 
 plugins:
-  - offline
-  #- privacy # Not all js bundles are needed, offline and search function fine without this
+  - offline:
+      enabled: !ENV [OFFLINE, false]
+  - privacy
   - search
   - autorefs:
       resolve_closest: true
@@ -71,7 +72,7 @@ nav:
 
 theme:
   name: material
-  custom_dir: overrides
+  #custom_dir: overrides # Used for html banner
   font: false
   features:
     - content.code.copy

@@ -70,6 +70,8 @@ apiVersion: mirror.openshift.io/v2alpha1
 
 mirror:
   platform:
+    architectures:
+    - amd64
     channels:
     - type: ocp
       name: stable-4.17
@@ -86,6 +88,8 @@ apiVersion: mirror.openshift.io/v2alpha1
 
 mirror:
   platform:
+    architectures:
+    - amd64
     channels:
     - type: ocp
       name: stable-4.17
@@ -180,16 +184,20 @@ mirror:
     - name: odr-hub-operator
       channels:
       - name: stable-4.17
-
-    - name: local-storage-operator # Optional: Only for local storage deployments
+    
+    # For local storage deployments i.e. node disks 
+    - name: local-storage-operator
       channels:
       - name: stable
-    - name: odf-multicluster-orchestrator # Optional: Only for Regional Disaster Recovery (Regional-DR) configuration
+    
+    # Optional: Only for Regional Disaster Recovery (Regional-DR) configuration
+    - name: odf-multicluster-orchestrator
       channels:
       - name: stable-4.17
   
   additionalImages:
-  - name: registry.redhat.io/odf4/odf-must-gather-rhel9:v4.16 # Optional: ODF Must gather support tools
+  # Optional: ODF Must gather support tools
+  - name: registry.redhat.io/odf4/odf-must-gather-rhel9:v4.17
 ```
 
 ### OpenShift Virtulization (KubeVirt) and Migration Kit for Virtualization (MTV) Operators
@@ -211,6 +219,7 @@ mirror:
   operators:
   - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
     packages:
+    # Virtualization
     - name: kubevirt-hyperconverged
       channels:
       - name: stable
@@ -218,21 +227,30 @@ mirror:
       channels:
       - name: stable
     
-    - name: lvms-operator # Optional: If you would like to use local dynamic storage on another disk attached to the host
-      defaultChannel: stable-4.16
+    # Optional: If you would like to use local dynamic storage on another disk attached to the host
+    - name: lvms-operator
+      defaultChannel: stable-4.17
       channels:
-      - name: stable-4.16
-
+      - name: stable-4.17
+    
+    # Migration Toolkit for Virtulization
     - name: mtv-operator
       channels:
       - name: release-v2.6
       
   additionalImages:
-  - name: registry.redhat.io/rhel8/rhel-guest-image:latest # Optional: Virtual guest images
-  - name: registry.redhat.io/rhel9/rhel-guest-image:latest # Optional: Virtual guest images
-  - name: registry.redhat.io/openshift4/ose-must-gather:latest # Needed for lvms-operator if you're using
-  - name: quay.io/jcall/vddk:latest # Heavily recommended to build a VDDK image when transferring from vSphere
-  - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.16 # Optional: KubeVirt Must gather support tools
+  # Optional: Virtual guest images
+  - name: registry.redhat.io/rhel8/rhel-guest-image:latest
+  - name: registry.redhat.io/rhel9/rhel-guest-image:latest
+  
+  # Needed for lvms-operator if you're using
+  - name: registry.redhat.io/openshift4/ose-must-gather:latest
+  
+  # Heavily recommended to have a VDDK image when transferring from vSphere
+  - name: quay.io/jcall/vddk:latest # Heavily recommended to have a VDDK image when transferring from vSphere
+
+  # Optional: KubeVirt Must gather support tools
+  - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.17
 ```
 
 ### Other Handy Operators
@@ -251,27 +269,108 @@ mirror:
   operators:
   - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
     packages:
-      - name: redhat-oadp-operator  # OpenShift API for Data Protection (OADP) features provide options for backing up and restoring applications
-        channels:
-        - name: stable-1.4
-      - name: mtc-operator  # Migration Toolkit for containers to migrate workloads from one cluster to another
-        channels:
-        - name: release-v1.8
-      - name: nfd # Node feature discovery
-        channels:
-        - name: stable
-      - name: web-terminal # Terminal that you can access from the WebUI
-        channels:
-        - name: fast
+    # Advanced Cluster Management for Kuberenetes
+    - name: advanced-cluster-management
+      channels:
+        - name: release-2.13
+    - name: multicluster-engine
+      channels:
+        - name: stable-2.8
+        
+    # Advanced Cluster Security for Kuberenetes
+    - name: rhacs-operator
+      channels:
+      - name: stable
+    
+    # OpenShift API for Data Protection (OADP) features provide options for backing up and restoring applications
+    - name: redhat-oadp-operator 
+      channels:
+      - name: stable-1.4
+    
+    # Migration Toolkit for containers to migrate workloads from one cluster to another
+    - name: mtc-operator
+      channels:
+      - name: release-v1.8
+    
+    # Node feature discovery
+    - name: nfd
+      channels:
+      - name: stable
+    
+    # Terminal that you can access from the WebUI
+    - name: web-terminal
+      channels:
+      - name: fast
+    - name: devworkspace-operator
+      channels:
+      - name: fast
+
+   # Ansible Automation Platform Operator
+    - name: ansible-automation-platform-operator
+      channels:
+      - name: stable-2.5
+   
+   # MetalLB Operator
+    - name: metallb-operator
+      channels:
+      - name: stable
+      
+   # PTP Operator
+    - name: ptp-operator
+      channels:
+      - name: stable
+
+   # OpenShift Logging
+    - name: cluster-logging
+      channels:
+      - name: stable-6.2
+    - name: loki-operator
+      channels:
+      - name: stable-6.2
+
+   # OpenShift Service Mesh
+    - name: servicemeshoperator3
+      channels:
+      - name: stable
+    - name: kiali-ossm
+      channels:
+      - name: stable
+    - name: jaeger-product
+      channels:
+      - name: stable
+
+   # Cluster Observability Operator
+    - name: cluster-observability-operator
+      channels:
+      - name: stable
+
+   # Network Observability Operator
+    - name: netobserv-operator
+      channels:
+      - name: stable
+
+   # Keycloak Operator 
+    - name: rhbk-operator
+      channels:
+      - name: stable-v26.0
+
+   # Cert Manager
+    - name: openshift-cert-manager-operator
+      channels:
+      - name: stable-v1
   
   additionalImages:
   - name: registry.redhat.io/rhel8/support-tools
   - name: registry.redhat.io/rhel9/support-tools
-  - name: registry.redhat.io/odf4/odf-must-gather-rhel9:v4.16
-  - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.16
 
-  helm: # NFS CSI that can do dynamic provisioning off of NFS attached storage, or provide NFS storage from the cluster
+  # Universal Base Images
+  - name: registry.redhat.io/ubi9/ubi:latest
+  - name: registry.redhat.io/ubi8/ubi:latest
+
+  helm:
     repositories:
+      
+      # NFS CSI that can do dynamic provisioning off of NFS attached storage, or provide NFS storage from the cluster (community supported)
       - name: csi-driver-nfs
         url: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
         charts:
@@ -280,6 +379,7 @@ mirror:
 ```
 
 ### DISA STIG Operators
+These aren't actually tied to the STIG, just makes it easier to actually apply it to your cluster
 
 ```{ .yaml .copy }
 ---
@@ -294,9 +394,6 @@ mirror:
       channels:
       - name: stable
     - name: file-integrity-operator
-      channels:
-      - name: stable
-    - name: rhacs-operator
       channels:
       - name: stable
 ```

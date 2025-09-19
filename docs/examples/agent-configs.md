@@ -181,6 +181,8 @@ kind: AgentConfig
 metadata:
   name: cluster
 rendezvousIP: 172.16.10.10
+
+# You can omit this section below entirely if you wanna let DHCP just assign addressing at random
 hosts:
   - hostname: m1.cluster.example.com
     role: master

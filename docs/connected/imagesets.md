@@ -91,7 +91,7 @@
       helm: {} # (10)!
     ```
 
-    1. Defines what architecture platform images we want to download: This example is for amd64(default), you can leave this value out entirely if you just want amd64 since it's the default arch
+    1. Defines what architecture platform images we want to download: This will help decrease the size of the mirrored content
     1. Defines what version we want to download: OCP version 4.17 stable branch
     1. Graph data needed for the cincinnati operator
     1. Operator catalog we want to download from
