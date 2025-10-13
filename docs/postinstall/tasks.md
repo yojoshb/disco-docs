@@ -76,7 +76,7 @@ oc apply -f image-additional-trust-bundle.yaml
 ```
 
 ## Disabling the Insights Operator
-This is probably already set to be unmanaged (disabled) but check it if it's not. Look for `managementState: Unmanaged` under the `spec:` section.
+This probably shows up in the WebUI as disabled, but is most likely set to `Managed` (enabled). Change the `managementState: Managed` to `managementState: Unmanaged`.
 
 ```{ .bash }
 oc get insightsoperator.operator.openshift.io/cluster -o yaml
@@ -88,11 +88,11 @@ metadata:
   ...
 spec:
   logLevel: Normal
-  managementState: Unmanaged
+  managementState: Managed
   operatorLogLevel: Normal
 ```
 
-If you need to set it to Unmanaged
+Set it to Unmanaged
 ```{ .yaml .no-copy title="insights-disable.yaml" }
 ---
 apiVersion: operator.openshift.io/v1

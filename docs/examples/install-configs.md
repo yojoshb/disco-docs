@@ -99,7 +99,7 @@ platform:
     apiVIPs:
       - 172.16.1.5 # (9)! API ip address
     ingressVIPs:
-      - 172.16.1.4 # (10)! Ingress API ip address
+      - 172.16.1.6 # (10)! Ingress API ip address, the *.apps A record
 fips: true # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
 pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry
 sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (13)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
@@ -128,7 +128,7 @@ imageDigestSources: # (15)! Your image mirrors, this in the idms-oc-mirror.yaml 
 7. The network that connects the cluster to your LAN. This is the IP space that resides on your LAN.
 8. Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
 9. API ip address
-10. Ingress API ip address
+10. Ingress API ip address, the *.apps A record
 11. Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
 12. A pull secret for your internal image registry
 13. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes

@@ -60,7 +60,7 @@ From your `oc mirror` command, you could have the following files in your workin
     !!! info
         If you have any **ClusterCatalogs** i.e `cc-redhat-operator-index-v4-17.yaml`, they will only work on OpenShift 4.18 or newer. Ignore errors from ClusterCatalogs when applying resources if you are on an older version of OpenShift
 
-        This is due to changes in the Operator Lifecycle Manager (OLM) architecture moving from OLM classic to OLMv1 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/extensions/catalogs){:target="_blank"}
+        This is due to changes in the Operator Lifecycle Manager (OLM) architecture moving from OLM classic to OLMv1: [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/extensions/catalogs){:target="_blank"}
 
 ## Configure the cluster to use the resources you mirrored
 

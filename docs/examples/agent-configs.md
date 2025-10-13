@@ -4,6 +4,8 @@
 
 [Red Hat Docs: Agent Configuration Parameters](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installation-config-parameters-agent#agent-configuration-parameters_installation-config-parameters-agent){:target="_blank"}
 
+[Bill's awesome collection of agent installation examples](https://github.com/bstrauss84/openshift-install-configs/tree/main/installation-configs/baremetal/agent)
+
 Various examples of common agent-configs. Sub in your data as appropriate.
 
 !!! important
@@ -173,7 +175,7 @@ hosts:
 ```
 
 ### DHCP
-If you want to utilize DHCP, the config is very simple and you can leave out the `networkConfig` enitirely. Make sure to at least create a static reservation for the `rendezvousIP` and master nodes if you want them to be on specific machines.
+If you want to utilize DHCP, the config is very simple and you can leave out the `networkConfig` enitirely. It's a good idea to at least create a static reservation for the `rendezvousIP` and master nodes if you want them to be on specific machines. The `rendezvousIP` must be a master node.
 
 ```{ .yaml .copy }
 apiVersion: v1alpha1

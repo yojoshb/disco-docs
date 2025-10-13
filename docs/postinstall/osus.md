@@ -195,7 +195,7 @@ The following steps outline the high-level workflow on how to update a cluster i
       metadata:
         name: ${NAME}
       spec:
-        replicas: 2
+        replicas: 1
         releases: ${RELEASE_IMAGES}
         graphDataImage: ${GRAPH_DATA_IMAGE}
       EOF

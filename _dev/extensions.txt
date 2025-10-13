@@ -1,0 +1,3 @@
+https://timvink.github.io/mkdocs-print-site-plugin/index.html
+https://mkdocs-to-pdf.readthedocs.io/en/latest/usage/
+https://mkdocstrings.github.io/autorefs/

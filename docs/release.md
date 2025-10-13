@@ -1,31 +1,14 @@
 
 Version: GITHUB_RELEASE
 
-### To-do
-- [x] Initial release
-- [x] Connected process
-    - [x] Tools and credentials
-    - [x] imageset-configs
-    - [x] mirror-2-disk
-- [x] Disconnected process
-    - [x] Tools and credentials
-    - [x] Mirror Registry install
-    - [x] disk-2-mirror
-    - [x] DNS
-- [x] Disconnected install
-    - [x] Build ISO
-    - [x] Boot ISO
-    - [x] Troubleshooting
-- [x] Post install
-    - [x] Applying cluster resources
-    - [x] NTP
-    - [x] OSUS
-    - [x] Additional tasks
-- [ ] Optional configs
-    - [x] core passwd
-    - [x] registry
-    - [ ] Additional cluster configs?
-- [x] Example configs
-    - [x] install-config.yaml
-    - [x] agent-config.yaml
-    - [x] common imageset-configs (kubevirt/odf/etc)
+### Additional Resources
+
+Some additional resources to continue on your journey in no particular order:
+
+- https://github.com/yojoshb/ocp/
+- https://github.com/bstrauss84/openshift-install-configs/
+- https://github.com/afouladi7/openshift_shortcuts/
+- https://github.com/yakovbeder/oc-mirror-web-app/
+- https://github.com/kenmoini/disconnected-openshift/
+- https://github.com/kenmoini/ansible-redfish/
+- https://github.com/RedHatGov/ocp/

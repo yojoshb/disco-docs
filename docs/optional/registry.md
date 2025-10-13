@@ -14,7 +14,7 @@
     - Key-based SSH connectivity on the target host. SSH keys are automatically generated for local installs. For remote hosts, you must generate your own SSH keys.
     - 2 or more vCPUs.
     - 8 GB or more of RAM.
-    - About 12 GB for OpenShift Container Platform 4.17 release images, or about 358 GB for OpenShift Container Platform 4.17 release images and OpenShift Container Platform 4.17 Red Hat Operator images. Up to 1 TB per stream or more is suggested. Shoot for 100GB+
+    - About 30 GB for OpenShift Container Platform release images, or about 500 GB for OpenShift Container Platform release images and OpenShift Container Platform 4.17 Red Hat Operator images. Up to 1 TB per stream or more is suggested. Shoot for 100GB+ for a fairly minimal install.
 
 1. Create a directory structure for the mirror registry contents. This example expects the `/opt` directory to have have sufficient space to hold the data for the images mirrored earlier as well as sufficient permissions for a **non-root** account to read/write to this area. Change this path/structure as you see fit for your environment.
     ```{ .bash }
@@ -79,11 +79,30 @@
     INFO[2025-03-17 14:39:08] Quay is available at https://registry.example.com:8443 with credentials (init, 4AywhWu5xsjiN2et09C3mg1rV7K6IS8f)
     ```
 
+  - The registry containers will be setup to start on boot, this is handled by systemd user services in `~/.config/systemd/user/`
+  ```{ .bash }
+  tree ~/.config/systemd/user/
+  /home/admin/.config/systemd/user/
+  ├── default.target.wants
+  │   ├── quay-app.service -> /home/admin/.config/systemd/user/quay-app.service
+  │   ├── quay-pod.service -> /home/admin/.config/systemd/user/quay-pod.service
+  │   └── quay-redis.service -> /home/admin/.config/systemd/user/quay-redis.service
+  ├── multi-user.target.wants
+  │   ├── quay-app.service -> /home/admin/.config/systemd/user/quay-app.service
+  │   ├── quay-pod.service -> /home/admin/.config/systemd/user/quay-pod.service
+  │   └── quay-redis.service -> /home/admin/.config/systemd/user/quay-redis.service
+  ├── quay-app.service
+  ├── quay-pod.service
+  └── quay-redis.service
+
+  2 directories, 9 files
+  ```
+
 ## Create your pull/push secret for your mirror registry
 Generate a secret from the mirror registry and save it to your machine. 
 
 1. Navigate to Quay in your web browser, then create an account in Quay and login
-> You can use the init account if you want, it's best practice to create your own and change the password 
+> You can use the init account if you want, at the very least change default generated password 
 
 1. Click on your username in the top right
     - **Account Settings** > **Docker CLI Password** > **Generate Encrypted Password** > **Docker Configuration**

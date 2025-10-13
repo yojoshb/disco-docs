@@ -83,7 +83,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
       apiVIPs:
         - 172.16.1.5 # (9)! API ip address
       ingressVIPs:
-        - 172.16.1.4 # (10)! Ingress API ip address
+        - 172.16.1.6 # (10)! Ingress API ip address, the *.apps A record
       provisioningNetwork: Disabled
   fips: true # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
   pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry. Best practive is for this secret to only have pull permissions
@@ -114,7 +114,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
   7. The network that connects the cluster to your LAN. This is the IP space that resides on your LAN.
   8. Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
   9. API ip address
-  10. Ingress API ip address
+  10. Ingress API ip address, the *.apps A record
   11. Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
   12. A pull secret for your internal image registry. Best practive is for this secret to only have pull permissions
   13. Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes by default
@@ -163,6 +163,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
               next-hop-address: 172.16.1.254 # (11)! The default gateway, or default route of your node. This must be in the same subnet as the IP address set for the specified interface.
               next-hop-interface: enp6s18
               table-id: 254
+    
     - hostname: m2.cluster.example.com
       role: master
       interfaces:
@@ -190,6 +191,7 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
               next-hop-address: 172.16.1.254
               next-hop-interface: enp6s18
               table-id: 254
+    
     - hostname: m3.cluster.example.com
       role: master
       interfaces:

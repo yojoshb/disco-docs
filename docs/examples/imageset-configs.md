@@ -107,7 +107,7 @@ apiVersion: mirror.openshift.io/v2alpha1
 mirror:
   platform:
     architectures:
-    - arm64
+    - arm64    # Valid architectures: amd64, arm64, ppc64le, s390x, multi
     channels:
     - type: ocp
       name: stable-4.17
@@ -125,6 +125,8 @@ apiVersion: mirror.openshift.io/v2alpha1
 
 mirror:
   platform:
+    architectures:
+    - amd64
     channels:
     - type: ocp
       name: stable-4.17
@@ -136,11 +138,41 @@ mirror:
     - name: cincinnati-operator
 ```
 
+### Ansible Automation Platform
+
+The Operator will not contain any collections or execution/decision environments. So if you want to utilize the Automation Hub on the cluster, you'll want to pull them over to the disconnected network. It's a bit tedious at the moment, hopefully this will be easier in the future. 
+
+- To get the collections, go to [Automation Hub](https://console.redhat.com/ansible/automation-hub){:target="_blank"}, and download the tarballs of the collections that you would like to include in your Private Automation Hub.
+
+- Follow the [old 2.3 docs](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.3/html/red_hat_ansible_automation_platform_installation_guide/disconnected-installation#importing-collections-into-private-automation-hub_disconnected-installation){:target="_blank"} to add the collections you downloaded and transfered. 
+
+```{ .yaml .copy }
+---
+kind: ImageSetConfiguration
+apiVersion: mirror.openshift.io/v2alpha1
+
+mirror:
+  operators:
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
+    packages:
+
+    # Ansible Automation Platform Operator
+    - name: ansible-automation-platform-operator
+      channels:
+      - name: stable-2.5
+
+  additionalImages:
+  # Images that the Containerized/RPM offline-bundle comes with. You can bring these over independentaly with podman also. Make sure to point PAH to your registry where these are mirrored to.
+  - name: registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel8:latest
+  - name: registry.redhat.io/ansible-automation-platform-25/ee-minimal-rhel8:latest
+  - name: registry.redhat.io/ansible-automation-platform-25/de-supported-rhel8:latest
+```
+
 ### OpenShift Data Foundation (ODF) Operators
 
 [Red Hat ODF 4.17 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.17/html/planning_your_deployment/disconnected-environment_rhodf#disconnected-environment_rhodf){:target="_blank"}
 
-Consult the docs for whatever version of ODF you are wanting to install. The operators required vary per version.
+Consult the docs for whatever version of ODF you are wanting to install. The operators required vary per OCP version.
 
 ```{ .yaml .copy title="ODF 4.17" }
 ---
@@ -185,7 +217,7 @@ mirror:
       channels:
       - name: stable-4.17
     
-    # For local storage deployments i.e. node disks 
+    # For local storage deployments i.e. node attached disks 
     - name: local-storage-operator
       channels:
       - name: stable
@@ -208,7 +240,7 @@ mirror:
 
 [VDDK](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#creating-vddk-image_mtv)
 
-[VDDK Image](https://quay.io/repository/jcall/vddk?tab=info)
+[Prebuilt VDDK Image](https://quay.io/repository/jcall/vddk?tab=info)
 
 ```{ .yaml .copy }
 ---
@@ -246,8 +278,8 @@ mirror:
   # Needed for lvms-operator if you're using
   - name: registry.redhat.io/openshift4/ose-must-gather:latest
   
-  # Heavily recommended to have a VDDK image when transferring from vSphere
-  - name: quay.io/jcall/vddk:latest # Heavily recommended to have a VDDK image when transferring from vSphere
+  # Heavily recommended to have a VDDK image when transferring from vSphere, best to create your own but this one generally works
+  - name: quay.io/jcall/vddk:latest
 
   # Optional: KubeVirt Must gather support tools
   - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.17
@@ -304,11 +336,6 @@ mirror:
     - name: devworkspace-operator
       channels:
       - name: fast
-
-   # Ansible Automation Platform Operator
-    - name: ansible-automation-platform-operator
-      channels:
-      - name: stable-2.5
    
    # MetalLB Operator
     - name: metallb-operator
@@ -370,7 +397,7 @@ mirror:
   helm:
     repositories:
       
-      # NFS CSI that can do dynamic provisioning off of NFS attached storage, or provide NFS storage from the cluster (community supported)
+      # NFS CSI that can do dynamic provisioning off of NFS attached storage, or provide NFS storage from the cluster (community supported, need to add chart requested images to the additionalImages: dictionary)
       - name: csi-driver-nfs
         url: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
         charts:
@@ -396,4 +423,23 @@ mirror:
     - name: file-integrity-operator
       channels:
       - name: stable
+```
+
+### NetApp (Trident Operator)
+
+```
+---
+kind: ImageSetConfiguration
+apiVersion: mirror.openshift.io/v2alpha1
+
+mirror:
+  operators:
+  # Certified Operators Catalog
+  - catalog: registry.redhat.io/redhat/certified-operator-index:v4.19
+    packages:
+      
+    # Netapp Trident
+    - name: trident-operator
+      channels:
+        - name: stable
 ```

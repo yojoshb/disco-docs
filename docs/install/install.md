@@ -84,24 +84,6 @@
 ## Troubleshooting
 Things may not go as planned so sometimes manual intervention may be required. The `openshift-install --dir my_cluster/ agent wait-for` commands should let you know if an error occurs, but sometimes it's best to get directly on the nodes and troubleshoot.
 
-#### HA Cluster without a external Load Balancer
-If you build a HA cluster (3 masters, 2+ workers), without a external Load Balancer, the router pods will not be able to redirect `*.apps` routes to anything outside of the cluster. Move the router pods to the master nodes, and scale the deployment accordingly
-
-!!! important
-    Make sure your wildcard (`*.apps.cluster.example.com`) DNS record is pointing to the same IP Address of the API (`api.cluster.example.com`) record so HAproxy workers can forward the requests correctly. (p.s. not sure why this is the case at all, still trying to figure out why the ingress VIP behaves this way..)
-
-- To move the router, the following patch on the IngressController will add both the node selector and toleration:
-
-```{ .bash }
-oc patch ingresscontrollers.operator.openshift.io default -n  openshift-ingress-operator  --type=merge -p '{"spec":{"nodePlacement": {"nodeSelector": {"matchLabels": {"node-role.kubernetes.io/master": ""}},"tolerations": [{"key": "node-role.kubernetes.io/master","operator": "Exists","effect":"NoSchedule"}]}}}'
-```
-
-- The router is configured by default to have only 2 replicas, but with 3 infrastructure nodes the following patch is required to scale to 3 routers.
-
-```{ .bash }
-oc patch ingresscontroller/default -n openshift-ingress-operator --type=merge -p '{"spec":{"replicas": 3}}'
-```
-
 #### Direct SSH access
 - Since there's an SSH key injected into the ISO, you can SSH directly to the node using the same ssh key specified in the install-config.yaml.
 ```{ .bash }
@@ -118,7 +100,10 @@ ssh core@sno.cluster.example.com
 ```
 
 #### KubeAPI Certificate Issues
-If you powered down the cluster before 24 hours, or the cluster has been down for a extended amount of time (> 30 days), there may be some kubelet certificate issues that will cause the KubeAPI fail to initialize. The kubeapi-server CA has likely expired and cannot issue certs on it's behalf. 
+
+[RH Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/installation_overview/index#installation-process-details)
+
+If you powered down the cluster before 24 hours, or the cluster has been down for a extended amount of time (< 30 days), there may be some kube certificate issues that will cause the KubeAPI fail to initialize. The node-bootstrapper CSRs has likely need to be manually approved. 
 
 - SSH to the master node(s), then use the `localhost.kubeconfig` to inspect the Certificate Signing Requests (csr's) 
 ```{ .bash }

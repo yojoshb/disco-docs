@@ -11,7 +11,7 @@ DL_DIR="$(pwd)/bin"
 RHEL_VERSION="9"
 
 # OpenShift Channel and version: latest, stable, stable-4.20, etc
-RELEASE_VERSION="stable-4.18"
+RELEASE_VERSION="stable-4.19"
 
 # OpenShift and Tools architecture: amd64, arm64, ppc64le, s390x, multi
 RELEASE_ARCH="amd64"
@@ -81,13 +81,14 @@ if [ "$RHEL_VERSION" = "9" ]; then wget -q --show-progress $DL_OCMIRROR_EL9; els
 # If true, download mirror-registry
 if [ "$MIRROR_REGISTRY" = true ]; then wget -q --show-progress -P ../ $DL_MIRROR_REGISTRY; fi
 
-# Extract tools
+# Extract tools and set perms
 for tar in *.tar.gz; do
   tar zxf $tar
   rm -f $tar
   rm -f README.md
 done
-chmod a+x oc kubectl
+mv butane-$RELEASE_ARCH butane
+chmod a+x oc kubectl butane oc-mirror
 
 # If true, extract the openshift-install binary for fips or non fips
 if [ "$INSTALLER" = true ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; then
@@ -104,11 +105,8 @@ if [ "$INSTALLER" = true ] && [ "$RHEL_VERSION" = "$RUNTIME_RHEL_VERSION" ]; the
   fi
 fi
 
-mv butane-$RELEASE_ARCH butane
-chmod a+x butane oc-mirror
+# Move tools to $DL_DIR and remove tmp directory
 mv oc kubectl butane oc-mirror ..
-
-# Remove tmp directory
 cd ..
 rm -rf tmp
 
