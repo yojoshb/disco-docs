@@ -34,7 +34,7 @@ networking:
   - 172.30.0.0/16 # (8)! Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
 platform:
   none: {} # (9)! You must set the platform to none for a single-node cluster. You can set the platform to vsphere, baremetal, or none for multi-node clusters.
-fips: true # (10)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
+fips: false # (10)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
 pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (11)! A pull secret for your internal image registry
 sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (12)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
 additionalTrustBundle: | # (13)! The rootCA.pem certificate of your internal image registry
@@ -97,10 +97,10 @@ networking:
 platform:
   baremetal:
     apiVIPs:
-      - 172.16.1.5 # (9)! API ip address
+    - 172.16.1.5 # (9)! API ip address
     ingressVIPs:
-      - 172.16.1.6 # (10)! Ingress API ip address, the *.apps A record
-fips: true # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
+    - 172.16.1.6 # (10)! Ingress API ip address, the *.apps A record
+fips: false # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
 pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry
 sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (13)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes
 additionalTrustBundle: | # (14)! The rootCA.pem certificate of your internal image registry
@@ -192,7 +192,7 @@ capabilities:
     - baremetal
     - marketplace
     - openshift-samples
-fips: true
+fips: false
 pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}'
 sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....'
 additionalTrustBundle: |

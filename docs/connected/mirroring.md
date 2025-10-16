@@ -1,5 +1,5 @@
 ## Mirroring images to disk
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-to-disk-v2_about-installing-oc-mirror-v2){:target="_blank"}
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/disconnected_environments/about-installing-oc-mirror-v2){:target="_blank"}
 
 Now that the images are defined, we can mirror them to disk. Repeat this process for updates or additions to your cluster.
 

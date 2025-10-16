@@ -9,7 +9,9 @@
 Various examples of common agent-configs. Sub in your data as appropriate.
 
 !!! important
-    For each host you configure, you must provide the MAC address of an interface on the host to specify which host you are configuring.
+    For each host you configure, you must provide the MAC address of an interface on the host, the name of the interface can be whatever you want as long as you know the MAC. 
+    
+    You can configure additional interfaces on your hosts after the cluster is installed by utilizing the `NMState Operator`.
 
 ### Bonds/Link Aggregation
 
@@ -19,43 +21,46 @@ kind: AgentConfig
 metadata:
   name: cluster
 rendezvousIP: 172.16.10.10
+additionalNTPSources:
+- ntp.example.com
 hosts:
-  - hostname: master1.cluster.example.com
-    role: master
+- hostname: master1.cluster.example.com
+  role: master
+  interfaces:
+  - name: eno1
+    macAddress: 00:ef:44:21:e6:a1
+  - name: eno2
+    macAddress: 00:ef:44:21:e6:a2
+  networkConfig:
     interfaces:
-     - name: eno1
-       macAddress: 00:ef:44:21:e6:a1
-     - name: eno2
-       macAddress: 00:ef:44:21:e6:a2
-    networkConfig:
-      interfaces:
-        - name: bond0
-          description: Access mode bond using ports eno1 and eno2
-          type: bond
-          state: up
-          ipv4:
-            enabled: true
-            address:
-              - ip: 172.16.10.10
-                prefix-length: 24
-            dhcp: false
-          link-aggregation:
-            mode: active-backup  # mode=1 active-backup, mode=2 balance-xor or mode=4 802.3ad
-            options:
-              miimon: '150'
-            port:
-            - eno1
-            - eno2
-      dns-resolver:
-        config:
-          server:
-            - 172.16.10.1
-      routes:
-        config:
-          - destination: 0.0.0.0/0
-            next-hop-address: 172.16.10.254
-            next-hop-interface: bond0
-            table-id: 254
+    - name: bond0
+      description: Access mode bond using ports eno1 and eno2
+      type: bond
+      state: up
+      ipv4:
+        enabled: true
+        address:
+        - ip: 172.16.10.10
+          prefix-length: 24
+        dhcp: false
+      link-aggregation:
+        mode: 802.3ad  # mode=1 active-backup, mode=2 balance-xor or mode=4 802.3ad
+        options:
+          miimon: '150'
+        port:
+        - eno1
+        - eno2
+    
+    dns-resolver:
+      config:
+        server:
+        - 172.16.10.1
+    routes:
+      config:
+      - destination: 0.0.0.0/0
+        next-hop-address: 172.16.10.254
+        next-hop-interface: bond0
+        table-id: 254
 ```
 
 ### VLANs & Bonds/Link Aggregation
@@ -68,54 +73,81 @@ kind: AgentConfig
 metadata:
   name: cluster
 rendezvousIP: 172.16.10.10
+additionalNTPSources:
+- ntp.example.com
 hosts:
-  - hostname: master1.cluster.example.com
-    role: master
+- hostname: master1.cluster.example.com
+  role: master
+  interfaces:
+  - name: eno1
+    macAddress: 00:ef:44:21:e6:a1
+  - name: eno2
+    macAddress: 00:ef:44:21:e6:a2
+  networkConfig:
     interfaces:
-     - name: eno1
-       macAddress: 00:ef:44:21:e6:a1
-     - name: eno2
-       macAddress: 00:ef:44:21:e6:a2
-    networkConfig:
-      interfaces:
-        - name: bond0.300
-          type: vlan
-          state: up
-          vlan:
-            base-iface: bond0
-            id: 300
-          ipv4:
-            enabled: true
-            address:
-              - ip: 172.16.10.10
-                prefix-length: 24
-            dhcp: false
-        - name: bond0
-          description: Access mode bond using ports eno1 and eno2
-          type: bond
-          state: up
-          mac-address: 00:ef:44:21:e6:a1
-          ipv4:
-            enabled: false
-          ipv6:
-            enabled: false
-          link-aggregation:
-            mode: active-backup  # mode=1 active-backup, mode=2 balance-xor or mode=4 802.3ad
-            options:
-              miimon: '150'
-            port:
-            - eno1
-            - eno2
-      dns-resolver:
-        config:
-          server:
-            - 172.16.10.1
-      routes:
-        config:
-          - destination: 0.0.0.0/0
-            next-hop-address: 172.16.10.254
-            next-hop-interface: bond0.300
-            table-id: 254
+    - name: eno1
+      type: ethernet
+      state: up
+    - name: eno2
+      type: ethernet
+      state: up
+    
+    - name: bond0
+      description: Trunk mode bond using ports eno1 and eno2
+      type: bond
+      state: up
+      ipv4:
+        enabled: false
+      ipv6:
+        enabled: false
+      link-aggregation:
+        mode: 802.3ad  # mode=1 active-backup, mode=2 balance-xor or mode=4 802.3ad
+        options:
+          miimon: '150'
+        port:
+        - eno1
+        - eno2
+    
+    - name: bond0.100  # Example VLAN 100 on the 'main' network subnet
+      type: vlan
+      state: up
+      vlan:
+        base-iface: bond0
+        id: 100
+      ipv4:
+        enabled: true
+        address:
+        - ip: 172.16.10.10
+          prefix-length: 24
+        dhcp: false
+      ipv6:
+        enabled: false
+    
+    - name: bond0.500  # Example VLAN 500 on different subnet
+      type: vlan
+      state: up
+      vlan:
+        base-iface: bond0
+        id: 500
+      ipv4:
+        enabled: true
+        address:
+        - ip: 172.16.50.10
+          prefix-length: 24
+        dhcp: false
+      ipv6:
+        enabled: false
+    
+    dns-resolver:
+      config:
+        server:
+        - 172.16.10.1
+    routes:
+      config:
+      - destination: 0.0.0.0/0
+        next-hop-address: 172.16.10.254
+        next-hop-interface: bond0.100
+        table-id: 254
 ```
 
 ### Root Device Hints
@@ -142,40 +174,42 @@ kind: AgentConfig
 metadata:
   name: cluster
 rendezvousIP: 172.16.10.10
+additionalNTPSources:
+- ntp.example.com
 hosts:
-  - hostname: master1.cluster.example.com
-    role: master
-    rootDeviceHints:
-      deviceName: "/dev/sda"
-    interfaces:
-     - name: eno1
-       macAddress: 00:ef:44:21:e6:a1
-    networkConfig:
-        interfaces:
-          - name: enp6s18
-            type: ethernet
-            state: up
-            mac-address: BC:24:11:EE:DD:C1
-            ipv4:
-              enabled: true
-              address:
-                - ip: 172.16.1.10
-                  prefix-length: 24
-              dhcp: false
-        dns-resolver:
-          config:
-            server:
-              - 172.16.1.254
-        routes:
-          config:
-            - destination: 0.0.0.0/0
-              next-hop-address: 172.16.1.254
-              next-hop-interface: enp6s18
-              table-id: 254
+- hostname: master1.cluster.example.com
+  role: master
+  rootDeviceHints:
+    deviceName: "/dev/disk/by-path/pci-0000:01:00.0-nvme-1"
+  interfaces:
+   - name: eno1
+     macAddress: 00:ef:44:21:e6:a1
+  networkConfig:
+      interfaces:
+      - name: enp6s18
+        type: ethernet
+        state: up
+        mac-address: BC:24:11:EE:DD:C1
+        ipv4:
+          enabled: true
+          address:
+          - ip: 172.16.1.10
+            prefix-length: 24
+          dhcp: false
+      dns-resolver:
+        config:
+          server:
+          - 172.16.1.254
+      routes:
+        config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 172.16.1.254
+          next-hop-interface: enp6s18
+          table-id: 254
 ```
 
 ### DHCP
-If you want to utilize DHCP, the config is very simple and you can leave out the `networkConfig` enitirely. It's a good idea to at least create a static reservation for the `rendezvousIP` and master nodes if you want them to be on specific machines. The `rendezvousIP` must be a master node.
+If you want to utilize DHCP, the config is very simple and you can leave out the `networkConfig` enitirely. It's a good idea to at least create a static reservation for the `rendezvousIP` and master nodes if you want them to be on specific machines. The `rendezvousIP` must be a master node. You can source NTP directly from DHCP if your DHCP server has this option
 
 ```{ .yaml .copy }
 apiVersion: v1alpha1
@@ -186,19 +220,80 @@ rendezvousIP: 172.16.10.10
 
 # You can omit this section below entirely if you wanna let DHCP just assign addressing at random
 hosts:
-  - hostname: m1.cluster.example.com
-    role: master
+- hostname: master1.cluster.example.com
+  role: master
+  interfaces:
+  - name: enp6s18
+    macAddress: BC:24:11:EE:DD:C1
+
+- hostname: master2.cluster.example.com
+  role: master
+  interfaces:
+  - name: enp6s18
+    macAddress: BC:24:11:EE:DD:C2
+
+- hostname: master3.cluster.example.com
+  role: master
+  interfaces:
+  - name: enp6s18
+    macAddress: BC:24:11:EE:DD:C3
+```
+
+(Opinionated): It may be better represented to still explicitly define the interfaces like so
+
+```{ .yaml .copy }
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: cluster
+rendezvousIP: 172.16.10.10
+
+hosts:
+- hostname: master1.cluster.example.com
+  role: master
+  interfaces:
+  - name: enp6s18
+    macAddress: BC:24:11:EE:DD:C1
+  networkConfig:
     interfaces:
+    - name: enp6s18
+      type: ethernet
+      state: up
+      ipv4:
+        enabled: true
+        dhcp: true
+      ipv6:
+        enabled: false
+
+- hostname: master2.cluster.example.com
+  role: master
+  interfaces:
+    - name: enp6s18
+      macAddress: BC:24:11:EE:DD:C2
+    networkConfig:
+      interfaces:
       - name: enp6s18
-        macAddress: BC:24:11:EE:DD:C1
-  - hostname: m2.cluster.example.com
-    role: master
+        type: ethernet
+        state: up
+        ipv4:
+          enabled: true
+          dhcp: true
+        ipv6:
+          enabled: false
+
+- hostname: master3.cluster.example.com
+  role: master
+  interfaces:
+  - name: enp6s18
+    macAddress: BC:24:11:EE:DD:C3
+  networkConfig:
     interfaces:
-      - name: enp6s18
-        macAddress: BC:24:11:EE:DD:C2
-  - hostname: m3.cluster.example.com
-    role: master
-    interfaces:
-      - name: enp6s18
-        macAddress: BC:24:11:EE:DD:C3
+    - name: enp6s18
+      type: ethernet
+      state: up
+      ipv4:
+        enabled: true
+        dhcp: true
+      ipv6:
+        enabled: false
 ```

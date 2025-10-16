@@ -81,11 +81,11 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
   platform:
     baremetal:
       apiVIPs:
-        - 172.16.1.5 # (9)! API ip address
+      - 172.16.1.5 # (9)! API ip address
       ingressVIPs:
-        - 172.16.1.6 # (10)! Ingress API ip address, the *.apps A record
+      - 172.16.1.6 # (10)! Ingress API ip address, the *.apps A record
       provisioningNetwork: Disabled
-  fips: true # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
+  fips: false # (11)! Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead
   pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}' # (12)! A pull secret for your internal image registry. Best practive is for this secret to only have pull permissions
   sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....' # (13)! Public ssh key that you define. This key will give ssh access to the nodes through the 'core' user. This is the only way to ssh into the nodes by default
   additionalTrustBundle: | # (14)! The rootCA.pem certificate of your internal image registry. Note the indentation
@@ -134,91 +134,91 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
     name: cluster # (1)! The cluster name that you specified in your DNS records.
   rendezvousIP: 172.16.1.10 # (2)! Can be the IP of any one of the master nodes. This node will become bootstrap machine during install. A worker cannot be the rendezvous machine.
   additionalNTPSources: # (3)! Optional but recommended for disconnected installs. The install can work without NTP but it'll rely on the system clocks to be correct which may not always be true. IP address or hostname is accepatable 
-    - ntp.example.com 
+  - ntp.example.com 
   hosts:
-    - hostname: m1.cluster.example.com # (4)! Hostname of the node, must be resolvable by dns.
-      role: master # (5)! Recommended to explicitly define roles for your hosts, especially if you're defining masters and workers as they would otherwise be applied at random.
+  - hostname: m1.cluster.example.com # (4)! Hostname of the node, must be resolvable by dns.
+    role: master # (5)! Recommended to explicitly define roles for your hosts, especially if you're defining masters and workers as they would otherwise be applied at random.
+    interfaces:
+    - name: enp6s18 # (6)! Name of the interface. If you do not know it, the installer scripts will detect the actual name by mac-address.
+      macAddress: BC:24:11:EE:DD:C1 # (7)! Required! The MAC address of an interface on the host, used to determine which host to apply the configuration to.
+    networkConfig:
       interfaces:
-        - name: enp6s18 # (6)! Name of the interface. If you do not know it, the installer scripts will detect the actual name by mac-address.
-          macAddress: BC:24:11:EE:DD:C1 # (7)! Required! The MAC address of an interface on the host, used to determine which host to apply the configuration to.
-      networkConfig:
-        interfaces:
-          - name: enp6s18
-            type: ethernet
-            state: up
-            mac-address: BC:24:11:EE:DD:C1
-            ipv4:
-              enabled: true
-              address:
-                - ip: 172.16.1.10 # (8)! The static IP address of the target bare metal host.
-                  prefix-length: 24 # (9)! The static IP address’s subnet prefix for the target bare metal host.
-              dhcp: false
-        dns-resolver:
-          config:
-            server:
-              - 172.16.1.254 # (10)! The DNS server for the target bare metal host.
-        routes:
-          config:
-            - destination: 0.0.0.0/0
-              next-hop-address: 172.16.1.254 # (11)! The default gateway, or default route of your node. This must be in the same subnet as the IP address set for the specified interface.
-              next-hop-interface: enp6s18
-              table-id: 254
+      - name: enp6s18
+        type: ethernet
+        state: up
+        mac-address: BC:24:11:EE:DD:C1
+        ipv4:
+          enabled: true
+          address:
+          - ip: 172.16.1.10 # (8)! The static IP address of the target bare metal host.
+            prefix-length: 24 # (9)! The static IP address’s subnet prefix for the target bare metal host.
+          dhcp: false
+      dns-resolver:
+        config:
+          server:
+          - 172.16.1.254 # (10)! The DNS server for the target bare metal host.
+      routes:
+        config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 172.16.1.254 # (11)! The default gateway, or default route of your node. This must be in the same subnet as the IP address set for the specified interface.
+          next-hop-interface: enp6s18
+          table-id: 254
     
-    - hostname: m2.cluster.example.com
-      role: master
+  - hostname: m2.cluster.example.com
+    role: master
+    interfaces:
+    - name: enp6s18
+      macAddress: BC:24:11:EE:DD:C2
+    networkConfig:
       interfaces:
-        - name: enp6s18
-          macAddress: BC:24:11:EE:DD:C2
-      networkConfig:
-        interfaces:
-          - name: enp6s18
-            type: ethernet
-            state: up
-            mac-address: BC:24:11:EE:DD:C2
-            ipv4:
-              enabled: true
-              address:
-                - ip: 172.16.1.11
-                  prefix-length: 24
-              dhcp: false
-        dns-resolver:
-          config:
-            server:
-              - 172.16.1.254
-        routes:
-          config:
-            - destination: 0.0.0.0/0
-              next-hop-address: 172.16.1.254
-              next-hop-interface: enp6s18
-              table-id: 254
+      - name: enp6s18
+        type: ethernet
+        state: up
+        mac-address: BC:24:11:EE:DD:C2
+        ipv4:
+          enabled: true
+          address:
+          - ip: 172.16.1.11
+            prefix-length: 24
+          dhcp: false
+      dns-resolver:
+        config:
+          server:
+          - 172.16.1.254
+      routes:
+        config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 172.16.1.254
+          next-hop-interface: enp6s18
+          table-id: 254
     
-    - hostname: m3.cluster.example.com
-      role: master
+  - hostname: m3.cluster.example.com
+    role: master
+    interfaces:
+    - name: enp6s18
+      macAddress: BC:24:11:EE:DD:C3
+    networkConfig:
       interfaces:
-        - name: enp6s18
-          macAddress: BC:24:11:EE:DD:C3
-      networkConfig:
-        interfaces:
-          - name: enp6s18
-            type: ethernet
-            state: up
-            mac-address: BC:24:11:EE:DD:C3
-            ipv4:
-              enabled: true
-              address:
-                - ip: 172.16.1.12
-                  prefix-length: 24
-              dhcp: false
-        dns-resolver:
-          config:
-            server:
-              - 172.16.1.254
-        routes:
-          config:
-            - destination: 0.0.0.0/0
-              next-hop-address: 172.16.1.254
-              next-hop-interface: enp6s18
-              table-id: 254
+      - name: enp6s18
+        type: ethernet
+        state: up
+        mac-address: BC:24:11:EE:DD:C3
+        ipv4:
+          enabled: true
+          address:
+          - ip: 172.16.1.12
+            prefix-length: 24
+          dhcp: false
+      dns-resolver:
+        config:
+          server:
+          - 172.16.1.254
+      routes:
+        config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 172.16.1.254
+          next-hop-interface: enp6s18
+          table-id: 254
   ```
 
   1. The cluster name that you specified in your DNS records.
