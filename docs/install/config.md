@@ -71,13 +71,13 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
     name: cluster # (5)! The cluster name that you specified in your DNS records.
   networking:
     clusterNetwork:
-    - cidr: 10.128.0.0/14 # (6)! The network that the cluster shares for assigning IPs to PODS. Each node will get a /23 (500~ usable IP addresses). Make sure this IP space does not conflict with anything on your LAN.
+    - cidr: 10.128.0.0/14 # (6)! Default Value: The network that the cluster shares for assigning IPs to PODS. Each node will get a /23 (500~ usable IP addresses). Make sure this IP space does not conflict with anything on your LAN.
       hostPrefix: 23
     machineNetwork:
     - cidr: 172.16.1.0/24 # (7)! The network that connects the cluster to your LAN. This is the IP space that resides on your LAN.
     networkType: OVNKubernetes
     serviceNetwork:
-    - 172.30.0.0/16 # (8)! Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
+    - 172.30.0.0/16 # (8)! Default Value: Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
   platform:
     baremetal:
       apiVIPs:
@@ -110,9 +110,9 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
   3. This parameter controls the number of compute machines that the Agent-based installation waits to discover before triggering the installation process. It is the number of compute machines that must be booted with the generated ISO.
   4. The number of control plane machines that you add to the cluster. Because the cluster uses these values as the number of etcd endpoints in the cluster, the value must match the number of control plane machines that you deploy.
   5. The cluster name that you specified in your DNS records.
-  6. The network that the cluster shares for assigning IPs to PODS. Each node will get a /23 (500~ usable IP addresses). Make sure this IP space does not conflict with anything on your LAN.
+  6. Default Value: The network that the cluster shares for assigning IPs to PODS. Each node will get a /23 (500~ usable IP addresses). Make sure this IP space does not conflict with anything on your LAN.
   7. The network that connects the cluster to your LAN. This is the IP space that resides on your LAN.
-  8. Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
+  8. Default Value: Used for internal service objects. Make sure this IP space does not conflict with anything on your LAN.
   9. API ip address
   10. Ingress API ip address, the *.apps A record
   11. Boolean: Either true or false to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead

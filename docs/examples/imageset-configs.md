@@ -241,13 +241,10 @@ mirror:
 
 ### OpenShift Virtulization (KubeVirt) and Migration Kit for Virtualization (MTV) Operators
 
-[KubeVirt](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization/index){:target="_blank"}
-
-[MTV](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/index){:target="_blank"}
-
-[VDDK](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#creating-vddk-image_mtv){:target="_blank"}
-
-[Prebuilt VDDK Image](https://quay.io/repository/jcall/vddk?tab=info){:target="_blank"}
+- [KubeVirt](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization/index){:target="_blank"}
+- [MTV](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/index){:target="_blank"}
+- [VDDK](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#creating-vddk-image_mtv){:target="_blank"}
+- [Prebuilt VDDK Image](https://quay.io/repository/jcall/vddk?tab=info){:target="_blank"}
 
 ```{ .yaml .copy }
 ---
@@ -292,13 +289,28 @@ mirror:
   - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.19
 ```
 
+### Compliance Operator
+Contains various security profiles including the DISA STIG
+
+```{ .yaml .copy }
+---
+kind: ImageSetConfiguration
+apiVersion: mirror.openshift.io/v2alpha1
+
+mirror:
+  operators:
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
+    packages:
+    - name: compliance-operator
+      channels:
+      - name: stable
+```
+
 ### Other Handy Operators
 
-[NFD](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/specialized_hardware_and_driver_enablement/psap-node-feature-discovery-operator){:target="_blank"}
-
-[OADP](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/backup_and_restore/oadp-application-backup-and-restore){:target="_blank"}
-
-[MTC](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/migration_toolkit_for_containers/index){:target="_blank"}
+- [NFD](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/specialized_hardware_and_driver_enablement/psap-node-feature-discovery-operator){:target="_blank"}
+- [OADP](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/backup_and_restore/oadp-application-backup-and-restore){:target="_blank"}
+- [MTC](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/migration_toolkit_for_containers/index){:target="_blank"}
 
 ```{ .yaml .copy }
 ---
@@ -402,27 +414,10 @@ mirror:
   - name: registry.redhat.io/ubi8/ubi:latest
 
   # https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner: NFS subdir external provisioner is an automatic provisioner that uses your existing and already configured NFS server to support dynamic provisioning.
-  - registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:latest
+  - name: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:latest
 ```
 
-### Compliance Operators
-Contains various security profiles including the DISA STIG
-
-```{ .yaml .copy }
----
-kind: ImageSetConfiguration
-apiVersion: mirror.openshift.io/v2alpha1
-
-mirror:
-  operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
-    packages:
-    - name: compliance-operator
-      channels:
-      - name: stable
-```
-
-### NetApp (Trident Operator)
+### NetApp Storage (Trident Operator)
 
 [Trident Docs](https://docs.netapp.com/us-en/trident/index.html){:target="_blank"}
 
