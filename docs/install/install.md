@@ -101,7 +101,12 @@ ssh core@sno.cluster.example.com
 
 #### KubeAPI Certificate Issues
 
-[RH Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/installation_overview/index#installation-process-details)
+[RHw Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/installation_overview/index#installation-process-details)
+
+!!! info
+    You can use the `approve-kube-csr.sh` script in the docs repository that can perform this action a bit more efficiently. Adjust the scripts variables per your environment
+        
+    `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/approve-kube-csr.sh`
 
 If you powered down the cluster before 24 hours, or the cluster has been down for a extended amount of time (< 30 days), there may be some kube certificate issues that will cause the KubeAPI fail to initialize. The node-bootstrapper CSRs has likely need to be manually approved. 
 

@@ -4,7 +4,7 @@
 
 [Red Hat Docs: Agent Configuration Parameters](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installation-config-parameters-agent#agent-configuration-parameters_installation-config-parameters-agent){:target="_blank"}
 
-[Bill's awesome collection of agent installation examples](https://github.com/bstrauss84/openshift-install-configs/tree/main/installation-configs/baremetal/agent)
+[Bill's awesome collection of agent installation examples](https://github.com/bstrauss84/openshift-install-configs/tree/main/installation-configs/baremetal/agent){:target="_blank"}
 
 Various examples of common agent-configs. Sub in your data as appropriate.
 
@@ -65,7 +65,7 @@ hosts:
 
 ### VLANs & Bonds/Link Aggregation
 
-[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer)
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer){:target="_blank"}
 
 ```{ .yaml .copy }
 apiVersion: v1alpha1

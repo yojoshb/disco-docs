@@ -17,17 +17,17 @@ To prune through the various catalogs, use the following commands
 oc mirror list releases
   
 # Output all OpenShift release channels list for a release
-oc mirror list releases --version=4.17
+oc mirror list releases --version=4.19
   
 # List all OpenShift versions in a specified channel
-oc mirror list releases --channel=stable-4.17
+oc mirror list releases --channel=stable-4.19
   
 # List all OpenShift channels for a specific version
-oc mirror list releases --channels --version=4.17
+oc mirror list releases --channels --version=4.19
   
 # List OpenShift channels for a specific version and one or more release architecture. 
 # Valid architectures: amd64 (default), arm64, ppc64le, s390x, multi.
-oc mirror list releases --channels --version=4.17 --filter-by-archs amd64,arm64,ppc64le,s390x,multi
+oc mirror list releases --channels --version=4.19 --filter-by-archs amd64,arm64,ppc64le,s390x,multi
 ```
 
 - Operators
@@ -39,15 +39,15 @@ oc mirror list releases --channels --version=4.17 --filter-by-archs amd64,arm64,
         [Source: Allens Repository with more helpful scripts and configs](https://github.com/afouladi7/openshift_shortcuts/blob/main/TEMPLATES/random_commands.md){:target="_blank"}
       
         ```bash
-        for i in $(oc-mirror list operators --catalogs --version=4.17 | grep registry); do $(oc-mirror list operators --catalog=$i --version=4.17 > $(echo $i | cut -b 27- | rev | cut -b 7- | rev).txt); done
+        for i in $(oc-mirror list operators --catalogs --version=4.19 | grep registry); do $(oc-mirror list operators --catalog=$i --version=4.19 > $(echo $i | cut -b 27- | rev | cut -b 7- | rev).txt); done
         ```
 
 ```bash
 # List available operator catalog release versions
 oc mirror list operators
   
-# Output default operator catalogs for OpenShift release 4.17
-oc mirror list operators --catalogs --version=4.17
+# Output default operator catalogs for OpenShift release 4.19
+oc mirror list operators --catalogs --version=4.19
   
 # List all operator packages in a catalog
 oc mirror list operators --catalog=catalog-name
@@ -74,9 +74,9 @@ mirror:
     - amd64
     channels:
     - type: ocp
-      name: stable-4.17
-      minVersion: 4.17.17
-      maxVersion: 4.17.21
+      name: stable-4.19
+      minVersion: 4.19.10
+      maxVersion: 4.19.12
 ```
 
 - You can also pin to a specific version
@@ -92,9 +92,9 @@ mirror:
     - amd64
     channels:
     - type: ocp
-      name: stable-4.17
-      minVersion: 4.17.21
-      maxVersion: 4.17.21
+      name: stable-4.19
+      minVersion: 4.19.12
+      maxVersion: 4.19.12
 ```
 
 - For other architectures, you can select the filter for the target platform 
@@ -110,7 +110,7 @@ mirror:
     - arm64    # Valid architectures: amd64, arm64, ppc64le, s390x, multi
     channels:
     - type: ocp
-      name: stable-4.17
+      name: stable-4.19
 ```
 
 ### OpenShift Update Service (OSUS)
@@ -129,11 +129,11 @@ mirror:
     - amd64
     channels:
     - type: ocp
-      name: stable-4.17
+      name: stable-4.19
     graph: true
 
   operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
     packages:
     - name: cincinnati-operator
 ```
@@ -153,13 +153,13 @@ apiVersion: mirror.openshift.io/v2alpha1
 
 mirror:
   operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
     packages:
 
     # Ansible Automation Platform Operator
     - name: ansible-automation-platform-operator
       channels:
-      - name: stable-2.5
+      - name: stable-2.6
 
   additionalImages:
   # Images that the Containerized/RPM offline-bundle comes with. You can bring these over independentaly with podman also. Make sure to point PAH to your registry where these are mirrored to.
@@ -170,11 +170,15 @@ mirror:
 
 ### OpenShift Data Foundation (ODF) Operators
 
+[Red Hat ODF 4.19 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.19/html/planning_your_deployment/disconnected-environment_rhodf#disconnected-environment_rhodf){:target="_blank"}
+
+[Red Hat ODF 4.18 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/disconnected-environment_rhodf#disconnected-environment_rhodf){:target="_blank"}
+
 [Red Hat ODF 4.17 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.17/html/planning_your_deployment/disconnected-environment_rhodf#disconnected-environment_rhodf){:target="_blank"}
 
 Consult the docs for whatever version of ODF you are wanting to install. The operators required vary per OCP version.
 
-```{ .yaml .copy title="ODF 4.17" }
+```{ .yaml .copy title="ODF 4.19" }
 ---
 kind: ImageSetConfiguration
 apiVersion: mirror.openshift.io/v2alpha1
@@ -185,37 +189,40 @@ mirror:
     packages:
     - name: ocs-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: odf-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: mcg-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: odf-csi-addons-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: ocs-client-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: odf-prometheus-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: recipe
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: rook-ceph-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: cephcsi-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
+    - name: odf-dependencies
+      channels:
+      - name: stable-4.19
     - name: odr-cluster-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     - name: odr-hub-operator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     
     # For local storage deployments i.e. node attached disks 
     - name: local-storage-operator
@@ -225,22 +232,22 @@ mirror:
     # Optional: Only for Regional Disaster Recovery (Regional-DR) configuration
     - name: odf-multicluster-orchestrator
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
   
   additionalImages:
   # Optional: ODF Must gather support tools
-  - name: registry.redhat.io/odf4/odf-must-gather-rhel9:v4.17
+  - name: registry.redhat.io/odf4/odf-must-gather-rhel9:v4.19
 ```
 
 ### OpenShift Virtulization (KubeVirt) and Migration Kit for Virtualization (MTV) Operators
 
-[KubeVirt](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization/index)
+[KubeVirt](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization/index){:target="_blank"}
 
-[MTV](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/index)
+[MTV](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/index){:target="_blank"}
 
-[VDDK](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#creating-vddk-image_mtv)
+[VDDK](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#creating-vddk-image_mtv){:target="_blank"}
 
-[Prebuilt VDDK Image](https://quay.io/repository/jcall/vddk?tab=info)
+[Prebuilt VDDK Image](https://quay.io/repository/jcall/vddk?tab=info){:target="_blank"}
 
 ```{ .yaml .copy }
 ---
@@ -249,7 +256,7 @@ apiVersion: mirror.openshift.io/v2alpha1
 
 mirror:
   operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
     packages:
     # Virtualization
     - name: kubevirt-hyperconverged
@@ -261,14 +268,14 @@ mirror:
     
     # Optional: If you would like to use local dynamic storage on another disk attached to the host
     - name: lvms-operator
-      defaultChannel: stable-4.17
+      defaultChannel: stable-4.19
       channels:
-      - name: stable-4.17
+      - name: stable-4.19
     
     # Migration Toolkit for Virtulization
     - name: mtv-operator
       channels:
-      - name: release-v2.6
+      - name: release-v2.9
       
   additionalImages:
   # Optional: Virtual guest images
@@ -282,16 +289,16 @@ mirror:
   - name: quay.io/jcall/vddk:latest
 
   # Optional: KubeVirt Must gather support tools
-  - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.17
+  - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.19
 ```
 
 ### Other Handy Operators
 
-[NFD](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/specialized_hardware_and_driver_enablement/psap-node-feature-discovery-operator)
+[NFD](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/specialized_hardware_and_driver_enablement/psap-node-feature-discovery-operator){:target="_blank"}
 
-[OADP](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/backup_and_restore/oadp-application-backup-and-restore)
+[OADP](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/backup_and_restore/oadp-application-backup-and-restore){:target="_blank"}
 
-[MTC](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/migration_toolkit_for_containers/index)
+[MTC](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/migration_toolkit_for_containers/index){:target="_blank"}
 
 ```{ .yaml .copy }
 ---
@@ -299,7 +306,7 @@ kind: ImageSetConfiguration
 apiVersion: mirror.openshift.io/v1alpha2
 mirror:
   operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
     packages:
     # Advanced Cluster Management for Kuberenetes
     - name: advanced-cluster-management
@@ -394,19 +401,12 @@ mirror:
   - name: registry.redhat.io/ubi9/ubi:latest
   - name: registry.redhat.io/ubi8/ubi:latest
 
-  helm:
-    repositories:
-      
-      # NFS CSI that can do dynamic provisioning off of NFS attached storage, or provide NFS storage from the cluster (community supported, need to add chart requested images to the additionalImages: dictionary)
-      - name: csi-driver-nfs
-        url: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
-        charts:
-          - name: csi-driver-nfs
-            version: 4.9.0
+  # https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner: NFS subdir external provisioner is an automatic provisioner that uses your existing and already configured NFS server to support dynamic provisioning.
+  - registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:latest
 ```
 
-### DISA STIG Operators
-These aren't actually tied to the STIG, just makes it easier to actually apply it to your cluster
+### Compliance Operators
+Contains various security profiles including the DISA STIG
 
 ```{ .yaml .copy }
 ---
@@ -415,19 +415,18 @@ apiVersion: mirror.openshift.io/v2alpha1
 
 mirror:
   operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
     packages:
     - name: compliance-operator
-      channels:
-      - name: stable
-    - name: file-integrity-operator
       channels:
       - name: stable
 ```
 
 ### NetApp (Trident Operator)
 
-```
+[Trident Docs](https://docs.netapp.com/us-en/trident/index.html){:target="_blank"}
+
+```{ .yaml .copy }
 ---
 kind: ImageSetConfiguration
 apiVersion: mirror.openshift.io/v2alpha1

@@ -10,7 +10,7 @@ DL_DIR="$(pwd)/bin"
 # Major version of RHEL: 8 or 9           
 RHEL_VERSION="9"
 
-# OpenShift Channel and version: latest, stable, stable-4.20, etc
+# OpenShift Channel and version: latest, stable, stable-4.20, 4.20.2, etc
 RELEASE_VERSION="stable-4.19"
 
 # OpenShift and Tools architecture: amd64, arm64, ppc64le, s390x, multi
@@ -26,6 +26,7 @@ INSTALLER=false
 FIPS=false
 
 ### Shouldn't need to modify ###
+umask 0022 # STIG workaround just in case
 RELEASE_IMAGE=$(curl -s https://mirror.openshift.com/pub/openshift-v4/$RELEASE_ARCH/clients/ocp/$RELEASE_VERSION/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}')
 RELEASE_VERSION=$(curl -s https://mirror.openshift.com/pub/openshift-v4/$RELEASE_ARCH/clients/ocp/$RELEASE_VERSION/release.txt | grep 'Version:' | awk -F ' ' '{print $2}')
 RUNTIME_RHEL_VERSION=$(cat /etc/redhat-release | cut -f1 -d. | tr -d -c 0-9)
@@ -37,7 +38,7 @@ else
   echo "Aborting. Invalid RHEL Version or RHEL runtime"; exit
 fi
 
-# Download URL's curated from supplied vars
+# Download URL's curated from supplied vars.
 DL_BUTANE="https://mirror.openshift.com/pub/openshift-v4/$RELEASE_ARCH/clients/butane/latest/butane-$RELEASE_ARCH"                                             # Latest butane
 DL_OC="https://mirror.openshift.com/pub/openshift-v4/$RELEASE_ARCH/clients/ocp/$RELEASE_VERSION/openshift-client-linux-$RELEASE_ARCH-rhel$RHEL_VERSION.tar.gz" # Version & RHEL specific oc 
 DL_OCMIRROR_EL9="https://mirror.openshift.com/pub/openshift-v4/$RELEASE_ARCH/clients/ocp/latest/oc-mirror.rhel9.tar.gz"                                        # Latest oc-mirror for rhel9
@@ -62,9 +63,9 @@ else
   echo "OpenShift Install binary: false, either INSTALLER=false or your runtime version of RHEL does not match the RHEL_VERSION you defined."
   INSTALLER=false
 fi
-echo ""
+echo
 read -p "Press [ENTER] to continue  |  Press [CTRL-C] to abort"
-echo ""
+echo
 
 # Create dir structure and clean tmp if there's leftover junk in there from possible download failure
 mkdir -p $DL_DIR/tmp
@@ -110,4 +111,5 @@ mv oc kubectl butane oc-mirror ..
 cd ..
 rm -rf tmp
 
-echo -e "\nTools saved to: $DL_DIR\n"
+echo -e "\nTools downloaded to: $DL_DIR"
+ls -1 $DL_DIR

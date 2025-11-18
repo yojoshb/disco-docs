@@ -1,9 +1,9 @@
+!!! info
+    If you set `additionalNTPSources` in your agent-config.yaml, skip this step, you do not need to do this as NTP would've been configured during install.
+
 ## Configuring a time source for the disconnected cluster
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/machine_configuration/index#machine-config-index){:target="_blank"}
-
-!!! info
-    If you set `additionalNTPSources` in your agent-config.yaml, skip this step, you do not need to do this as NTP would've been configured during install.
 
 We need to apply a custom Network Time Protocol (NTP) configuration to the nodes, because by default, internet connectivity is assumed in OpenShift Container Platform and `chronyd` is configured to use the `*.rhel.pool.ntp.org` servers.
 

@@ -35,7 +35,7 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
     
     !!! warning "Important"
         This binary is specific to the release version of OpenShift you are installing. The binary must match the release images that you mirror.
-    - This doc will go over the extraction method to make sure the correct binary is downloaded for the release images mirrored. 
+    - This doc will go over the extraction and mirror site download method to make sure the correct binary is downloaded for the release images mirrored. 
   ---
 
 - **mirror-registry** (optional): Small registry that can host the required container images to install, update, and maintain the cluster.

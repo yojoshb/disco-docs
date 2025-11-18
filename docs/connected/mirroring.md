@@ -77,9 +77,17 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
     ```{ . .no-copy title="Example Output" }
     mirror_000001.tar  working-dir
     ```
-  
-### Extract the openshift-install binary from the release-images mirrored
-This binary will be used to create the ISO that you will boot on your hardware to install the cluster. This binary has to match the exact version of OpenShift release images that you have mirrored. To extract the openshift-install that's built for your mirrored images version on the connected network:
+
+1. The working-dir will also show you the exact version of OpenShift you mirrored, if you specified the platform mirror via `stable-4.xx` in your imageset config file.
+  ```{ . .no-copy title="Example" }
+  ls /opt/4.17-mirrordata/working-dir/signatures/4.17.17-x86_64-sha256-2c8a2124df0a8c865a3771c49d01bfcb96cadc7f411e23870eb9f8adbe032ec1
+  ```
+
+## Extract or Download the installer 
+The `openshift-install` or `openshift-install-fips` binary will be used to create the ISO that you will boot on your hardware to install the cluster. This binary has to match the exact version of OpenShift release images that you have mirrored.
+
+### Option 1: Extract the binary
+To extract the `openshift-install` that's built for your mirrored images version on the connected network:
 
 !!! note
     If you used the `rhel-oc-tools.sh` script and chose to extract the binary you do not need to do this.
@@ -88,11 +96,11 @@ This binary will be used to create the ISO that you will boot on your hardware t
     
     1. Using oc-mirror v2 directory structure, get the hash from the images we mirrored to disk
     ```{ .bash .no-copy }
-    ls /opt/4.17-mirrordata/working-dir/signatures/4.17.70-x86_64-sha256-d9c985464c0315160971b3e79f5fbec628d403a572f7a6d893c04627c066c0bb | awk -F'sha256-' '{print $2}'
-    {==40a0dce2a37e3278adc2fd64f63bca67df217b7dd8f68575241b66fdae1f04a3==}
+    ls /opt/4.17-mirrordata/working-dir/signatures/4.17.17-x86_64-sha256-2c8a2124df0a8c865a3771c49d01bfcb96cadc7f411e23870eb9f8adbe032ec1 | awk -F'sha256-' '{print $2}'
+    {==2c8a2124df0a8c865a3771c49d01bfcb96cadc7f411e23870eb9f8adbe032ec1==}
 
     # Store this in a variable to use it to curate the URL to extract the installer from without copying and pasting 
-    export HASH=$(ls /opt/4.17-mirrordata/working-dir/signatures/4.17.70-x86_64-sha256-40a0dce2a37e3278adc2fd64f63bca67df217b7dd8f68575241b66fdae1f04a3 | awk -F'sha256-' '{print $2}')
+    export HASH=$(ls /opt/4.17-mirrordata/working-dir/signatures/4.17.17-x86_64-sha256-2c8a2124df0a8c865a3771c49d01bfcb96cadc7f411e23870eb9f8adbe032ec1 | awk -F'sha256-' '{print $2}')
     ```
     2. Or, construct the entire URL based on the version specified in the imageset config file. Read the warning below to understand the potential issue you could run into with this method.
     ```{ .bash .no-copy }
@@ -100,12 +108,12 @@ This binary will be used to create the ISO that you will boot on your hardware t
     export RELEASE_ARCH=amd64
     export RELEASE_IMAGE=$(curl -s https://mirror.openshift.com/pub/openshift-v4/$RELEASE_ARCH/clients/ocp/$VERSION/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}')
     echo $RELEASE_IMAGE
-    quay.io/openshift-release-dev/ocp-release@sha256:{==40a0dce2a37e3278adc2fd64f63bca67df217b7dd8f68575241b66fdae1f04a3==}
+    quay.io/openshift-release-dev/ocp-release@sha256:{==2c8a2124df0a8c865a3771c49d01bfcb96cadc7f411e23870eb9f8adbe032ec1==}
     ```
     !!! warning
         Be aware that this could end up downloading a different version of installer if you mirrored the images at a earlier time.
 
-        Example: You mirrored the `stable-4.17` the images a week ago, at that time the stable channel was set to version `4.17.70`. Now you go to extract the binary a week later, but the stable-4.17 branch was updated from `4.17.70` to `4.17.71`. The binary would be downloaded for the newer stable branch `4.17.71` and be the incorrect version with the images you mirrored prior. This would cause the installer to fail, as it would be looking for the newer release payload on the mirror registry.
+        Example: You mirrored the `stable-4.17` the images a week ago, at that time the stable channel was set to version `4.17.17`. Now you go to extract the binary a week later, but the stable-4.17 branch was updated from `4.17.17` to `4.17.18`. The binary would be downloaded for the newer stable branch `4.17.18` and be the incorrect version with the images you mirrored prior. This would cause the installer to fail, as it would be looking for the newer release payload on the mirror registry.
 
 2. Use `oc adm` to extract the openshift-install binary that is purpose built for the version of images you mirrored. This command will extract the `openshift-install` or `openshift-install-fips` binary to your current directory. You can pass in the `--dir='<path>'` to extract the binary to a specific location on your filesystem. 
     ```{ .bash .no-copy }
@@ -128,13 +136,19 @@ This binary will be used to create the ISO that you will boot on your hardware t
     ./openshift-install version
     ```
     ```{ . .no-copy title="Example Output" }
-    ./openshift-install 4.12.70
-    built from commit 798aeaaf61fbc22669b6bad2edc058ea6949d733
-    release image quay.io/openshift-release-dev/ocp-release@sha256:{==40a0dce2a37e3278adc2fd64f63bca67df217b7dd8f68575241b66fdae1f04a3==}
+    ./openshift-install 4.17.17
+    built from commit 8bcf87f80e1803f9ec986dfe099625a088ac2412
+    release image quay.io/openshift-release-dev/ocp-release@sha256:2c8a2124df0a8c865a3771c49d01bfcb96cadc7f411e23870eb9f8adbe032ec1
     release architecture amd64
     ```
 
-If the SHA256 values match each other (highlighted values), then you have extracted the correct `openshift-install` binary that can build your cluster ISO with the release images you mirrored. If the hashes do not match, you will need to either go find the correct `openshift-install` binary version for your images, or mirror the images again to the correct version of the install binary.
+    If the SHA256 values match each other (highlighted values), then you have extracted the correct `openshift-install` binary that can build your cluster ISO with the release images you mirrored. If the hashes do not match, you will need to go find the correct `openshift-install` binary version for your images following the method below.
+
+### Option 2: Download the binary
+You can find the correct version of `openshift-install` binary on the [public mirror site](https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/){:target="_blank"}
+
+- Example for the amd64 `openshift-install` version `4.17.17`: <https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/4.17.17/openshift-install-linux.tar.gz>
+- Example for the amd64 `openshift-install-fips` version `4.17.17`: <https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/4.17.17/openshift-install-rhel9-amd64.tar.gz>
 
 ## Transfer data and tools to the disconnected environment.
 Place these files on a disk and transfer them to your disconnected network
