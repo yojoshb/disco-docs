@@ -10,7 +10,9 @@ use_directory_urls: false
 plugins:
   - offline:
       enabled: !ENV [OFFLINE, false]
-  - privacy
+  - privacy:
+      links_attr_map:
+        target: _blank
   - search
   - autorefs:
       resolve_closest: true
