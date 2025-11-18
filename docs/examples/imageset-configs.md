@@ -424,11 +424,8 @@ mirror:
 
 ### NetApp (Trident Operator)
 
-<<<<<<< HEAD
 [Trident Docs](https://docs.netapp.com/us-en/trident/index.html){:target="_blank"}
 
-=======
->>>>>>> e62d8bd8a7383d055087d939805c9f511c073fa8
 ```{ .yaml .copy }
 ---
 kind: ImageSetConfiguration
