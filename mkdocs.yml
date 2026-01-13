@@ -63,6 +63,12 @@ nav:
     - 4.2 NTP Setup: postinstall/ntp.md
     - 4.3 OpenShift Update Service: postinstall/osus.md
     - 4.4 Additional Tasks: postinstall/tasks.md
+  - 5. Updating the Cluster:
+    - update/index.md
+    - 5.1 OpenShift Update Service: update/osus.md
+    - 5.2 Mirror updated images to disk: update/connected-mirroring.md
+    - 5.3 Mirror updated images to registry: update/disconnected-mirroring.md
+    - 5.4 Update the cluster: update/update.md
   - Optional:
     - Red Hat Mirror Registry: optional/registry.md
     - Core User Password: optional/corepasswd.md

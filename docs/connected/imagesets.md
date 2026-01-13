@@ -78,11 +78,18 @@
       operators:
       - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17 # (4)!
         packages:
+        
         - name: lvms-operator # (5)!
           defaultChannel: stable-4.17 # (6)!
           channels:
           - name: stable-4.17 # (7)!
+        
         - name: cincinnati-operator # (8)!
+        
+        - name: something # (9)!
+          channels:
+          - name: stable-4.17
+            minVersion: 2.3
   
       additionalImages: # (9)!
       - name: registry.redhat.io/ubi8/ubi:latest
@@ -96,8 +103,9 @@
     1. Graph data needed for the cincinnati operator
     1. Operator catalog we want to download from
     1. Operator that we want to download
-    1. Some operators will need a defaultChannel specified. oc-mirror will tell you if it's required when attempting to mirror the data
+    1. Some operators will need a defaultChannel specified. This is because there may be a newer defaultChannel available, you can (but generally shouldn't) mix and match operator versions. oc-mirror will tell you if it's required when attempting to mirror the data
     1. Version/Channel for said operators
     1. Only has one channel so just take the latest version
+    1. 
     1. Any additional images to bring with us, RHEL UBI's are always nice to have for testing, ose-must-gather is for gathering extra logs in the event a must gather is used for support or general debugging
-    1. Any additional helm charts, these are non-cataloged application bundles more or less. This example we aren't specifying anything so it's blank
+    1. Any additional helm charts, these are non-cataloged application deployment bundles more or less. This example we aren't specifying anything so it's blank. You can also omit the entire stanza

@@ -112,4 +112,4 @@ cd ..
 rm -rf tmp
 
 echo -e "\nTools downloaded to: $DL_DIR"
-ls -1 $DL_DIR
+ls -1 --color $DL_DIR

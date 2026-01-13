@@ -70,7 +70,7 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
     [INFO]   : 👋 Goodbye, thank you for using oc-mirror
     ```
     
-1. List your output directory and verify the image set `mirror_000001.tar` file was created. The `working-dir` will contain logs and relavent info for the data mirrorred to disk.
+1. List your output directory and verify the image set `mirror_000001.tar` file was created. The `working-dir` will contain logs and relavent info for the data mirrored to disk.
     ```{ .bash }
     ls /opt/4.17-mirrordata/
     ```
@@ -160,5 +160,3 @@ Place these files on a disk and transfer them to your disconnected network
 - **butane**
 - **mirror-registry** (if using)
 - **openshift-install** or **openshift-install-fips**
-
----

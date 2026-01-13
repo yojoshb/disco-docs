@@ -66,4 +66,4 @@ else
     echo -e "Skipping certificate approvals"
 fi
 
-echo "\nStartup Script finished on: $(date)"
+echo -e "\nStartup Script finished on: $(date)"

@@ -1,4 +1,4 @@
-# Use the oficial image of mkdocs-material
+# Use the official image of mkdocs-material
 FROM squidfunk/mkdocs-material
 
 # Set build directory

@@ -262,6 +262,14 @@ mirror:
     - name: kubernetes-nmstate-operator
       channels:
       - name: stable
+
+    # HA/DR Operators
+    - name: node-healthcheck-operator
+      channels:
+      - name: stable
+    - name: self-node-remediation
+      channels:
+      - name: stable
     
     # Optional: If you would like to use local dynamic storage on another disk attached to the host
     - name: lvms-operator
@@ -435,5 +443,5 @@ mirror:
     # Netapp Trident
     - name: trident-operator
       channels:
-        - name: stable
+      - name: stable
 ```
