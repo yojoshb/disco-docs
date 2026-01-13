@@ -1,5 +1,8 @@
 # Updating the Cluster and Operators
 
+!!! warning
+    This section is a work in progress. Still need to add the *gotchas*, and what not
+
 After the cluster has been up and running with all post installation tasks completed, now it's time to maintain it during it's lifecycle.
 
 - Reference the [Updating a cluster in a disconnected environment documentation](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment){:target="_blank"} for more thorough instructions.
