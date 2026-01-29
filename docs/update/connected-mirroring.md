@@ -1,12 +1,13 @@
 ## Mirroring images to disk
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/disconnected_environments/about-installing-oc-mirror-v2){:target="_blank"}
 
-Now that the images are defined, we can mirror them to disk. Repeat this process for updates or additions to your cluster.
+Now that the images are defined, we can mirror them to disk. Repeat this process for updates or additions to your cluster. Use the same `working-dir` that you used to install the cluster for updates.
 
 - Pass in the image set configuration file that was created. This procedure assumes that it is named `imageset-config.yaml`. If you named your's differently, sub in your name of the file.
 - Specify the target directory where you want to output the image set tar file. The target directory path must start with `file://`. This procedure assumes you want to store the image set in `/opt/4.17-mirrordata`. Store it anywhere that has available disk space. Can even be the mounted drive you're going to use to transfer the data to the high-side.
   - The target directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. Keep this directory safe, and do not modify it. It will be used again for updates and additions to your cluster
 - Be aware of the caching system, this will also take up considerable space on the disk depending on how many images you want to mirror
+
 !!! question "Caching"
     - How does the cache work?
         - It's like a local registry, it can take up additional disk space almost as large as the .tar that gets generated

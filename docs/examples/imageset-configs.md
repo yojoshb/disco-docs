@@ -263,11 +263,20 @@ mirror:
       channels:
       - name: stable
 
-    # HA/DR Operators
+    # Fencing and Remediation are similar to VMware’s Infrastructure HA and Node Failure features.
     - name: node-healthcheck-operator
       channels:
       - name: stable
-    - name: self-node-remediation
+    - name: node-maintenance-operator
+      channels:
+      - name: stable
+    - name: self-node-remediation # SNR: Use this operator for VirtualMachine nodes or baremetal nodes without BMC access
+      channels:
+      - name: stable
+    - name: fence-agents-remediation # FAR: Use this operator if your baremetal nodes have BMC access, it's much faster
+      channels:
+      - name: stable
+    - name: cluster-kube-descheduler-operator # Similar to VMware’s Distributed Resource Scheduler (DRS)
       channels:
       - name: stable
     
@@ -280,7 +289,12 @@ mirror:
     # Migration Toolkit for Virtulization
     - name: mtv-operator
       channels:
-      - name: release-v2.9
+      - name: release-v2.10
+
+    # Migration Toolkit for Containers, useful for moving vm storage between storage classes. This will soon be included with KubeVirt
+    - name: mtv-operator
+      channels:
+      - name: release-v1.8
       
   additionalImages:
   # Optional: Virtual guest images

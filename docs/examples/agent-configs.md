@@ -13,6 +13,63 @@ Various examples of common agent-configs. Sub in your data as appropriate.
     
     You can configure additional interfaces on your hosts after the cluster is installed by utilizing the `NMState Operator`.
 
+### VLANs
+
+This port is expected to be connected to a tagged/trunk port on the upstream network switch.
+
+```{ .yaml .copy }
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: cluster
+rendezvousIP: 172.16.10.10
+additionalNTPSources:
+- ntp.example.com
+hosts:
+- hostname: master1.cluster.example.com
+  role: master
+  interfaces:
+  - name: eno1
+    macAddress: 00:ef:44:21:e6:a1
+  networkConfig:
+    interfaces:
+    - name: eno1
+      type: ethernet
+      state: up
+      ipv4:
+        enabled: false
+      ipv6:
+        enabled: false
+
+    - name: eno1.100 # Port tagged with VLAN 100, the machine network
+      description: Trunk mode port using eno1 on VLAN 100
+      type: vlan
+      state: up
+      vlan:
+        base-iface: eno1
+        id: 100
+      ipv4:
+        enabled: true
+        address:
+        - ip: 172.16.10.10
+          prefix-length: 24
+        dhcp: false
+      ipv6:
+        enabled: false
+    
+    dns-resolver:
+      config:
+        server:
+        - 172.16.10.1
+    routes:
+      config:
+      - destination: 0.0.0.0/0
+        next-hop-address: 172.16.10.254
+        next-hop-interface: eno1.100
+        table-id: 254
+```
+
+
 ### Bonds/Link Aggregation
 
 ```{ .yaml .copy }
@@ -65,6 +122,8 @@ hosts:
 
 ### VLANs & Bonds/Link Aggregation
 
+This bond is expected to be connected to a tagged/trunk port on the upstream network switch.
+
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer){:target="_blank"}
 
 ```{ .yaml .copy }
@@ -108,7 +167,7 @@ hosts:
         - eno1
         - eno2
     
-    - name: bond0.100  # Example VLAN 100 on the 'main' network subnet
+    - name: bond0.100  # Example VLAN 100 on the 'main' network subnet, this subnet matches your machineNetwork
       type: vlan
       state: up
       vlan:

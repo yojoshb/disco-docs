@@ -12,3 +12,4 @@ Some additional resources to continue on your journey in no particular order:
 - <https://github.com/yakovbeder/oc-mirror-web-app/>
 - <https://github.com/kenmoini/disconnected-openshift/>
 - <https://github.com/kenmoini/ansible-redfish/>
+- <https://github.com/johnsimcall/openshift-notes>
