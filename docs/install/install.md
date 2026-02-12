@@ -1,6 +1,6 @@
 ## Booting the agent ISO and watching the installation
 
-1. Boot the agent.iso on your hardware. This example output is for a single node OpenShift install, the node is named `sno.cluster.example.com`. The commands are the same for whatever type of cluster your are installing with the agent based installer. Normally installs take around 45 minutes give or take.
+1. Boot the agent.iso on your hardware. This example output is for a single node OpenShift install, the node is named `sno.cluster.example.com`. The commands are the same for whatever type of cluster your are installing with the agent based installer. Normally installs take around 45 minutes to an hour give or take.
 
     !!! info    
         When you boot your ISO, make sure to set the ISO as a one-time boot option. The node(s) will reboot automatically during install and you don't want them rebooting into the installation ISO accidentally.

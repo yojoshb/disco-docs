@@ -13,3 +13,5 @@ Some additional resources to continue on your journey in no particular order:
 - <https://github.com/kenmoini/disconnected-openshift/>
 - <https://github.com/kenmoini/ansible-redfish/>
 - <https://github.com/johnsimcall/openshift-notes>
+- <https://github.com/dmc5179/openshift4-disconnected>
+- <https://examples.openshift.pub/>

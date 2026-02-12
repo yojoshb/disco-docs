@@ -115,13 +115,15 @@ oc apply -f insights-disable.yaml
 
 ## Image CR and additional Container Registries
 
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/images/index#image-configuration-classic){:target="_blank"}
+
 The cluster has different mechanisms to control how images are pulled - you can block registries, specifically only registries, set insecure registries, etc. This is all configured in the Image CR.
 
 You also need to set some configuration here for registries you're pulling from that are signed by custom Root CA certificates. These definitions are used for ImageStreams, the OpenShift Update Service, and a couple of other places. Not required for core cluster image pulling functionality but good to configure nonetheless.
 
 To define Root CA certificates, you have to create a ConfigMap. This ConfigMap needs to have keys that are named for the hostname of the registry. If you're using a non-443 port for the registry, append it to the hostname with two dots to separate it, eg `registry.example.com:5000` would be `registry.example.com..5000`.
 
-When configuring the Root CA for the registry that hosts the OpenShift Releases served by the OpenShift Update Service there is an `updateservice-registry` key that is used. This is outlined in the [OSUS Install Doc: Configure access to the secured registry](./osus.md)
+When configuring the Root CA for the registry that hosts the OpenShift Releases served by the OpenShift Update Service there is an `updateservice-registry` key that is used. This is outlined in the [OSUS Install: Configure access to the secured registry](./osus.md#configure-access-to-the-secured-registry)
 
 ```{ .yaml title="image-ca-bundle.yaml" }
 # Root CA definitions for use by the config/Image CR
@@ -218,4 +220,89 @@ oc edit image.config.openshift.io cluster
 
 # Apply the yaml file if you created one
 oc apply -f image-config-cr.yaml
+```
+
+## Creating Container Pull Secrets
+
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/images/managing-images#using-image-pull-secrets){:target="_blank"}
+
+To authenticate with container registries in OpenShift Container Platform, you can create pull secrets from existing Docker or Podman authentication files. You can also create secrets by providing registry credentials directly by using the `oc create secret docker-registry` command.
+
+1. Create a secret from an existing authentication file
+    1. For Docker clients using `.docker/config.json`
+    ```bash
+    oc create secret generic <pull_secret_name> \
+      --from-file=.dockerconfigjson=<path/to/.docker/config.json> \
+      --type=kubernetes.io/dockerconfigjson
+    ```
+    
+    1. For Podman clients using `.config/containers/auth.json`
+    ```bash
+    oc create secret generic <pull_secret_name> \
+      --from-file=<path/to/.config/containers/auth.json> \
+      --type=kubernetes.io/podmanconfigjson
+    ```
+
+1. If you do not already have a Docker credentials file for the secured registry, you can create a secret
+```bash
+oc create secret docker-registry <pull_secret_name> \
+  --docker-server=<registry_server> \
+  --docker-username=<user_name> \
+  --docker-password=<password> \
+  --docker-email=<email>
+```
+
+## Using a Pull Secret in a Workload
+
+To allow workloads to pull images from private registries in OpenShift Container Platform, you can link the pull secret to a service account by entering the `oc secrets link` command or by defining it directly in your workload configuration YAML file.
+
+1. Link the pull secret to a service account by entering the following command. Note that the name of the service account should match the name of the service account that pod uses. The default service account is `default`.
+```bash
+oc secrets link default <pull_secret_name> --for=pull
+```
+
+1. Verify the change by entering the following command
+```bash
+oc get serviceaccount default -o yaml
+```
+```{ . .no-copy title="Example Output" }
+apiVersion: v1
+imagePullSecrets:
+- name: default-dockercfg-123456
+- name: <pull_secret_name>
+kind: ServiceAccount
+metadata:
+  annotations:
+    openshift.io/internal-registry-pull-secret-ref: <internal_registry_pull_secret>
+  creationTimestamp: "2025-03-03T20:07:52Z"
+  name: default
+  namespace: default
+  resourceVersion: "13914"
+  uid: 9f62dd88-110d-4879-9e27-1ffe269poe3
+secrets:
+- name: <pull_secret_name>
+```
+
+3. Optional: Instead of linking the secret to a service account, you can alternatively reference it directly in your pod or workload definition. This is useful for GitOps workflows such as ArgoCD.
+```{ . .no-copy title="Example Pod Definition" }
+apiVersion: v1
+kind: Pod
+metadata:
+  name: <secure_pod_name>
+spec:
+  containers:
+  - name: <container_name>
+    image: quay.io/my-private-image
+  imagePullSecrets:
+  - name: <pull_secret_name>
+```
+```{ . .no-copy title="Example ArgoCD workflow" }
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: <example_workflow>
+spec:
+  entrypoint: <main_task>
+  imagePullSecrets:
+  - name: <pull_secret_name>
 ```

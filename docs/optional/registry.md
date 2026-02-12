@@ -138,4 +138,7 @@ Generate a secret from the mirror registry and save it to your machine.
 
 1. By the end, you should have a Registry account that can push/pull (so oc-mirror can push images to it) and a account that can only pull (so the cluster can access the images for installing/updating). This registry should only be used to hold OpenShift release images. Follow your organizations best practice to administer this process.
 
+!!! note "The self-signed certificates are only valid for **1 year** by default, make sure to use your own if you plan on using this registry for longer than one year"
+        
+
 1. Continue to [mirroring images to registry](../disconnected/mirroring.md)

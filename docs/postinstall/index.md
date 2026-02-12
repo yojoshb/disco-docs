@@ -17,11 +17,11 @@ After installing OpenShift Container Platform, a cluster administrator can confi
 
 ---
 
-Best to [enable tab completion](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/cli_tools/openshift-cli-oc#cli-enabling-tab-completion){:target="_blank"} on the `oc` command line tool. It makes navigating through the resources much easier.
+Best to [enable tab completion](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/cli_tools/openshift-cli-oc#cli-enabling-tab-completion){:target="_blank"} on the `oc` command line tool. It makes navigating through the resources much easier. Check the link above if you are using a different shell, as the example below is for bash.
 ```{ .bash }
 oc completion bash > oc_bash_completion
 ```
-Then make it availble system-wide or source it from your `.bashrc`
+Then make it availble system-wide or you can just source it from your `.bashrc`
 ```{ .bash }
 sudo cp oc_bash_completion /etc/bash_completion.d/
 ```

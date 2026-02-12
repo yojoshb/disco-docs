@@ -4,63 +4,6 @@ By default, Red Hat Enterprise Linux CoreOS (RHCOS) creates a user named `core` 
 
 This can be helpful, for example, if a node is down and you cannot access that node by using SSH or the `oc debug node` command. However, by default, there is no password for this user, so you cannot log in without creating one. You can create a password for the `core` user by using a machine config.
 
-## OpenShift 4.7 to 4.12 Procedure
-[Red Hat KCS Article](https://access.redhat.com/solutions/7010657){:target="_blank"}
-
-1. Create a base64-encoded string in the format `username:password`, with the username as `core` and the password being hashed with SHA512 (`openssl passwd -6`) in order to avoid storing cleartext passwords. Replace `MYPASSWORD` in the command below with the password of your choice:
-
-    ```{ .bash }
-    MYBASE64STRING=$(echo core:$(printf "MYPASSWORD" | openssl passwd -6 --stdin) | base64 -w0)
-    ```
-
-2. Using the template below as an example, create a `MachineConfig` object that accomplishes two tasks:
-
-    1. Writes the base64-encoded string generated above on the desired nodes' filesystem as the file `/etc/core.passwd`
-
-    1. Sets up a new systemd unit on the desired nodes to run the `chpasswd` command during the boot process using the file written above as input (The `-e` flag is used to tell `chpasswd` to expect an encrypted/hashed password).
-
-    ```{ .bash }
-    cat << EOF > 99-set-core-passwd.yaml
-    apiVersion: machineconfiguration.openshift.io/v1
-    kind: MachineConfig
-    metadata:
-      labels:
-        machineconfiguration.openshift.io/role: worker
-      name: 99-worker-set-core-passwd
-    spec:
-      config:
-        ignition:
-          version: 3.2.0
-        storage:
-          files:
-          - contents:
-              source: data:text/plain;charset=utf-8;base64,$MYBASE64STRING
-            mode: 420
-            overwrite: true
-            path: /etc/core.passwd
-        systemd:
-          units:
-          - name: set-core-passwd.service
-            enabled: true
-            contents: |
-              [Unit]
-              Description=Set 'core' user password for out-of-band login
-              [Service]
-              Type=oneshot
-              ExecStart=/bin/sh -c 'chpasswd -e < /etc/core.passwd'
-              [Install]
-              WantedBy=multi-user.target
-    EOF
-    ```
-    ```{ .bash }
-    oc create -f 99-set-core-passwd.yaml
-    ```
-
-3. As the `MachineConfig` is applied, the file containing the hashed password will be created and a new systemd unit will be configured to run the `chpasswd` command on the nodes' next boot process, setting a password for the `core` user and thus allowing terminal login via virtual console.
-    
-    !!! note
-        Be aware that SSH password-based login would not be possible still as it is **disabled** by default on RHCOS `sshd` configuration, allowing only key-based authentication. Also, these steps could be taken before the issue arises, as a safeguard.
-
 ## OpenShift 4.13 and up Procedure
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/machine_configuration/machine-configs-configure#core-user-password_machine-configs-configure){:target="_blank"}
 
@@ -112,4 +55,56 @@ You can create a password for the `core` user by using a machine config. The Mac
     NAME     CONFIG                                             UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
     master   rendered-master-d686a3ffc8fdec47280afec446fce8dd   True      False      False      3              3                   3                     0                      64m
     worker   rendered-worker-4605605a5b1f9de1d061e9d350f251e5   False     True       False      3              0                   0                     0                      64m
+    ```
+
+## OpenShift 4.7 to 4.12 Procedure
+[Red Hat KCS Article](https://access.redhat.com/solutions/7010657){:target="_blank"}
+
+1. Create a base64-encoded string in the format `username:password`, with the username as `core` and the password being hashed with SHA512 (`openssl passwd -6`) in order to avoid storing cleartext passwords. Replace `MYPASSWORD` in the command below with the password of your choice:
+
+    ```{ .bash }
+    MYBASE64STRING=$(echo core:$(printf "MYPASSWORD" | openssl passwd -6 --stdin) | base64 -w0)
+    ```
+
+2. Using the template below as an example, create a `MachineConfig` object that accomplishes two tasks:
+
+    1. Writes the base64-encoded string generated above on the desired nodes' filesystem as the file `/etc/core.passwd`
+
+    1. Sets up a new systemd unit on the desired nodes to run the `chpasswd` command during the boot process using the file written above as input (The `-e` flag is used to tell `chpasswd` to expect an encrypted/hashed password).
+
+    ```{ .bash }
+    cat << EOF > 99-set-core-passwd.yaml
+    apiVersion: machineconfiguration.openshift.io/v1
+    kind: MachineConfig
+    metadata:
+      labels:
+        machineconfiguration.openshift.io/role: worker
+      name: 99-worker-set-core-passwd
+    spec:
+      config:
+        ignition:
+          version: 3.2.0
+        storage:
+          files:
+          - contents:
+              source: data:text/plain;charset=utf-8;base64,$MYBASE64STRING
+            mode: 420
+            overwrite: true
+            path: /etc/core.passwd
+        systemd:
+          units:
+          - name: set-core-passwd.service
+            enabled: true
+            contents: |
+              [Unit]
+              Description=Set 'core' user password for out-of-band login
+              [Service]
+              Type=oneshot
+              ExecStart=/bin/sh -c 'chpasswd -e < /etc/core.passwd'
+              [Install]
+              WantedBy=multi-user.target
+    EOF
+    ```
+    ```{ .bash }
+    oc create -f 99-set-core-passwd.yaml
     ```
