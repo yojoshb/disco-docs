@@ -42,6 +42,10 @@ oc mirror list releases --channels --version=4.19 --filter-by-archs amd64,arm64,
         for i in $(oc-mirror list operators --catalogs --version=4.19 | grep registry); do $(oc-mirror list operators --catalog=$i --version=4.19 > $(echo $i | cut -b 27- | rev | cut -b 7- | rev).txt); done
         ```
 
+        You can also use the `catalog-fetcher.sh` script in the docs repository that will save operators names and default channels to their corresponding txt files. Same thing as the one-liner above with a little more control.
+        
+        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/catalog-fetcher.sh`
+
 ```bash
 # List available operator catalog release versions
 oc mirror list operators

@@ -3,8 +3,8 @@
 1. Let's browse the catalog to determine what we want to download using `oc mirror`
     
     !!! tip 
-        Some of these commands take time, and by default they print to stdout. You can send the outputs to a file e.g. '`oc mirror list operators > $(date +%F)-openshift-operators.txt`' or view the stdout in `.oc-mirror.log`. 
-      
+        Some of these commands take time, and by default they print to stdout and to the `.oc-mirror.log` file in your current working directory.
+
         This handy little one-liner will dump all available operators and their corresponding catalogs and store them in text files for a specific version. This will take some time to run initially, but saves a bunch of time in the long run
 
         [Source: Allens Repository with more helpful scripts and configs](https://github.com/afouladi7/openshift_shortcuts/blob/main/TEMPLATES/random_commands.md){:target="_blank"}
@@ -12,8 +12,10 @@
         ```{ .bash }
         for i in $(oc-mirror list operators --catalogs --version=4.17 | grep registry); do $(oc-mirror list operators --catalog=$i --version=4.17 > $(echo $i | cut -b 27- | rev | cut -b 7- | rev).txt); done
         ```
+
+        You can also use the `catalog-fetcher.sh` script in the docs repository that will save operator names and default channels to their corresponding txt files. Same thing as the one-liner above just with a bit more control. 
         
-        The `.oc-mirror.log` file gets generated in the current directory you are at when you run oc mirror commands.
+        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/catalog-fetcher.sh`
 
     - Using `oc mirror list releases` to list platform releases and versions
       
@@ -94,7 +96,7 @@
     ```
 
     1. Defines what architecture platform images we want to download: This will help decrease the size of the mirrored content
-    1. Defines what version we want to download: OCP version 4.17 stable branch
+    1. Defines what version we want to download: OCP version 4.17 stable channel
     1. Graph data needed for the cincinnati operator
     1. Operator catalog we want to download from
     1. Operator that we want to download

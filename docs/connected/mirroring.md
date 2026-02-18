@@ -6,7 +6,7 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
 - Pass in the image set configuration file that was created. This procedure assumes that it is named `imageset-config.yaml`. If you named your's differently, sub in your name of the file.
 - Specify the target directory where you want to output the image set tar file. The target directory path must start with `file://`. This procedure assumes you want to store the image set in `/opt/4.17-mirrordata`. Store it anywhere that has available disk space. Can even be the mounted drive you're going to use to transfer the data to the high-side.
   - The target directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. Keep this directory safe, and do not modify it. It will be used again for updates and additions to your cluster
-- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images you want to mirror
+- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images you want to mirror.
 !!! question "Caching"
     - How does the cache work?
         - It's like a local registry, it can take up additional disk space almost as large as the .tar that gets generated
@@ -19,7 +19,7 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
     - I intentionally canceled the task and re-ran the mirroring process, but it seemed to start from the beginning.
         - It goes through the images from your ISC but it won't pull them if they're already in the cache. You can compare the elapsed times by running a second time with the images already cached.
     - The cache takes up a lot of disk space can it be deleted?
-        - Yes the cache can be removed, oc mirror will just re-download what's needed
+        - Yes the cache can be removed, however it's best to keep it intact as this mechansim will allow incremental mirroring for updates. It is prunable using oc mirror deletes.
 
 1. You have set the umask parameter to `0022` on the operating system that uses oc-mirror.
 
@@ -68,6 +68,10 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
     [INFO]   : 📦 Preparing the tarball archive...
     [INFO]   : mirror time     : 13m31.071692892s
     [INFO]   : 👋 Goodbye, thank you for using oc-mirror
+    ```
+    - If you are having issues mirroring images, throw some retry, timeout, and parallel image flags on the command
+    ```
+    oc mirror -c imageset-config.yaml file:///opt/4.17-mirrordata --v2 --retry-times 60 --image-timeout 60m --retry-delay 5s --parallel-images 2
     ```
     
 1. List your output directory and verify the image set `mirror_000001.tar` file was created. The `working-dir` will contain logs and relavent info for the data mirrored to disk.

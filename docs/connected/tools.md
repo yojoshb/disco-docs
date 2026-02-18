@@ -1,34 +1,34 @@
 ## Download necessary tools
-Be aware of the tool(s) version and architecture. Certain tools require matching to the version of OpenShift you're installing and the correct binary for the RHEL version that you are using. 
+Be aware of the tool(s) version and architecture. Certain tools require matching to the version of OpenShift you're installing and the correct binary for the RHEL version that you are using.
+
+- [General Release Information](https://console.redhat.com/openshift/releases){:target="_blank"}
 
 - [Red Hat Console Downloads](https://console.redhat.com/openshift/downloads){:target="_blank"} has the latest-stable version of all the tools. 
 - Look through the [public mirror site](https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/){:target="_blank"} if you need to get a specific version. Red Hat console downloads come from this site.
-- Or access specific versions through the [OCP downloads page on the Red Hat Customer Portal](https://access.redhat.com/downloads/content/290){:target="_blank"}
+    - Or access specific versions through the [OCP downloads page on the Red Hat Customer Portal](https://access.redhat.com/downloads/content/290){:target="_blank"}
 
-    !!! info
-        You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like. Make sure to edit the script's variables to define what version/arch/binaries you want to download.
-
-        Set up up your [Red Hat pull-secret](#grab-your-pull-secret-from-your-red-hat-account) before using the script if you intend to extract the `openshift-installer` as it will need valid credentials for access.
-        
-        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/rhel-oc-tools.sh`
-
-- [General Release Information](https://console.redhat.com/openshift/releases){:target="_blank"}
+!!! info
+    You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like. Make sure to edit the script's variables to define what version/arch/binaries you want to download.
+    
+    Set up up your [Red Hat pull-secret](#grab-your-pull-secret-from-your-red-hat-account) before using the script if you intend to extract the `openshift-installer` as it will need valid credentials for access.
+    
+    `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/rhel-oc-tools.sh`
   
   ---
 
 - **oc**: The OpenShift Client command line tool to interact with the cluster, also needed to use CLI plugins.
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/cli_tools/index#cli-installing-cli_cli-developer-commands){:target="_blank"}
     - You can use the latest-stable version available for your architecture. `oc` newer than your cluster version may have additional capabilities that your cluster cannot use.
-    - RHEL 9 latest-stable: `wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux-amd64-rhel9.tar.gz`
-    - RHEL 8 latest-stable: `wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux-amd64-rhel8.tar.gz`
+    - AMD64 RHEL 9 latest-stable: `wget https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/stable/openshift-client-linux-amd64-rhel9.tar.gz`
+    - AMD64 RHEL 8 latest-stable: `wget https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/stable/openshift-client-linux-amd64-rhel8.tar.gz`
   ---
 
 - **oc-mirror**: Awesome oc cli plugin to streamline getting the required images mirrored and packed into a `.tar` file to transfer to the high-side. Also used to upload the images into your mirror registry on the high-side once they are brought over.
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#about-installing-oc-mirror-v2){:target="_blank"}
     - Always use the latest version available for your architecture.
-    - **oc-mirror v2** is new, and GA'd for OpenShift 4.18, but is backwards compatible with older releases down to v4.12.
-    - RHEL 9 latest: `wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/oc-mirror.rhel9.tar.gz`
-    - RHEL 8 latest: `wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/oc-mirror.tar.gz`
+    - **oc-mirror v2** is new, and GA'd for OpenShift 4.18, but is backwards compatible with older releases down to v4.14.
+    - AMD64 RHEL 9 latest: `wget https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/oc-mirror.rhel9.tar.gz`
+    - AMD64 RHEL 8 latest: `wget https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/oc-mirror.tar.gz`
   ---
 
 - **openshift-install**: Program that will create the OpenShift install disk that will bootstrap and install the cluster on your hardware. 
