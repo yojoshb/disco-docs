@@ -7,10 +7,10 @@ CATALOG="all"
 check_deps() {
   if ! command -v oc &> /dev/null; then echo "Error: 'oc' command not found. Please install it or ensure it is in your system PATH." && exit 1; fi
   if ! command -v oc-mirror &> /dev/null; then echo "Error: 'oc-mirror' command not found. Please install it or ensure it is in your system PATH." && exit 1; fi
-  # hacky way to make sure 4.21 or newer oc-mirror version is in use so --v1 flags are used
-  ocmirror_version=$(oc mirror version 2>&1 /dev/null | grep -o 'GitVersion:"[^"]*"' | cut -d'"' -f2)
-  ocmirror_req_version="4.21"
-  ocmirror_lowest_version=$(printf '%s\n' "$ocmirror_version" "$ocmirror_req_version" | sort -V | head -n1)
+  # hacky way to make sure 4.21 or newer oc-mirror version is in use so --v1 flags are accepted
+  local ocmirror_version=$(oc mirror version 2>&1 /dev/null | grep -o 'GitVersion:"[^"]*"' | cut -d'"' -f2)
+  local ocmirror_req_version="4.21"
+  local ocmirror_lowest_version=$(printf '%s\n' "$ocmirror_version" "$ocmirror_req_version" | sort -V | head -n1)
   if [ "$ocmirror_lowest_version" = "$ocmirror_req_version" ]; then : ; else echo "Error: oc-mirror version is lower than $ocmirror_req_version. Please install the latest version for your architecture." && exit 1; fi
 }
 
@@ -46,17 +46,17 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-echo "Fetching catalogs for Version: $VERSION"; echo "Target Catalog: $CATALOG"; echo "----------------------------------------"
+echo "Fetching catalogs for Version: $VERSION"; echo "Target Catalog: $CATALOG"; echo "========================================"
 
 if [ "$CATALOG" = "all" ]; then
   for catalog in $(oc mirror list operators --catalogs --version=$VERSION --v1 2> /dev/null | grep registry); do
     file=$(echo "$catalog" | sed 's/.*redhat\///;s/:.*//')_v$VERSION.txt
     echo -e "Processing $catalog -> $file\n"
     oc mirror list operators --catalog=$catalog --version=$VERSION --v1 2> /dev/null > $file
-	echo -e "\nProcessed Catalog: $catalog on $(date)" >> $file
-	echo -e "- If you need to list all channels for a specific operator use:\n    oc mirror list operators --catalog=$catalog --version=$VERSION --package=<operator-name> --v1\n"
+    echo -e "\nProcessed Catalog: $catalog on $(date)" >> $file
+	  echo -e "- If you need to list all channels for a specific operator use:\n    oc mirror list operators --catalog=$catalog --version=$VERSION --package=<operator-name> --v1\n"
     echo -e "- If you need to list all available versions for a specified operator in a channel use:\n    oc mirror list operators --catalog=$catalog --version=$VERSION --package=<operator-name> --channel=<channel-name> --v1"
-	echo "----------------------------------------"
+	  echo "----------------------------------------"
   done
 else
   url="registry.redhat.io/redhat/"

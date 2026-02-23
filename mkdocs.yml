@@ -76,6 +76,7 @@ nav:
     - imageset-config.yaml: examples/imageset-configs.md
     - install-config.yaml: examples/install-configs.md
     - agent-config.yaml: examples/agent-configs.md
+    - Advanced Installations: examples/advanced-installation.md
   - About: release.md
 
 theme:
