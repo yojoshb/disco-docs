@@ -37,6 +37,30 @@ openshift-install agent create image --dir <installation_directory>
 oc patch schedulers.config.openshift.io cluster --type merge --patch '{"spec": {"mastersSchedulable": false}}'
 ```
 
+#### GitOps ZTP: Enable disk encryption using LUKS
+
+[RH Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-encrypt_installing-with-agent-based-installer){:target="_blank"}
+
+[Additional Docs for TANG: primarily for installer-provisioned infrastructure, user-provisioned infrastructure, and Assisted Installer deployments](https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/installation_configuration/index#installation-special-config-storage_installing-customizing){:target="_blank"}
+
+!!! note
+    If using CLEVIS/TANG, DHCP is required for agent-based installs as there is no good way of passing static IP kernel args to the agent-installer currently. It's possible to patch this in during agent-bootstrap, but difficult.
+    If you want a static-like IP deployment, you can still utilize static-dhcp reservations to get similar behavior
+
+- Edit the `<installation_directory>/cluster-manifests/agent-cluster-install.yaml` and add the yaml below under `spec:`
+```{ .yaml .copy }
+diskEncryption:
+  enableOn: all # Valid values are none, all, masters, and workers
+  mode: tang    # Valid values are tpmv2 and tang
+  tangServers: '[{"url": "http://tang-server:7500","thumbprint": "_91gvNqLpFotYLfIsdfgfvcbas4wESQRHB3_dk"}]' # Optional: only needed if using tang
+```
+
+- Now you can create the agent.iso
+```{ .bash }
+openshift-install agent create image --dir <installation_directory>
+```
+
+
 ### Additional Manifests
 
 #### Disabling default catalog sources, and adding your mirrored catalogs
