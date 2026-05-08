@@ -1,5 +1,9 @@
 ## Creating ImageSets for mirroring
 
+- [General Release Information](https://console.redhat.com/openshift/releases){:target="_blank"}
+
+- [Operator Catalogs](https://catalog.redhat.com/en/search?searchType=software&deployed_as=Operator){:target="_blank"}
+
 1. Let's browse the catalog to determine what we want to download using `oc mirror`
     
     !!! tip 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Script to gracefully shutdown the cluster. Requires cluster-admin permissions. Nodes will be unschedulable when powered back on
+# Script to gracefully shutdown the cluster. Requires cluster-admin permissions. Nodes will be unschedulable when powered back on so. If you have any low PodDisruptionBudgets, these may have to be patched for them to evacuate cleanly
 
 ### Variables to modify ###
 # oc tool path: Either specify the path or find it with another tool
@@ -66,4 +66,4 @@ for node in $(${OC} get nodes -o jsonpath='{.items[*].metadata.name}'); do
   ${OC} debug node/${node} -- chroot /host shutdown -h ${TIME}
 done
 
-echo -e "\nShutdown Script finished on: $(date)"
+echo -e "\nShutdown Script finished on: $(date) \nMake sure to uncordon the nodes when you boot them back up!"

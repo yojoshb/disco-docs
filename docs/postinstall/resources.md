@@ -4,6 +4,11 @@ Before importing these cluster sources, it's best to disable all default catalog
 oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
 ```
 
+If your're on v4.20 you will have to patch the HelmChartRepository as well
+```{ .bash }
+oc patch HelmChartRepository openshift-helm-charts --type json -p '[{"op": "add", "path": "/spec/disabled", "value": true}]'
+```
+
 ## Cluster Resources
 
 [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#oc-mirror-custom-resources-v2_about-installing-oc-mirror-v2){:target="_blank"}

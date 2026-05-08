@@ -1,13 +1,18 @@
 #!/bin/bash
+set -e
 
 # Default values
 VERSION="4.20"
 CATALOG="all"
 
+# Set TMPDIR for oc-mirror in case of /tmp mounted with 'noexec'
+export TMPDIR=$(pwd)/tmp
+mkdir $TMPDIR
+
 check_deps() {
   if ! command -v oc &> /dev/null; then echo "Error: 'oc' command not found. Please install it or ensure it is in your system PATH." && exit 1; fi
   if ! command -v oc-mirror &> /dev/null; then echo "Error: 'oc-mirror' command not found. Please install it or ensure it is in your system PATH." && exit 1; fi
-  # hacky way to make sure 4.21 or newer oc-mirror version is in use so --v1 flags are accepted
+  # hacky way to make sure 4.21 or newer oc-mirror version is in use so --v1 flags are accepted for best compatibility 
   local ocmirror_version=$(oc mirror version 2>&1 /dev/null | grep -o 'GitVersion:"[^"]*"' | cut -d'"' -f2)
   local ocmirror_req_version="4.21"
   local ocmirror_lowest_version=$(printf '%s\n' "$ocmirror_version" "$ocmirror_req_version" | sort -V | head -n1)
@@ -34,6 +39,11 @@ Examples:
   $0 --version 4.19
 EOF
   exit 0
+}
+
+cleanup(){
+  rm -rf $TMPDIR
+  rm -f .oc-mirror.log
 }
 
 while [[ "$#" -gt 0 ]]; do
@@ -71,4 +81,4 @@ else
   echo "----------------------------------------"
 fi
 
-rm -f .oc-mirror.log
+cleanup

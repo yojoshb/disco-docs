@@ -24,7 +24,7 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
   ---
 
 - **oc-mirror**: Awesome oc cli plugin to streamline getting the required images mirrored and packed into a `.tar` file to transfer to the high-side. Also used to upload the images into your mirror registry on the high-side once they are brought over.
-    - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#about-installing-oc-mirror-v2){:target="_blank"}
+    - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/disconnected_environments/about-installing-oc-mirror-v2){:target="_blank"}
     - Always use the latest version available for your architecture.
     - **oc-mirror v2** is new, and GA'd for OpenShift 4.18, but is backwards compatible with older releases down to v4.14.
     - AMD64 RHEL 9 latest: `wget https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/oc-mirror.rhel9.tar.gz`

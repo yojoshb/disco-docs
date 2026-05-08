@@ -174,13 +174,14 @@ mirror:
 
 ### OpenShift Data Foundation (ODF) Operators
 
-[Red Hat ODF 4.19 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.19/html/planning_your_deployment/disconnected-environment_rhodf#disconnected-environment_rhodf){:target="_blank"}
-
-[Red Hat ODF 4.18 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/disconnected-environment_rhodf#disconnected-environment_rhodf){:target="_blank"}
-
-[Red Hat ODF 4.17 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.17/html/planning_your_deployment/disconnected-environment_rhodf#disconnected-environment_rhodf){:target="_blank"}
-
 Consult the docs for whatever version of ODF you are wanting to install. The operators required vary per OCP version.
+
+[Red Hat ODF 4.20 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.20/html/planning_your_deployment/disconnected-environment_rhodf){:target="_blank"}
+
+[Red Hat ODF 4.19 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.19/html/planning_your_deployment/disconnected-environment_rhodf){:target="_blank"}
+
+[Red Hat ODF 4.18 Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/disconnected-environment_rhodf){:target="_blank"}
+
 
 ```{ .yaml .copy title="ODF 4.19" }
 ---
@@ -189,7 +190,7 @@ apiVersion: mirror.openshift.io/v2alpha1
 
 mirror:
   operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.17
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.19
     packages:
     - name: ocs-operator
       channels:
@@ -247,8 +248,10 @@ mirror:
 
 - [KubeVirt](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization/index){:target="_blank"}
 - [MTV](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/index){:target="_blank"}
-- [VDDK](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#creating-vddk-image_mtv){:target="_blank"}
-- [Prebuilt VDDK Image](https://quay.io/repository/jcall/vddk?tab=info){:target="_blank"}
+
+Create a VDDK image and pull it over with you. You can upload it to a registry and pull it within the isc, or use podman to scoot it over.
+
+- [VDDK](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.11/html/planning_your_migration_to_red_hat_openshift_virtualization/assembly_provider-specific-requirements-for-migration_mtv#creating-vddk-image_mtv){:target="_blank"}
 
 ```{ .yaml .copy }
 ---
@@ -308,8 +311,8 @@ mirror:
   # Needed for lvms-operator if you're using
   - name: registry.redhat.io/openshift4/ose-must-gather:latest
   
-  # Heavily recommended to have a VDDK image when transferring from vSphere, best to create your own but this one generally works
-  - name: quay.io/jcall/vddk:latest
+  # Heavily recommended to have a VDDK image when transferring from vSphere, create your own
+  #- name: quay.io/user/vddk:latest
 
   # Optional: KubeVirt Must gather support tools
   - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.19
@@ -440,7 +443,7 @@ mirror:
   - name: registry.redhat.io/ubi8/ubi:latest
 
   # https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner: NFS subdir external provisioner is an automatic provisioner that uses your existing and already configured NFS server to support dynamic provisioning.
-  - name: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:latest
+  - name: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
 ```
 
 ### NetApp Storage (Trident Operator)

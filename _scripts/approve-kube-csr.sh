@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Node list: List all hostnames of the nodes to ssh to
+# Node list: List all hostname's of the nodes to ssh to
 NODES=(
 control1.cluster.example.com
 ...
@@ -10,7 +10,7 @@ control1.cluster.example.com
 # Path to Private SSH key that can connect to the hosts
 KEY=/home/user/.ssh/id_rsa
 
-# Yes this is using sudo inside of a bash script..  
+# Yes this is using sudo inside of a bash script..
 APPROVE_CSR(){
   cat << 'EOF'
 echo "Copy local.kubeconfig to /tmp"

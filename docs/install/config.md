@@ -253,6 +253,10 @@ The Agent-based Installer performs validation checks on user defined YAML files 
 
 ## Creating the agent image
 
+If you want to further customize the ISO, you can do so using [ZTP Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-ztp_installing-with-agent-based-installer){:target="_blank"} and [Additional Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-opt-manifests_installing-with-agent-based-installer){:target="_blank"}.
+
+- Some examples will also live in this document here: [Advanced Installation Examples](../examples/advanced-installation.md)
+
 1. Your cluster build directory should look like this
 ```{ .bash }
 tree my_cluster

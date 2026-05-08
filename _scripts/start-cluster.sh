@@ -63,7 +63,7 @@ if [[ "$yn" =~ ^[Yy]$ ]]; then
   echo -e "\nApproving all CSR's\n----------------------------------------"
   ${OC} get csr -o name | xargs ${OC} adm certificate approve
 else
-    echo -e "Skipping certificate approvals"
+    echo -e "Skipping forced certificate approvals"
 fi
 
 echo -e "\nStartup Script finished on: $(date)"
