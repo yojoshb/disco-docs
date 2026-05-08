@@ -1,4 +1,4 @@
-When creating the agent.iso using the agent-based installer, you can furthur customize your clusters deployment by editing/adding additional manifests.
+When creating the agent.iso using the agent-based installer, you can further customize your clusters deployment by editing/adding additional manifests.
 
 - [Docs: ZTP Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-ztp_installing-with-agent-based-installer){:target="_blank"}
 - [Docs: Additional Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-opt-manifests_installing-with-agent-based-installer){:target="_blank"}
