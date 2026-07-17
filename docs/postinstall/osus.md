@@ -33,7 +33,7 @@ The following steps outline the high-level workflow on how to update a cluster i
       oc create configmap image-ca-bundle --from-file=updateservice-registry=ca.crt -n openshift-config
       ```
       
-      ```{ .yaml .no-copy title="Example"
+      ```{ .yaml .no-copy title="Example" }
       apiVersion: v1
       kind: ConfigMap
       metadata:
