@@ -7,6 +7,8 @@ Various examples of common imageset-configs (ISC) including Operators. Sub in yo
 
     Feel free to mix, match, and create different imagesets for different deployments
 
+    If mixing and matching imageset config files, watchout for your `ImageTagMirrorSet` and `ImageDigestMirrorSet` resources that oc-mirror generates. You'll want to make sure your disconnected cluster can see all your images in the mirror registry. Do not blindly apply ITMS/IDMS to an existing cluster as there is high chance there will be images missing and your cluster won't be able to pull them.
+
 [Red Hat Blog about Operators in disconnected environments](https://www.redhat.com/en/blog/deploying-red-hat-openshift-operators-disconnected-environment){:target="_blank"}
 
 To prune through the various catalogs, use the following commands
@@ -42,9 +44,10 @@ oc mirror list releases --channels --version=4.19 --filter-by-archs amd64,arm64,
         for i in $(oc-mirror list operators --catalogs --version=4.19 | grep registry); do $(oc-mirror list operators --catalog=$i --version=4.19 > $(echo $i | cut -b 27- | rev | cut -b 7- | rev).txt); done
         ```
 
-        You can also use the `catalog-fetcher.sh` script in the docs repository that will save operators names and default channels to their corresponding txt files. Same thing as the one-liner above with a little more control.
+        You can also use the `catalog-fetcher.sh` script in the docs repository to save operator names and default channels to text files or generate an oc-mirror v2 `ImageSetConfiguration`.
         
-        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/catalog-fetcher.sh`
+        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/catalog-fetcher.sh && chmod +x catalog-fetcher.sh`
+
 
 ```bash
 # List available operator catalog release versions
@@ -148,7 +151,7 @@ The Operator will not contain any collections or execution/decision environments
 
 - To get the collections, go to [Automation Hub](https://console.redhat.com/ansible/automation-hub){:target="_blank"}, and download the tarballs of the collections that you would like to include in your Private Automation Hub.
 
-- Follow the [old 2.3 docs](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.3/html/red_hat_ansible_automation_platform_installation_guide/disconnected-installation#importing-collections-into-private-automation-hub_disconnected-installation){:target="_blank"} to add the collections you downloaded and transfered. 
+- Follow the [old 2.3 docs](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.3/html/red_hat_ansible_automation_platform_installation_guide/disconnected-installation#importing-collections-into-private-automation-hub_disconnected-installation){:target="_blank"} to add the collections you downloaded and transferred.
 
 ```{ .yaml .copy }
 ---
@@ -166,7 +169,7 @@ mirror:
       - name: stable-2.6
 
   additionalImages:
-  # Images that the Containerized/RPM offline-bundle comes with. You can bring these over independentaly with podman also. Make sure to point PAH to your registry where these are mirrored to.
+  # Images that the Containerized/RPM offline-bundle comes with. You can bring these over independently with podman also. Make sure to point PAH to your registry where these are mirrored to.
   - name: registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel8:latest
   - name: registry.redhat.io/ansible-automation-platform-25/ee-minimal-rhel8:latest
   - name: registry.redhat.io/ansible-automation-platform-25/de-supported-rhel8:latest
@@ -299,7 +302,7 @@ mirror:
       - name: release-v2.10
 
     # Migration Toolkit for Containers, useful for moving vm storage between storage classes. This will soon be included with KubeVirt
-    - name: mtv-operator
+    - name: mtc-operator
       channels:
       - name: release-v1.8
       
@@ -435,8 +438,8 @@ mirror:
       - name: stable-v1
   
   additionalImages:
-  - name: registry.redhat.io/rhel8/support-tools
-  - name: registry.redhat.io/rhel9/support-tools
+  - name: registry.redhat.io/rhel8/support-tools:latest
+  - name: registry.redhat.io/rhel9/support-tools:latest
 
   # Universal Base Images
   - name: registry.redhat.io/ubi9/ubi:latest

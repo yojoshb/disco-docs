@@ -17,9 +17,10 @@
         for i in $(oc-mirror list operators --catalogs --version=4.17 | grep registry); do $(oc-mirror list operators --catalog=$i --version=4.17 > $(echo $i | cut -b 27- | rev | cut -b 7- | rev).txt); done
         ```
 
-        You can also use the `catalog-fetcher.sh` script in the docs repository that will save operator names and default channels to their corresponding txt files. Same thing as the one-liner above just with a bit more control. 
+        You can also use the `catalog-fetcher.sh` script in the docs repository to save operator names and default channels to text files or generate an oc-mirror v2 `ImageSetConfiguration`.
         
-        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/catalog-fetcher.sh`
+        `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/catalog-fetcher.sh && chmod +x catalog-fetcher.sh`
+
 
     - Using `oc mirror list releases` to list platform releases and versions
       
@@ -100,12 +101,12 @@
     ```
 
     1. Defines what architecture platform images we want to download: This will help decrease the size of the mirrored content
-    1. Defines what version we want to download: OCP version 4.17 stable channel
-    1. Graph data needed for the cincinnati operator
-    1. Operator catalog we want to download from
-    1. Operator that we want to download
-    1. Some operators will need a defaultChannel specified. This is because there may be a newer defaultChannel available, you can (but generally shouldn't) mix and match operator versions. oc-mirror will tell you if it's required when attempting to mirror the data
-    1. Version/Channel for said operators
-    1. Only has one channel so just take the latest version
-    1. Any additional images to bring with us, RHEL UBI's are always nice to have for testing, ose-must-gather is for gathering extra logs in the event a must gather is used for support or general debugging
-    1. Any additional helm charts, these are non-operator application deployment bundles more or less. This example we aren't specifying anything so it's blank. You can also omit the entire stanza
+    2. Defines what version we want to download: OCP version 4.17 stable channel
+    3. Graph data needed for the cincinnati operator
+    4. Operator catalog we want to download from
+    5. Operator that we want to download
+    6. Some operators will need a defaultChannel specified. This is because there may be a newer defaultChannel available, you can (but generally shouldn't) mix and match operator versions. oc-mirror will tell you if it's required when attempting to mirror the data
+    7. Version/Channel for said operators
+    8. Only has one channel so just take the latest version
+    9. Any additional images to bring with us, RHEL UBI's are always nice to have for testing, ose-must-gather is for gathering extra logs in the event a must gather is used for support or general debugging
+    10. Any additional helm charts, these are non-operator application deployment bundles more or less. This example we aren't specifying anything so it's blank. You can also omit the entire stanza

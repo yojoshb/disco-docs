@@ -230,21 +230,21 @@ To authenticate with container registries in OpenShift Container Platform, you c
 
 1. Create a secret from an existing authentication file
     1. For Docker clients using `.docker/config.json`
-    ```bash
+    ```{ .bash }
     oc create secret generic <pull_secret_name> \
       --from-file=.dockerconfigjson=<path/to/.docker/config.json> \
       --type=kubernetes.io/dockerconfigjson
     ```
     
     1. For Podman clients using `.config/containers/auth.json`
-    ```bash
+    ```{ .bash }
     oc create secret generic <pull_secret_name> \
       --from-file=<path/to/.config/containers/auth.json> \
       --type=kubernetes.io/podmanconfigjson
     ```
 
 1. If you do not already have a Docker credentials file for the secured registry, you can create a secret
-```bash
+```{ .bash }
 oc create secret docker-registry <pull_secret_name> \
   --docker-server=<registry_server> \
   --docker-username=<user_name> \
@@ -257,15 +257,15 @@ oc create secret docker-registry <pull_secret_name> \
 To allow workloads to pull images from private registries in OpenShift Container Platform, you can link the pull secret to a service account by entering the `oc secrets link` command or by defining it directly in your workload configuration YAML file.
 
 1. Link the pull secret to a service account by entering the following command. Note that the name of the service account should match the name of the service account that pod uses. The default service account is `default`.
-```bash
+```{ .bash }
 oc secrets link default <pull_secret_name> --for=pull
 ```
 
 1. Verify the change by entering the following command
-```bash
+```{ .bash }
 oc get serviceaccount default -o yaml
 ```
-```{ . .no-copy title="Example Output" }
+```{ .yaml .no-copy title="Example Output" }
 apiVersion: v1
 imagePullSecrets:
 - name: default-dockercfg-123456
@@ -284,7 +284,7 @@ secrets:
 ```
 
 3. Optional: Instead of linking the secret to a service account, you can alternatively reference it directly in your pod or workload definition. This is useful for GitOps workflows such as ArgoCD.
-```{ . .no-copy title="Example Pod Definition" }
+```{ .yaml .no-copy title="Example Pod Definition" }
 apiVersion: v1
 kind: Pod
 metadata:
@@ -296,7 +296,7 @@ spec:
   imagePullSecrets:
   - name: <pull_secret_name>
 ```
-```{ . .no-copy title="Example ArgoCD workflow" }
+```{ .yaml .no-copy title="Example ArgoCD workflow" }
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:

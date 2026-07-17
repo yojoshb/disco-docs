@@ -8,11 +8,11 @@ Be aware of the tool(s) version and architecture. Certain tools require matching
     - Or access specific versions through the [OCP downloads page on the Red Hat Customer Portal](https://access.redhat.com/downloads/content/290){:target="_blank"}
 
 !!! info
-    You can use the `rhel-oc-tools.sh` script in the docs repository that will download all the tools for you if you'd like. Make sure to edit the script's variables to define what version/arch/binaries you want to download.
+    You can use the `rhel-oc-tools.sh` script in the docs repository to download all the tools. Run it with `--help` to see options for selecting the OpenShift version, architecture, RHEL version, destination, and optional binaries.
     
-    Set up up your [Red Hat pull-secret](#grab-your-pull-secret-from-your-red-hat-account) before using the script if you intend to extract the `openshift-installer` as it will need valid credentials for access.
-    
-    `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/rhel-oc-tools.sh`
+    `wget https://raw.githubusercontent.com/yojoshb/disco-docs/refs/heads/main/_scripts/rhel-oc-tools.sh && chmod +x rhel-oc-tools.sh`
+
+    For example: `./rhel-oc-tools.sh --release stable-4.20 --helm --installer`
   
   ---
 

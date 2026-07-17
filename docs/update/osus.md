@@ -7,11 +7,11 @@ This is kind of a pain but should only need to be set up one time. We essentiall
 The following steps outline the high-level workflow on how to update a cluster in a disconnected environment using OSUS:
 
 1. Configure access to a secured registry.
-1. Update the global cluster pull secret to access your mirror registry (if needed).
-1. Install the OSUS Operator.
-1. Create a service container for the OpenShift Update Service.
-1. Install the OSUS application and configure your clusters to use the OpenShift Update Service in your environment.
-1. Perform a supported update procedure from the documentation as you would with a connected cluster.
+2. Update the global cluster pull secret to access your mirror registry (if needed).
+3. Install the OSUS Operator.
+4. Create a service container for the OpenShift Update Service.
+5. Install the OSUS application and configure your clusters to use the OpenShift Update Service in your environment.
+6. Perform a supported update procedure from the documentation as you would with a connected cluster.
 
 ### Configure access to the secured registry
   [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/registry/configuring-registry-operator#images-configuration-cas_configuring-registry-operator){:target="_blank"}
@@ -20,7 +20,7 @@ The following steps outline the high-level workflow on how to update a cluster i
 
   1. Grab the CA in pem format for the container registry that the graph-image is in and create a new `configmap` object in the `openshift-config` namespace that defines your registry to be used for the updateservice.
       
-      - The OpenShift Update Service Operator needs the config map key name `updateservice-registry` in the registry CA cert.
+      - The OpenShift Update Service Operator needs the config map key name `updateservice-registry` in the registry CA cert. Make sure to put the mirror registry in the configmap as well. They will be the same certs just different names.
       
       ```bash
       # Since the OSUS image is on the Quay Mirror Registry we need it's rootCA
@@ -29,6 +29,22 @@ The following steps outline the high-level workflow on how to update a cluster i
       oc create configmap image-ca-bundle --from-file=updateservice-registry=ca.crt -n openshift-config
       ```
       
+      ```{ .yaml .no-copy title="Example"
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: image-ca-bundle
+      data:
+        updateservice-registry: |
+          -----BEGIN CERTIFICATE-----
+          ...
+          -----END CERTIFICATE-----
+        registry-with-port.example.com..5000: |
+          -----BEGIN CERTIFICATE-----
+          ...
+          -----END CERTIFICATE-----
+      ```
+
     !!! info
         Here we copied the rootCA of our registry to our current directory and called it `ca.crt`. Then created a configmap called `image-ca-bundle` in the openshift-config namespace using that certificate.
       
@@ -43,7 +59,7 @@ The following steps outline the high-level workflow on how to update a cluster i
       ```
     - [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#images-update-global-pull-secret_updating-disconnected-cluster-osus){:target="_blank"} 
     
-        You can update the global pull secret for your cluster by either replacing the current pull secret or appending a new pull secret. The procedure is required when users use a separate registry to store images than the registry used during installation. If you are using the same registry that you installed from (recommended), you can skip this.
+        You can update the global pull secret for your cluster by either replacing the current or appending a new pull secret. The procedure is required when users use a separate registry to store images than the registry used during installation. If you are using the same registry that you installed from (recommended), you can skip this.
 
 ### Install the operator from the UI or CLI
   
@@ -191,16 +207,19 @@ The following steps outline the high-level workflow on how to update a cluster i
       metadata:
         name: ${NAME}
       spec:
-        replicas: 1
+        replicas: 2
         releases: ${RELEASE_IMAGES}
         graphDataImage: ${GRAPH_DATA_IMAGE}
       EOF
       ```
 
-### Configuring the Cluster Version Operator (CVO) 
+### Method 1: Configuring the Cluster Version Operator (CVO) 
 
-  [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-configure-cvo){:target="_blank"}
-  
+[Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/disconnected_environments/updating-a-cluster-in-a-disconnected-environment#update-service-configure-cvo){:target="_blank"}
+
+!!! info
+    If you choose to set the policy engine route this way, you will have to edit the cluster proxy (last step in this doc)
+
   After the OpenShift Update Service Operator has been installed and the OpenShift Update Service application has been created, the Cluster Version Operator (CVO) can be updated to pull graph data from the OpenShift Update Service installed in your environment.
 
   1. Set the OpenShift Update Service target namespace, for example, `openshift-update-service`:
@@ -227,11 +246,48 @@ The following steps outline the high-level workflow on how to update a cluster i
       oc patch clusterversion version -p $PATCH --type merge
       ```
 
+### Method 2: Configuring the Cluster Version Operator (CVO) 
+
+!!! info
+    If you choose to set the policy engine route this way, you don't have to configure the proxy as this will be http traffic and not https, so there's no need for certificate trusting. That may or may not be satisfactory for your environment.
+
+  After the OpenShift Update Service Operator has been installed and the OpenShift Update Service application has been created, the Cluster Version Operator (CVO) can be updated to pull graph data from the OpenShift Update Service installed in your environment.
+
+  1. Set the OpenShift Update Service target namespace, for example, `openshift-update-service`:
+      ```bash
+      NAMESPACE=openshift-update-service
+      ```
+  2. Use the name of the OpenShift Update Service application created previously, for example, `update-service`:
+      ```bash
+      NAME=update-service
+
+      # If you used the oc mirror generated updateService.yaml
+      NAME=update-service-oc-mirror
+      ```
+  3. Expose the service
+     ```bash
+     oc expose service "$NAME"-policy-engine -n "$NAMESPACE"
+     ```
+  4. Obtain the policy engine route:
+      ```bash
+      POLICY_ENGINE_GRAPH_URI="http://$(oc -n "$NAMESPACE" get route "$NAME"-policy-engine -o jsonpath='{.spec.host}/api/upgrades_info/v1/graph{"\n"}')"
+      ```
+  5. Set the patch for the pull graph data:
+      ```bash
+      PATCH="{\"spec\":{\"upstream\":\"${POLICY_ENGINE_GRAPH_URI}\"}}"
+      ```
+  6. Patch the CVO to use the OpenShift Update Service in your environment:
+      ```bash
+      oc patch clusterversion version -p $PATCH --type merge
+      ```
+
 ### Configure the cluster-wide proxy
   
   [Red Hat Docs](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/networking/#enable-cluster-wide-proxy){:target="_blank"}
+  [KCS](https://access.redhat.com/solutions/6982757){:target="_blank"}
+  [KCS](https://access.redhat.com/solutions/7040684){:target="_blank"}
 
-  Finally, configure the cluster-wide proxy to configure the CA to trust the update server we created.
+  Finally, configure the cluster-wide proxy to configure the CA to trust the update server we created. This has to be done if the OpenShift Update Service is exposed through an edge route based https.
 
 !!! warning "This may cause nodes to reboot so be prepared"
 
