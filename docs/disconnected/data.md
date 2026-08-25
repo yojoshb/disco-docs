@@ -57,7 +57,7 @@ cp /mnt/transfer-disk/mirror-registry-amd64.tar.gz /opt
 !!! note
     You can just keep everything on the `transfer-disk` and mirror off of it if you want and skip this step. Be sure to stay organized
 
-1. Do this how you see fit for your environment. Identify a space on your disconnected machine that can hold the imageset-config.yaml, mirror_000001.tar, and generated cluster configs
+1. Do this how you see fit for your environment. Identify a space on your disconnected machine that can hold the imageset-config.yaml, mirror_000001.tar, generated cluster configs, and cache.
 ```{ .bash }
 mkdir /opt/4.17-mirrordata
 ```

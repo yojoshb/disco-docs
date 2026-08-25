@@ -60,6 +60,22 @@ diskEncryption:
 openshift-install agent create image --dir <installation_directory>
 ```
 
+#### GitOps ZTP: Agent Based Baremetal External Load-Balancer
+If using the `platform: baremetal` or `platform: vsphere` and you want an external load-balancer, you must provision the cluster with appropriate manifests. Normally if you bring your own load-balancer you should provision the hosts with `platform: none` in the `install-config.yaml` so the cluster operators have full control over the network.
+
+!!! note
+    This setting is only present in OpenShift 4.20 and above. If you're provisioning an older cluster, use `platform: none` in `install-config.yaml`.
+
+- Edit the `<installation_directory>/cluster-manifests/agent-cluster-install.yaml` and add the yaml below under `spec:`
+```{ .yaml .copy }
+loadBalancer:
+  type: UserManaged
+```
+
+- Now you can create the agent.iso
+```{ .bash }
+openshift-install agent create image --dir <installation_directory>
+```
 
 ### Additional Manifests
 

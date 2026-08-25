@@ -8,21 +8,23 @@ Now that the images are on the disk and you have a target registry with push/pul
 - Specify the target directory where the `mirror_000001.tar` file is. The target directory path must start with `file://`. This procedure assumes you want to upload the mirror_000001.tar **from** `/opt/4.17-mirrordata/`.
     - The target directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. Keep this directory safe, and do not modify it. It will be used again for updates and additions to your cluster
 - Specify the registry you will be mirroring the images to. In this example `registry.example.com:8443/` is our registry, and we will upload it to the `ocp` namespace in our registry.
-- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images are being uploaded to your mirror. Caching still occurs with the 'disk to mirror' workflow.
+- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images are being uploaded to your mirror. Caching still occurs with the 'disk to mirror' workflow. When the data is untarred, it first loads into the cache, then uploads into your mirror registry.
   
-!!! question "Caching"
-    - How does the cache work?
-        - It's like a local registry, it can take up additional disk space almost as large as the .tar that gets generated
-    - Where is it saved?
-        - By default in `$HOME/.oc-mirror/.cache`
-    - Can I control where I want the cache to be stored?
-        - Yes, you can pass `--cache-dir <dir>` which will change the cache location to `<dir>/.oc-mirror/.cache`
-    - During the mirroring process, is there a way to resume if something goes wrong?
-        - Yes, by re-running oc mirror
-    - I intentionally canceled the task and re-ran the mirroring process, but it seemed to start from the beginning.
-        - It goes through the images from your ISC but it won't pull them from the tarball if they're already in the cache. You can compare the elapsed times by running a second time with the images already cached.
-    - The cache takes up a lot of disk space can it be deleted?
-        - Yes the cache can be removed, oc mirror will just re-pull what's needed from the tarball
+- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images you want to mirror.
+    
+    !!! question "Caching"
+        - How does the cache work?
+            - It's like a local registry, it can take up additional disk space almost as large as the .tar that gets generated. It runs on port 50000 by default
+        - Where is it saved?
+            - By default in `$HOME/.oc-mirror/.cache`
+        - Can I control where I want the cache to be stored?
+            - Yes, you can pass `--cache-dir <dir>` which will change the cache location to `<dir>/.oc-mirror/.cache`
+        - During the mirroring process, is there a way to resume if something goes wrong?
+            - Yes, by re-running oc mirror
+        - I intentionally canceled the task and re-ran the mirroring process, but it seemed to start from the beginning.
+            - It goes through the images from your ISC but it won't unpack them if they're already in the cache. You can compare the elapsed times by running a second time with the images already cached.
+        - The cache takes up a lot of disk space can it be deleted?
+            - Yes the cache can be removed, however it's best to keep it intact as this mechanism will allow for better incremental mirroring as images that exist in cache. It is prunable using oc mirror deletes.
 
 ---
 1. You have set the umask parameter to `0022` on the operating system that uses oc-mirror.
@@ -34,38 +36,43 @@ Now that the images are on the disk and you have a target registry with push/pul
   ```{ .bash }
   oc mirror -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2
   ```
-  If your mirror registry is using a self-signed certificate and your machine doesn't trust it internally use `--dest-tls-verify=false`
-  ```{ .bash }
-  oc mirror --dest-tls-verify=false -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2
-  ```
-  ```{ . .no-copy title="Example Output" }
-  ...
-  [INFO]   : === Results ===
-  [INFO]   :  ✓  185 / 185 release images mirrored successfully
-  [INFO]   :  ✓  8 / 8 operator images mirrored successfully
-  [INFO]   :  ✓  1 / 1 additional images mirrored successfully
-  [INFO]   : 📄 Generating IDMS file...
-  [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml file created
-  [INFO]   : 📄 Generating ITMS file...
-  [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/itms-oc-mirror.yaml file created
-  [INFO]   : 📄 Generating CatalogSource file...
-  [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/cs-redhat-operator-index-v4-17.yaml file created
-  [INFO]   : 📄 Generating ClusterCatalog file...
-  [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/cc-redhat-operator-index-v4-17.yaml file created
-  [INFO]   : 📄 Generating Signature Configmap...
-  [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/signature-configmap.json file created
-  [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/signature-configmap.yaml file created
-  [INFO]   : 📄 Generating UpdateService file...
-  [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/updateService.yaml file created
-  [INFO]   : mirror time     : 14m20.563306852s
-  [INFO]   : 👋 Goodbye, thank you for using oc-mirror
-  ```
+    - If your mirror registry is using a self-signed certificate and your machine doesn't trust it internally use `--dest-tls-verify=false`
+    ```{ .bash }
+    oc mirror --dest-tls-verify=false -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2
+    ```
+    - If you want to put the cache in a different directory rather than `$HOME/.oc-mirror/.cache` specify it in the command
+    ```{ .bash }
+    oc mirror -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata --cache-dir /opt/ocp-cache docker://registry.example.com:8443/ocp --v2
+    ```
+
+    ```{ . .no-copy title="Example Output" }
+    ...
+    [INFO]   : === Results ===
+    [INFO]   :  ✓  185 / 185 release images mirrored successfully
+    [INFO]   :  ✓  8 / 8 operator images mirrored successfully
+    [INFO]   :  ✓  1 / 1 additional images mirrored successfully
+    [INFO]   : 📄 Generating IDMS file...
+    [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml file created
+    [INFO]   : 📄 Generating ITMS file...
+    [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/itms-oc-mirror.yaml file created
+    [INFO]   : 📄 Generating CatalogSource file...
+    [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/cs-redhat-operator-index-v4-17.yaml file created
+    [INFO]   : 📄 Generating ClusterCatalog file...
+    [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/cc-redhat-operator-index-v4-17.yaml file created
+    [INFO]   : 📄 Generating Signature Configmap...
+    [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/signature-configmap.json file created
+    [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/signature-configmap.yaml file created
+    [INFO]   : 📄 Generating UpdateService file...
+    [INFO]   : /opt/4.17-mirrordata/working-dir/cluster-resources/updateService.yaml file created
+    [INFO]   : mirror time     : 14m20.563306852s
+    [INFO]   : 👋 Goodbye, thank you for using oc-mirror
+    ```
 
     - If you are having issues mirroring images, throw some retry, timeout, and parallel image flags on the command
     ```{ .bash }
     oc mirror -c /opt/4.17-mirrordata/imageset-config.yaml --from file:///opt/4.17-mirrordata docker://registry.example.com:8443/ocp --v2 --retry-times 60 --image-timeout 60m --retry-delay 5s --parallel-images 2
     ```
-
+    
 1. Verify the cluster resources were generated by oc mirror in the `working-dir/cluster-resources` directory, these resources will be applied to the cluster later once it's installed
     ```{ .bash }
     ls /opt/4.17-mirrordata/working-dir/cluster-resources/
