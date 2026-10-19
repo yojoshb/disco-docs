@@ -13,6 +13,8 @@ Various examples of common agent-configs. Sub in your data as appropriate.
     
     You can configure additional interfaces on your hosts after the cluster is installed by utilizing the `NMState Operator`.
 
+    **br-ex** owns the machineNetwork interface! The interface that the nodes talk to eachother on shouldn't be modified after the cluster is up and running. If you need to add bonds or vlans, do it at install time.
+
 ### VLANs
 
 This port is expected to be connected to a tagged/trunk port on the upstream network switch.
@@ -59,6 +61,8 @@ hosts:
     
     dns-resolver:
       config:
+        search:
+        - example.com
         server:
         - 172.16.10.1
     routes:
@@ -110,6 +114,8 @@ hosts:
     
     dns-resolver:
       config:
+        search:
+        - example.com
         server:
         - 172.16.10.1
     routes:
@@ -199,10 +205,132 @@ hosts:
     
     dns-resolver:
       config:
+        search:
+        - example.com
         server:
         - 172.16.10.1
     routes:
       config:
+      - destination: 0.0.0.0/0
+        next-hop-address: 172.16.10.254
+        next-hop-interface: bond0.100
+        table-id: 254
+```
+
+### VLANs & Bonds/Link Aggregation with Jumbo Frames
+
+This bond is expected to be connected to a tagged/trunk port on the upstream network switch. MTU must be added to every interface including sub-interfaces. The agent-installer will automatically decrement the MTU from the OVNKubernetes CNI by `100`. So if you specify MTU `9000`, the clusterNetwork and serviceNetwork inside the cluster will be MTU `8900`.
+
+```{ .yaml .copy }
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: cluster
+rendezvousIP: 172.16.10.5  # Master/Bootstrap node IP
+hosts:
+- hostname: worker1.cluster.example.com
+  role: worker
+  interfaces:
+  - name: eno1
+    macAddress: 00:ef:44:21:e6:a1
+  - name: eno2
+    macAddress: 00:ef:44:21:e6:a2
+  - name: eno3
+    macAddress: 00:ef:44:21:e6:a3
+  - name: eno4
+    macAddress: 00:ef:44:21:e6:a4
+  networkConfig:
+    interfaces:
+    # Physical Interfaces for the primary Cluster Network
+    - name: eno1
+      type: ethernet
+      state: up
+      mtu: 9000
+    - name: eno2
+      type: ethernet
+      state: up
+      mtu: 9000
+
+    # Physical Interfaces for Storage Network
+    - name: eno3
+      type: ethernet
+      state: up
+      mtu: 9000
+    - name: eno4
+      type: ethernet
+      state: up
+      mtu: 9000
+
+    # Bond for Cluster (br-ex attaches to this)
+    - name: bond0
+      type: bond
+      state: up
+      mtu: 9000
+      ipv4:
+        enabled: false
+      link-aggregation:
+        mode: 802.3ad
+        options:
+          miimon: '150'
+        port:
+        - eno1
+        - eno2
+
+    # Bond for Storage
+    - name: bond1
+      type: bond
+      state: up
+      mtu: 9000
+      ipv4:
+        enabled: false
+      link-aggregation:
+        mode: 802.3ad
+        options:
+          miimon: '150'
+        port:
+        - eno3
+        - eno4
+
+    # Cluster VLAN (br-ex and OpenShift internal routing)
+    - name: bond0.100
+      type: vlan
+      state: up
+      mtu: 9000
+      vlan:
+        base-iface: bond0
+        id: 100
+      ipv4:
+        enabled: true
+        address:
+        - ip: 172.16.10.10
+          prefix-length: 24
+        dhcp: false
+    
+    # Storage VLAN 
+    - name: bond1.500
+      type: vlan
+      state: up
+      mtu: 9000
+      vlan:
+        base-iface: bond1
+        id: 500
+      ipv4:
+        enabled: true
+        address:
+        - ip: 172.16.50.10
+          prefix-length: 24
+        dhcp: false
+
+    dns-resolver:
+      config:
+        search:
+        - example.com
+        server:
+        - 172.16.10.1
+
+    routes:
+      config:
+      # Only bond0.100 gets a default gateway. Storage traffic uses implicit Layer 2 routes.
       - destination: 0.0.0.0/0
         next-hop-address: 172.16.10.254
         next-hop-interface: bond0.100
@@ -257,6 +385,8 @@ hosts:
           dhcp: false
       dns-resolver:
         config:
+          search:
+          - example.com
           server:
           - 172.16.1.254
       routes:
@@ -298,7 +428,7 @@ hosts:
     macAddress: BC:24:11:EE:DD:C3
 ```
 
-(Opinionated): It may be better represented to still explicitly define the interfaces like so
+(Opinionated): It may be easier represented to still explicitly define the interfaces like so
 
 ```{ .yaml .copy }
 apiVersion: v1alpha1

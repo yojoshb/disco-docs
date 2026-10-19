@@ -1,6 +1,6 @@
 ### Docker development container
 
-Used for live docs rendering. Contains scripts for building, starting, and stopping the dev container. Sub-out `docker` commands for `podman` if using
+Used for live docs rendering. Contains scripts for building, starting, and stopping the dev container. Sub-out `docker` commands for `podman` in the scripts, or install `podman-docker` if using podman.
 
 #### Usage
 Clone the repository and navigate to it

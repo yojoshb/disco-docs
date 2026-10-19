@@ -9,9 +9,7 @@ Now that the images are on the disk and you have a target registry with push/pul
     - The target directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. Keep this directory safe, and do not modify it. It will be used again for updates and additions to your cluster
 - Specify the registry you will be mirroring the images to. In this example `registry.example.com:8443/` is our registry, and we will upload it to the `ocp` namespace in our registry.
 - Be aware of the caching system, this will also take up considerable space on the disk depending on how many images are being uploaded to your mirror. Caching still occurs with the 'disk to mirror' workflow. When the data is untarred, it first loads into the cache, then uploads into your mirror registry.
-  
-- Be aware of the caching system, this will also take up considerable space on the disk depending on how many images you want to mirror.
-    
+
     !!! question "Caching"
         - How does the cache work?
             - It's like a local registry, it can take up additional disk space almost as large as the .tar that gets generated. It runs on port 50000 by default

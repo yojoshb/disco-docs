@@ -7,13 +7,15 @@ Now that the images are defined, we can mirror them to disk. Repeat this process
 - Specify the target directory where you want to output the image set tar file. The target directory path must start with `file://`. This procedure assumes you want to store the image set in `/opt/4.17-mirrordata`. Store it anywhere that has available disk space. Can even be the mounted drive you're going to use to transfer the data to the high-side.
   
 #### Persistent behavior in oc mirror v2
-- The target (`file://`) directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. It's best to keep this directory safe, and not modify it. It will be used again for incremental updates and additions to your cluster.
+- When mirroring, the target (`file://`) directory will also hold the `working-dir` environment. This directory contains the various necessary data to build, update, and maintain cluster resources. It's best to keep this directory safe, and not modify it. It will be used again for incremental updates and additions to your cluster. The cache mechanism is also used to download, or not download, the images during initial and subsequent mirror operations.
+
+- The existence and states of these directories define the behavior of how oc-mirror operates.
     
     !!! info "Scenarios"
-        - No working-dir, no cache: it's like doing the mirror from scratch
-        - Working-dir, no cache: incremental tar but all images downloaded again
-        - No working-dir, cache: will download only new images but tar will be full mirror size
-        - Working-dir, cache: incremental tar and will download only new images
+        - **No working-dir, no cache**: it's like doing the mirror from scratch
+        - **Working-dir, no cache**: incremental tar but all images downloaded again
+        - **No working-dir, cache**: will download only new images but tar will be full mirror size
+        - **Working-dir, cache**: incremental tar and will download only new images
 
 - Be aware of the caching system, this will also take up considerable space on the disk depending on how many images you want to mirror.
 

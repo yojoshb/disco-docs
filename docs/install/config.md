@@ -48,6 +48,9 @@ jq -c . $XDG_RUNTIME_DIR/containers/auth.json
 
 1. Create the files `install-config.yaml` and `agent-config.yaml` in the directory you defined.
 
+!!! important 
+    These files must be called `install-config.yaml` and `agent-config.yaml` and use the `.yaml` extension. The install binary will not accept anything else.
+
 The example below builds a bare metal compact cluster (3 master/control-plane/worker nodes) with static IP's and no external load-balancer. The cluster is called `cluster.example.com`. Each node is called m(1-3).cluster.example.com. You can use these procedures as a basis and modify according to your requirements.
 
 - **install-config.yaml**: This defines your cluster configuration, click on the `+` signs to get a general description of some the values
@@ -155,6 +158,8 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
           dhcp: false
       dns-resolver:
         config:
+          search:
+          - example.com
           server:
           - 172.16.1.254 # (10)! The DNS server for the target bare metal host.
       routes:
@@ -183,6 +188,8 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
           dhcp: false
       dns-resolver:
         config:
+          search:
+          - example.com
           server:
           - 172.16.1.254
       routes:
@@ -211,6 +218,8 @@ The example below builds a bare metal compact cluster (3 master/control-plane/wo
           dhcp: false
       dns-resolver:
         config:
+          search:
+          - example.com
           server:
           - 172.16.1.254
       routes:
@@ -253,9 +262,9 @@ The Agent-based Installer performs validation checks on user defined YAML files 
 
 ## Creating the agent image
 
-If you want to further customize the ISO, you can do so using [ZTP Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-ztp_installing-with-agent-based-installer){:target="_blank"} and [Additional Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-opt-manifests_installing-with-agent-based-installer){:target="_blank"}.
+If you want to further customize the ISO, you can do so using [ZTP Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-ztp_installing-with-agent-based-installer){:target="_blank"} or [Additional Manifests](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-opt-manifests_installing-with-agent-based-installer){:target="_blank"}.
 
-- Some examples will also live in this document here: [Advanced Installation Examples](../examples/advanced-installation.md)
+Some examples will also live in this document here: [Advanced Installation Examples](../examples/advanced-installation.md)
 
 1. Your cluster build directory should look like this
 ```{ .bash }
@@ -275,19 +284,23 @@ cp -r my_cluster/ my_cluster_backup/
 ```
 
 1. Create the agent image. It will be saved in the target directory that had the configs.
-```{ .bash }
-openshift-install --dir my_cluster/ agent create image
-```
-```{ . .no-copy title="Example Output" }
-INFO Configuration has 3 master replicas and 0 worker replicas
-WARNING The imageDigestSources configuration in install-config.yaml should have at least one source field matching the releaseImage value registry.example.com:8443/ocp/openshift/release-images@sha256:fd8f5562f0403504b35cc62e064b04c34e6baeb48384bddebffc98c3c69a2af3
-INFO The rendezvous host IP (node0 IP) is 172.16.1.10
-INFO Extracting base ISO from release payload
-INFO Base ISO obtained from release and cached at [/home/admin/.cache/agent/image_cache/coreos-x86_64.iso]
-INFO Consuming Install Config from target directory
-INFO Consuming Agent Config from target directory
-{==INFO Generated ISO at my_cluster/agent.x86_64.iso.==}
-```
+
+    !!! info
+        The ISO must be used within **24 hours**. Certificates are generated for bootstrapping that are only valid for 24 hours, so if you wait too long to boot it, you may have issues.
+
+    ```{ .bash }
+    openshift-install --dir my_cluster/ agent create image
+    ```
+    ```{ . .no-copy title="Example Output" }
+    INFO Configuration has 3 master replicas and 0 worker replicas
+    WARNING The imageDigestSources configuration in install-config.yaml should have at least one source field matching the releaseImage value registry.example.com:8443/ocp/openshift/release-images@sha256:fd8f5562f0403504b35cc62e064b04c34e6baeb48384bddebffc98c3c69a2af3
+    INFO The rendezvous host IP (node0 IP) is 172.16.1.10
+    INFO Extracting base ISO from release payload
+    INFO Base ISO obtained from release and cached at [/home/admin/.cache/agent/image_cache/coreos-x86_64.iso]
+    INFO Consuming Install Config from target directory
+    INFO Consuming Agent Config from target directory
+    {==INFO Generated ISO at my_cluster/agent.x86_64.iso.==}
+    ```
 
     - For FIPS, do the same thing but use the FIPS binary
     ```{ .bash }
