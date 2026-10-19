@@ -2,6 +2,8 @@
 
 [Offline/Standalone Docs site download](https://github.com/yojoshb/disco-docs/releases)
 
+[![build-release](https://github.com/yojoshb/disco-docs/actions/workflows/build-release.yml/badge.svg)](https://github.com/yojoshb/disco-docs/actions/workflows/build-release.yml)
+
 ## Documentation to install Red Hat OpenShift in a airgap/disconnected environment
 Mostly regurgitates Red Hat's docs in a more streamlined fashion that may be easier to follow. Includes common installation scenario examples and is able to be used completely offline for ease-of-use (other than external links to Red Hat docs). This installation method is based on using the Agent-based Installer and associated tools (oc-mirror).
 
