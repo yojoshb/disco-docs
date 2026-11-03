@@ -321,7 +321,7 @@ mirror:
   - name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel9:v4.19
 ```
 
-### Compliance Operator
+### Compliance Operator and Security
 Contains various security profiles including the DISA STIG
 
 ```{ .yaml .copy }
@@ -336,6 +336,20 @@ mirror:
     - name: compliance-operator
       channels:
       - name: stable
+  
+  # Optional: For scanning container images - ACS, Quay/Claire, or an external tool to the cluster. DISA STIG V-257586 requires image vuln scanning
+    - name: rhacs-operator
+      channels:
+      - name: stable
+    - name: quay-operator
+      channels:
+      - name: stable-3.18
+    - name: quay-bridge-operator
+      channels:
+      - name: stable-3.18
+    - name: container-security-operator
+      channels:
+      - name: stable-3.18
 ```
 
 ### Other Handy Operators
@@ -343,6 +357,7 @@ mirror:
 - [NFD](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/specialized_hardware_and_driver_enablement/psap-node-feature-discovery-operator){:target="_blank"}
 - [OADP](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/backup_and_restore/oadp-application-backup-and-restore){:target="_blank"}
 - [MTC](https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/migration_toolkit_for_containers/index){:target="_blank"}
+- [Group Sync](https://github.com/redhat-cop/group-sync-operator)
 
 ```{ .yaml .copy }
 ---
@@ -365,6 +380,11 @@ mirror:
       channels:
       - name: stable
     
+    # ArgoCD
+    - name: openshift-gitops-operator
+      channels:
+      - name: latest
+
     # OpenShift API for Data Protection (OADP) features provide options for backing up and restoring applications
     - name: redhat-oadp-operator 
       channels:
@@ -436,6 +456,22 @@ mirror:
     - name: openshift-cert-manager-operator
       channels:
       - name: stable-v1
+
+  # Red Hat Community Operator Index Catalog
+  - catalog: registry.redhat.io/redhat/community-operator-index:v4.19
+    packages:
+    # Group Sync Operator
+    - name: group-sync-operator
+      channels:
+      - name: alpha
+
+  # Red Hat Certified Operator Index Catalog     
+  - catalog: registry.redhat.io/redhat/certified-operator-index:v4.19
+    packages:
+    # NVIDIA GPU Operator
+    - name: gpu-operator-certified
+      channels:
+      - name: v26.3
   
   additionalImages:
   - name: registry.redhat.io/rhel8/support-tools:latest

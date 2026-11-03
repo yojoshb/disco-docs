@@ -43,7 +43,8 @@ additionalTrustBundle: | # (13)! The rootCA.pem certificate of your internal ima
   BQAwajELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlZBMREwDwYDVQQHDAhOZXcgWW9y
   azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xGTAXBgNVBAMMEHJl
   ...
-  -----END CERTIFICATE----- 
+  -----END CERTIFICATE-----
+additionalTrustBundlePolicy: Always
 imageDigestSources: # (14)! Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
 - mirrors:
   - registry.example.com:8443/ocp/openshift/release-images
@@ -109,7 +110,8 @@ additionalTrustBundle: | # (14)! The rootCA.pem certificate of your internal ima
   BQAwajELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlZBMREwDwYDVQQHDAhOZXcgWW9y
   azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xGTAXBgNVBAMMEHJl
   ...
-  -----END CERTIFICATE----- 
+  -----END CERTIFICATE-----
+additionalTrustBundlePolicy: Always
 imageDigestSources: # (15)! Your image mirrors, this in the idms-oc-mirror.yaml file generated from oc mirror. i.e. /opt/4.17-mirrordata/working-dir/cluster-resources/idms-oc-mirror.yaml 
 - mirrors:
   - registry.example.com:8443/ocp/openshift/release-images
@@ -201,7 +203,8 @@ additionalTrustBundle: |
   BQAwajELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlZBMREwDwYDVQQHDAhOZXcgWW9y
   azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xGTAXBgNVBAMMEHJl
   ...
-  -----END CERTIFICATE----- 
+  -----END CERTIFICATE-----
+additionalTrustBundlePolicy: Always
 imageDigestSources:
 - mirrors:
   - registry.example.com:8443/ocp/openshift/release-images
@@ -213,3 +216,220 @@ imageDigestSources:
 
 1. Easiest method is to set the baseline to None, then choose enabled capabilites in the additionalEnabledCapabilities stanza
 2. Here define what capabilites you want the cluster to have. Remove whatever you don't want
+
+### VMWare vSphere IPI
+
+A temporary Bootstrap machine will be created using this method and can be deleted after the cluster is up. `Bootstrap VM: 4 vCPU, 16 GB RAM, 100 GB disk`
+
+You will need to provide NTP through MachineConfigs as IPI has no equivalent for additionalNTPSources.
+
+```yaml title="install-config.yaml: vSphere IPI cluster in a single failure-domain"
+apiVersion: v1
+baseDomain: example.com
+compute:
+- name: worker
+  #platform: {} # Defaults to 2vCPU, 8GB RAM, 100GB disk
+  platform:
+    vsphere:
+      cpus: 8 # cpus must be divisible by coresPerSocket
+      coresPerSocket: 2
+      memoryMB: 16384
+      osDisk:
+        diskSizeGB: 120
+  replicas: 3
+controlPlane:
+  name: master
+  #platform: {} # # Defaults to 4vCPU, 16GB RAM, 100GB disk
+  platform:
+    vsphere:
+      cpus: 4 # cpus must be divisible by coresPerSocket
+      coresPerSocket: 2
+      memoryMB: 16384
+      osDisk:
+        diskSizeGB: 120
+  replicas: 3
+metadata:
+  name: cluster
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 172.16.1.0/24
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  vsphere:
+    vcenters:
+    - server: vcenter.example.com
+      port: 443
+      user: "svc-ocp@vsphere.local"
+      password: "REPLACE_WITH_VCENTER_PASSWORD" # Must place the password in clear text, you can rotate the password after the cluster is up and clean the config file
+      datacenters:
+      - DC01
+    failureDomains: # If wanting to use a RHCOS OVA Template in a datastore, you must use the failureDomains: yaml schema. If this is a single vSphere cluster, these can be arbitrary values
+    - name: fd-01
+      region: dc01
+      zone: compute-cluster-01
+      server: vcenter.example.com
+      topology:
+        datacenter: DC01
+        computeCluster: /DC01/host/Compute-Cluster-01
+        datastore: /DC01/datastore/datastore01
+        networks:
+        - OCP-Machine-Network
+        folder: /DC01/vm/ocp01
+        template: /DC01/vm/templates/rhcos-4.22-template.ova
+    diskType: thin
+    apiVIPs:
+    - 172.16.1.5
+    ingressVIPs:
+    - 172.16.1.6
+    hosts:
+    - role: bootstrap
+      networkDevice:
+        ipAddrs:
+        - 172.16.1.10/24
+        gateway: 172.16.10.254
+        nameservers:
+        - 172.16.10.254
+        - 172.16.20.254
+    - role: control-plane
+      networkDevice:
+        ipAddrs:
+        - 172.16.10.11/24
+        gateway: 172.16.10.254
+        nameservers:
+        - 172.16.10.254
+        - 172.16.20.254
+    - role: control-plane
+      networkDevice:
+        ipAddrs:
+        - 172.16.10.12/24
+        gateway: 172.16.10.254
+        nameservers:
+        - 172.16.10.254
+        - 172.16.20.254
+    - role: control-plane
+      networkDevice:
+        ipAddrs:
+        - 172.16.10.13/24
+        gateway: 172.16.10.254
+        nameservers:
+        - 172.16.10.254
+        - 172.16.20.254
+    - role: compute
+      networkDevice:
+        ipAddrs:
+        - 172.16.10.14/24
+        gateway: 172.16.10.254
+        nameservers:
+        - 172.16.10.254
+        - 172.16.20.254
+    - role: compute
+      networkDevice:
+        ipAddrs:
+        - 172.16.10.15/24
+        gateway: 172.16.10.254
+        nameservers:
+        - 172.16.10.254
+        - 172.16.20.254
+    - role: compute
+      networkDevice:
+        ipAddrs:
+        - 172.16.10.16/24
+        gateway: 172.16.10.254
+        nameservers:
+        - 172.16.10.254
+        - 172.16.20.254
+fips: false
+pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}'
+sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....'
+additionalTrustBundle: |
+  -----BEGIN CERTIFICATE-----
+  MIID1jCCAr6gAwIBAgIUZ11j30+eBRjNEl7IPufQdzMl6oAwDQYJKoZIhvcNAQEL
+  BQAwajELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlZBMREwDwYDVQQHDAhOZXcgWW9y
+  azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xGTAXBgNVBAMMEHJl
+  ...
+  -----END CERTIFICATE-----
+additionalTrustBundlePolicy: Always
+imageDigestSources:
+- mirrors:
+  - registry.example.com:8443/ocp/openshift/release-images
+  source: quay.io/openshift-release-dev/ocp-release
+- mirrors:
+  - registry.example.com:8443/ocp/openshift/release
+  source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+```
+
+### VMWare vSphere Agent-based
+
+Same as Baremetal, but you must provision the virtual machines beforehand and upload the generated ISO. An agent-config.yaml will need to be used for the VM networking.
+
+```yaml title="install-config.yaml: vSphere agent-based cluster in a single failure-domain"
+apiVersion: v1
+baseDomain: example.com
+compute:
+- name: worker
+  platform: {}
+  replicas: 3
+controlPlane:
+  name: master
+  platform: {}
+  replicas: 3
+metadata:
+  name: cluster
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 172.16.1.0/24
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  vsphere:
+    vcenters:
+    - server: vcenter.example.com
+      port: 443
+      user: "svc-ocp@vsphere.local"
+      password: "REPLACE_WITH_VCENTER_PASSWORD"
+      datacenters:
+      - DC01
+    failureDomains:
+    - name: fd-01
+      region: dc01
+      zone: compute-cluster-01
+      server: vcenter.example.com
+      topology:
+        datacenter: DC01
+        computeCluster: /DC01/host/Compute-Cluster-01
+        datastore: /DC01/datastore/datastore01
+        networks:
+        - OCP-Machine-Network
+        folder: /DC01/vm/ocp01
+    apiVIPs:
+    - 172.16.1.5
+    ingressVIPs:
+    - 172.16.1.6
+fips: false
+pullSecret: '{"auths":{"registry.example.com:8443": {"auth": "am9zaDpLSW....","email": ""}}}'
+sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg....'
+additionalTrustBundle: |
+  -----BEGIN CERTIFICATE-----
+  MIID1jCCAr6gAwIBAgIUZ11j30+eBRjNEl7IPufQdzMl6oAwDQYJKoZIhvcNAQEL
+  BQAwajELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlZBMREwDwYDVQQHDAhOZXcgWW9y
+  azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xGTAXBgNVBAMMEHJl
+  ...
+  -----END CERTIFICATE-----
+additionalTrustBundlePolicy: Always
+imageDigestSources:
+- mirrors:
+  - registry.example.com:8443/ocp/openshift/release-images
+  source: quay.io/openshift-release-dev/ocp-release
+- mirrors:
+  - registry.example.com:8443/ocp/openshift/release
+  source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+```
